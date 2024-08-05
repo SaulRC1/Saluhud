@@ -74,6 +74,34 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+                
+                <dependency>
+                    <groupId>com.uhu.saluhud.database.utils</groupId>
+                    <artifactId>SaluhudDatabaseUtils</artifactId>
+                    <version>1.0</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.junit.jupiter</groupId>
+                            <artifactId>junit-jupiter-api</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.hibernate.orm</groupId>
+                            <artifactId>hibernate-core</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.hibernate.orm</groupId>
+                            <artifactId>hibernate-c3p0</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.springframework.data</groupId>
+                            <artifactId>spring-data-jpa</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
 	</dependencies>
 
 	<build>
