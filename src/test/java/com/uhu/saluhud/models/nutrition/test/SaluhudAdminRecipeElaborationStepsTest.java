@@ -1,8 +1,6 @@
 package com.uhu.saluhud.models.nutrition.test;
 
 import com.uhu.saluhud.database.utils.models.nutrition.Allergenic;
-import com.uhu.saluhud.database.utils.services.saluhud.admin.nutrition.SaluhudAdminRecipeService;
-import com.uhu.saluhud.database.utils.services.saluhud.admin.nutrition.SaluhudAdminRecipeElaborationStepService;
 import com.uhu.saluhud.database.utils.models.nutrition.Ingredient;
 import com.uhu.saluhud.database.utils.models.nutrition.Recipe;
 import com.uhu.saluhud.database.utils.models.nutrition.RecipeElaborationStep;
@@ -10,8 +8,6 @@ import com.uhu.saluhud.database.utils.repositories.saluhud.admin.nutrition.Saluh
 import com.uhu.saluhud.database.utils.repositories.saluhud.admin.nutrition.SaluhudAdminIngredientRepository;
 import com.uhu.saluhud.database.utils.repositories.saluhud.admin.nutrition.SaluhudAdminRecipeElaborationStepRepository;
 import com.uhu.saluhud.database.utils.repositories.saluhud.admin.nutrition.SaluhudAdminRecipeRepository;
-import com.uhu.saluhud.database.utils.services.saluhud.admin.nutrition.SaluhudAdminAllergenicService;
-import com.uhu.saluhud.database.utils.services.saluhud.admin.nutrition.SaluhudAdminIngredientService;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
