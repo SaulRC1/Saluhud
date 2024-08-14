@@ -47,7 +47,7 @@ public class SaluhudUserTest {
         saluhudUserFitnessDataRepository.save(userFitnessData);
         saluhudUserRepository.save(user);
         saluhudUserRepository.save(user2);
-        saluhudUserRepository.delete(saluhudUserRepository.findByEmail("juan2@gmail.com").orElseThrow());
+        saluhudUserRepository.delete(saluhudUserRepository.findByEmail("juan@gmail.com").orElseThrow());
         
         List<SaluhudUser> users = this.saluhudUserRepository.findAll();
         assertTrue(users.contains(user), "El usuario" + user.getUsername() + " no existe.");         
