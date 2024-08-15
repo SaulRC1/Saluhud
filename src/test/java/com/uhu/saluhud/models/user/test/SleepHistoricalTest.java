@@ -49,15 +49,14 @@ public class SleepHistoricalTest {
         entries.add(entry);
 
         sleepHistorical.setEntries(entries);
-        SaluhudUser user1 = new SaluhudUser("Juan2k", "1235", "juan@gmail.com");
-        SaluhudUser user2 = new SaluhudUser("Juan2k2", "1236", "juan2@gmail.com");
+        SaluhudUser user1 = new SaluhudUser("Juan2k", "1235", "juan@gmail.com", "Juan", "Dominguez", 987654321);
+        SaluhudUser user2 = new SaluhudUser("Juan2k2", "1236", "juan2@gmail.com", "Raul", "Machado", 456789123);
         saluhudUserRepository.save(user1);
         saluhudUserRepository.save(user2);
         
         SaluhudUser user = saluhudUserRepository.findByEmail("juan2@gmail.com").orElseThrow();
         sleepHistorical.setUser(user);
 
-        //saluhudUserRepository.save(user);
         sleepHistoricalRepository.save(sleepHistorical);
         sleepHistoricalEntryRepository.save(entry);
     }

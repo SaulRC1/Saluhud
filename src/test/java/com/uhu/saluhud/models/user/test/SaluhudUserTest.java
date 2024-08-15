@@ -2,9 +2,7 @@ package com.uhu.saluhud.models.user.test;
 
 import com.uhu.saluhud.database.utils.models.user.SaluhudUser;
 import com.uhu.saluhud.database.utils.models.user.SaluhudUserFitnessData;
-import com.uhu.saluhud.database.utils.models.user.SaluhudUserPersonalData;
 import com.uhu.saluhud.database.utils.repositories.saluhud.admin.user.SaluhudAdminUserFitnessDataRepository;
-import com.uhu.saluhud.database.utils.repositories.saluhud.admin.user.SaluhudAdminUserPersonalDataRepository;
 import com.uhu.saluhud.database.utils.repositories.saluhud.admin.user.SaluhudAdminUserRepository;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -32,18 +30,13 @@ public class SaluhudUserTest {
     @Autowired
     private SaluhudAdminUserFitnessDataRepository saluhudUserFitnessDataRepository;
 
-    @Autowired
-    private SaluhudAdminUserPersonalDataRepository saluhudPersonalDataRepository;
-
     @Test
     public void testUserCRUD() {
 
-        SaluhudUserPersonalData userPersonalData = new SaluhudUserPersonalData("Saul", "Rodríguez", 123456789);
         SaluhudUserFitnessData userFitnessData = new SaluhudUserFitnessData(90, 170, "Men", 22, "Hectomorfo", 2, 8, 10000, 2100, "10%");
-        SaluhudUser user = new SaluhudUser("SaulRC1", "1235", "saul@gmail.com", userPersonalData, userFitnessData);
-        SaluhudUser user2 = new SaluhudUser("Juan2k", "1235", "juan@gmail.com");
+        SaluhudUser user = new SaluhudUser("SaulRC1", "1235", "saul@gmail.com", "Saul", "Rodríguez", 123456789, userFitnessData);
+        SaluhudUser user2 = new SaluhudUser("Juan2k", "1235", "juan@gmail.com", "Juan");
 
-        saluhudPersonalDataRepository.save(userPersonalData);
         saluhudUserFitnessDataRepository.save(userFitnessData);
         saluhudUserRepository.save(user);
         saluhudUserRepository.save(user2);

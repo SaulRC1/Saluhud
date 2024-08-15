@@ -48,7 +48,7 @@ public class WeightHistoricalTest {
 
         weightHistorical.setEntries(entries);
         
-        SaluhudUser user1 = new SaluhudUser("Juan2k", "1235", "juan@gmail.com");
+        SaluhudUser user1 = new SaluhudUser("Juan2k", "1235", "juan@gmail.com", "Juan");
         saluhudUserRepository.save(user1);
 
         SaluhudUser user = saluhudUserRepository.findByEmail("juan@gmail.com").orElseThrow();
