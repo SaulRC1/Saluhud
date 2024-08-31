@@ -34,8 +34,8 @@ public class SaluhudUserTest {
     public void testUserCRUD() {
 
         SaluhudUserFitnessData userFitnessData = new SaluhudUserFitnessData(90, 170, "Men", 22, "Hectomorfo", 2, 8, 10000, 2100, "10%");
-        SaluhudUser user = new SaluhudUser("SaulRC1", "1235", "saul@gmail.com", "Saul", "Rodríguez", 123456789, userFitnessData);
-        SaluhudUser user2 = new SaluhudUser("Juan2k", "1235", "juan@gmail.com", "Juan");
+        SaluhudUser user = new SaluhudUser("SaulRC1", "12356", "saul@gmail.com", "Saul", "Rodríguez", "+34123456789", userFitnessData);
+        SaluhudUser user2 = new SaluhudUser("Juan2k", "12356", "juan@gmail.com", "Juan");
 
         saluhudUserFitnessDataRepository.save(userFitnessData);
         saluhudUserRepository.save(user);

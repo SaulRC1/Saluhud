@@ -51,7 +51,7 @@ public class DailyStepsHistoricalTest {
 
         dailyStepsHistorical.setEntries(historicalEntries);
 
-        SaluhudUser user = new SaluhudUser("Juan2k2", "1235", "juan2@gmail.com", "Juan");
+        SaluhudUser user = new SaluhudUser("Juan2k2", "12356", "juan2@gmail.com", "Juan");
         dailyStepsHistorical.setUser(user);
 
         saluhudUserRepository.save(user);

@@ -45,12 +45,12 @@ public class SleepHistoricalTest {
         HistoricalEvaluation sleepEvaluation = HistoricalEvaluation.MINIMUM;
 
         List<SleepHistoricalEntry> entries = new ArrayList<>();
-        SleepHistoricalEntry entry = new SleepHistoricalEntry(now, 6, 23, sleepEvaluation, sleepHistorical);
+        SleepHistoricalEntry entry = new SleepHistoricalEntry(now, 6, 360, sleepEvaluation, sleepHistorical);
         entries.add(entry);
 
         sleepHistorical.setEntries(entries);
-        SaluhudUser user1 = new SaluhudUser("Juan2k", "1235", "juan@gmail.com", "Juan", "Dominguez", 987654321);
-        SaluhudUser user2 = new SaluhudUser("Juan2k2", "1236", "juan2@gmail.com", "Raul", "Machado", 456789123);
+        SaluhudUser user1 = new SaluhudUser("Juan2k", "12356", "juan@gmail.com", "Juan", "Dominguez", "+34987654321");
+        SaluhudUser user2 = new SaluhudUser("Juan2k2", "12367", "juan2@gmail.com", "Raul", "Machado", "+34456789123");
         saluhudUserRepository.save(user1);
         saluhudUserRepository.save(user2);
         
