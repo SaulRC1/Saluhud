@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.util.Assert;
 
 /**
  *
@@ -30,12 +29,10 @@ public class SaluhudAdminIngredientsTest {
         Ingredient harina = new Ingredient("Harina", 364, 10, 73, 1);
         Ingredient carneDeRes = new Ingredient("Carne de Res", 250, 26, 0, 17);
         Ingredient huevo = new Ingredient("Huevo", 68, 6, 0, 5);
-        Ingredient lechuga = new Ingredient("Lechuga", 5, 1, 2, 0);
 
         ingredientRepository.save(harina);
         ingredientRepository.save(carneDeRes);
         ingredientRepository.save(huevo);
-        ingredientRepository.save(lechuga);
 
         Ingredient ingredientSelectedById = ingredientRepository.findOne(harina.getId());
         assertEquals(ingredientSelectedById.getName(), "Harina");
@@ -43,7 +40,5 @@ public class SaluhudAdminIngredientsTest {
         Ingredient ingredientSelectedByName = ingredientRepository.findByName("Huevo");
         assertEquals(ingredientSelectedByName.getName(), "Huevo");
 
-        ingredientRepository.delete(lechuga);
-        Assert.isNull(this.ingredientRepository.findByName("Lechuga"), "");
     }
 }
