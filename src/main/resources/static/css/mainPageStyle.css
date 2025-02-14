@@ -1,0 +1,118 @@
+/* Colores corporativos */
+:root {
+    --color-rojo: #a80a2e; /* Rojo oscuro */
+    --color-blanco: #FFFFFF; /* Blanco */
+    --color-negro: #000000; /* Negro */
+}
+
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--color-blanco);
+    color: var(--color-negro);
+    margin: 0;
+    padding: 0;
+}
+
+/* Cabecera */
+.header {
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+    padding: 1rem;
+    text-align: center;
+}
+
+/* Contenido principal */
+.main-content {
+    max-width: 900px;
+    margin: 2rem auto;
+    background: var(--color-blanco);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+}
+
+/* Título de la página */
+.main-content h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Estilo de los botones */
+.button-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 1rem; /* Espaciado entre los botones */
+    padding: 0 1rem; /* Márgenes laterales para pantallas pequeñas */
+}
+
+.button {
+    display: inline-block;
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+    padding: 1rem 2rem;
+    margin: 0.5rem;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+    width: auto;
+}
+
+.button:hover {
+    background-color: #7a0000; /* Sombra más oscura para el hover */
+}
+
+/* Responsividad con Media Queries */
+
+/* Para pantallas grandes (escritorio) */
+@media (min-width: 1200px) {
+    .main-content {
+        max-width: 1000px;
+        padding: 2rem;
+    }
+
+    .button {
+        font-size: 1.2rem;
+    }
+}
+
+/* Para pantallas medianas (tabletas) */
+@media (max-width: 1199px) and (min-width: 768px) {
+    .main-content {
+        max-width: 90%;
+        padding: 1.5rem;
+    }
+
+    .button-container {
+        justify-content: space-between;
+    }
+}
+
+/* Para pantallas pequeñas (móviles) */
+@media (max-width: 767px) {
+    .header {
+        padding: 0.8rem;
+    }
+
+    .main-content {
+        max-width: 95%;
+        margin: 1rem auto;
+        padding: 1rem;
+    }
+
+    .button-container {
+        flex-direction: column;
+        align-items: center;
+        padding: 0 1rem; /* Añadimos padding a los lados */
+    }
+
+    .button {
+        width: 90%; 
+        padding: 1rem;
+        font-size: 1rem;
+    }
+}

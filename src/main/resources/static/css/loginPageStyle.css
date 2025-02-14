@@ -1,0 +1,104 @@
+/* Colores corporativos */
+:root {
+    --color-rojo: #a80a2e; /* Rojo oscuro */
+    --color-blanco: #FFFFFF; /* Blanco */
+    --color-negro: #000000; /* Negro */
+}
+
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--color-blanco);
+    color: var(--color-negro);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    box-sizing: border-box;
+    flex-direction: column; /* Alinea todo en columna */
+    text-align: center; /* Centra el contenido */
+}
+
+.login-container {
+    background-color: var(--color-blanco);
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-container h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--color-rojo);
+}
+
+.login-container div {
+    margin-bottom: 1rem;
+}
+
+.login-container label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.login-container input:focus {
+    border-color: var(--color-rojo);
+    outline: none;
+}
+
+.login-container button {
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-container button:hover {
+    background-color: #7a0000; /* Sombra más oscura para el hover */
+}
+
+/* Mensaje de error */
+.error-message {
+    color: red;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+/* Estilos para el header */
+header {
+    padding: 1rem;
+    width: 100%;
+}
+
+header img {
+    max-height: 200.0px; /* Ajusta el tamaño del logo */
+    display: block;
+    margin: 0 auto; /* Centra el logo */
+}
+
+footer {
+    margin-top: 20px;
+}
+
+
