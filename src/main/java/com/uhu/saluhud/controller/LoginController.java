@@ -1,7 +1,7 @@
 package com.uhu.saluhud.controller;
 
-import com.uhu.saluhud.database.utils.models.security.Credentials;
-import com.uhu.saluhud.database.utils.services.saluhud.admin.security.LoginService;
+import com.uhu.saluhuddatabaseutils.models.security.Credentials;
+import com.uhu.saluhuddatabaseutils.services.administrationportal.security.AdministrationPortalLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +20,7 @@ public class LoginController
 {
 
     @Autowired
-    LoginService loginService;
+    AdministrationPortalLoginService loginService;
 
     /**
      *

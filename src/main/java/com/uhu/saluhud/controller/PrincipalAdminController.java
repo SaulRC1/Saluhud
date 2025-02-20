@@ -1,6 +1,6 @@
 package com.uhu.saluhud.controller;
 
-import com.uhu.saluhud.database.utils.models.security.UserAccount;
+import com.uhu.saluhuddatabaseutils.models.security.UserAccount;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;

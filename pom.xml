@@ -76,7 +76,7 @@
         </dependency>
                 
         <dependency>
-            <groupId>com.uhu.saluhud.database.utils</groupId>
+            <groupId>com.uhu.saluhuddatabaseutils</groupId>
             <artifactId>SaluhudDatabaseUtils</artifactId>
             <version>1.0</version>
             <exclusions>
