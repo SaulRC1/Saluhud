@@ -4,37 +4,47 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <head>
         <meta charset="UTF-8"/>
-        <title>Portal de Gestión - Administradores</title>
+        <title th:text="#{header.portal}">Portal de Gestión - Administradores</title>
         <link rel="stylesheet" th:href="@{/css/mainPageStyle.css}">
     </head>
     <body>
         <div class="header">
-            <h2>Portal de Gestión para Administradores</h2>
+            <h2 th:text="#{header.portal}">Portal de Gestión para Administradores</h2>
         </div>
 
         <div class="main-content">
-            <h1 sec:authorize="isAuthenticated()">Panel de Control</h1>
-            <p sec:authorize="isAuthenticated()">Bienvenido al portal de administración. Desde aquí puedes gestionar las siguientes entidades:</p>
-            <p sec:authorize="!isAuthenticated()">Bienvenido al portal de administración. En primer lugar, inicie sesión con sus credenciales por favor</p>
+            <h1 sec:authorize="isAuthenticated()" th:text="#{panel.control}">Panel de Control</h1>
+            <p sec:authorize="isAuthenticated()" th:text="#{welcome.authenticated}">Bienvenido al portal de administración. Desde aquí puedes gestionar las siguientes entidades:</p>
+            <p sec:authorize="!isAuthenticated()" th:text="#{welcome.guest}">Bienvenido al portal de administración. En primer lugar, inicie sesión con sus credenciales por favor</p>
 
-            <div class="button-container" sec:authorize="isAuthenticated()">
-                <a href="#" class="button">Gestionar Recetas</a>
-                <a href="#" class="button">Gestionar Ingredientes</a>
-                <a href="#" class="button">Gestionar Alérgenos</a>
+            <div class="button-container" sec:authorize="isAuthenticated()">               
+                <a th:href="@{/recipes/home}" class="button" th:text="#{manage.recipes}">Gestionar Recetas</a>
+                <a href="#" class="button" th:text="#{manage.ingredients}">Gestionar Ingredientes</a>
+                <a href="#" class="button" th:text="#{manage.allergenics}">Gestionar Alérgenos</a>
+                <a href="#" class="button" th:text="#{manage.elaboration.steps}">Gestionar Pasos de Recetas</a>
+                <a href="#" class="button" th:text="#{manage.users}">Gestionar Usuarios Admin</a>
             </div>
 
-            <p sec:authorize="isAuthenticated()">Bienvenido, <span sec:authentication="name">Usuario</span>!</p>
+            <p sec:authorize="isAuthenticated()" th:text="#{welcome.message(${#authentication.name})}"></p>
 
             <!-- Muestra solo si el usuario NO está autenticado -->
-            <a th:href="@{/security/login}" sec:authorize="!isAuthenticated()" class="button">Iniciar Sesión</a>
+            <a th:href="@{/security/login}" sec:authorize="!isAuthenticated()" class="button" th:text="#{login}">Iniciar Sesión</a>
 
-            <!-- Muestra solo si el usuario tiene el rol ADMIN -->
+            <!-- Muestra solo si el usuario está autenticado -->
             <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
-                <button type="submit" class="button">Cerrar Sesión</button>
+                <button type="submit" class="button" th:text="#{logout}">Cerrar Sesión</button>
             </form>
 
         </div>
-        
+
+        <footer>
+            <!-- Selector de idioma en la parte superior derecha -->
+            <div class="language-selector">
+                <a th:href="@{/welcome(lang='es')}">🇪🇸 Español</a> |
+                <a th:href="@{/welcome(lang='en')}">🇬🇧 English</a>
+            </div>
+        </footer>
+
         <!-- Script para mostrar mensajes emergentes -->
         <script th:inline="javascript">
             /*<![CDATA[*/

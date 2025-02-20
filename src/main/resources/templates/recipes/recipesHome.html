@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{recipes.list.title}">Gestión de Recetas</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" th:href="@{/css/recipesPageStyle.css}"/>
+    </head>
+    <body>
+
+        <script th:src="@{/js/recipes-actions.js}"></script>
+
+        <div class="header">
+            <a th:href="@{/welcome}" class="header-link">
+                <h2 th:text="#{header.title}">Portal de Gestión para Administradores</h2>
+            </a>
+        </div>
+
+        <nav class="button-container" sec:authorize="isAuthenticated()">
+            <a th:href="@{/recipes/home}" class="button" th:text="#{recipes.manage}">Gestionar Recetas</a>
+            <a href="#" class="button" th:text="#{recipes.ingredients}">Gestionar Ingredientes</a>
+            <a href="#" class="button" th:text="#{recipes.allergens}">Gestionar Alérgenos</a>
+            <a href="#" class="button" th:text="#{recipes.steps}">Gestionar Pasos de Recetas</a>
+            <a href="#" class="button" th:text="#{recipes.users}">Gestionar Usuarios Admin</a>
+        </nav>
+
+        <!-- Mostrar el mensaje de éxito o error si está presente -->
+        <div th:if="${successMessage}" th:class="'message success'">
+            <p th:text="${successMessage}"></p>
+        </div>
+        <div th:if="${errorMessage}" th:class="'message error'">
+            <p th:text="${errorMessage}"></p>
+        </div>
+
+        <div class="container">
+            <h2 th:text="#{recipes.list.title}">Lista de Recetas</h2>
+
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Ingredientes</th>
+                            <th>Calorías</th>
+                            <th>Alérgenos</th>
+                            <th>Seleccionar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="receta : ${recipes}">
+                            <td th:text="${receta.id}"></td>
+                            <td>
+                                <a th:href="@{/recipes/details/{id}(id=${receta.id})}"
+                                   th:text="${receta.name}"
+                                   class="recipe-link"></a>
+                            </td>
+                            <td th:text="${receta.ingredientsDescription}"></td>
+                            <td th:text="${receta.kilocalories}"></td>
+                            <td>
+                                <span th:each="allergenic : ${receta.allergenics}" th:text="${allergenic.name} + ' ' "></span>
+                            </td>
+                            <td>
+                                <input type="radio" name="selectedRecipe" th:value="${receta.id}" 
+                                       th:attr="data-name=${receta.name}" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+         <!-- Paginación -->
+        <div class="pagination">
+            <a th:if="${currentPage > 0}" th:href="@{/recipes/home(page=${currentPage - 1})}" class="page-link" th:text="#{pagination.previous}">Anterior</a>
+            <span th:text="${currentPage + 1} + ' de ' + ${totalPages}"></span>
+            <a th:if="${currentPage + 1 < totalPages}" th:href="@{/recipes/home(page=${currentPage + 1})}" class="page-link" th:text="#{pagination.next}">Siguiente</a>
+        </div>
+
+        <div id="actions">
+            <button disabled id="updateButton" th:text="#{update.button}">Modificar</button>
+            <button disabled id="deleteButton" th:text="#{delete.button}">Eliminar</button>
+        </div>
+
+        <div style="padding-top: 25px">
+            <a th:href="@{/recipes/create}" class="button" th:text="#{create.new.recipe}">Crear Nueva Receta</a>
+        </div>
+
+        <footer>
+            <p th:text="#{footer.copyright}">© 2025 Saluhud. Todos los derechos reservados.</p>
+            <div class="language-selector">
+                <a th:href="@{/recipes/home(lang='es')}">🇪🇸 Español</a> |
+                <a th:href="@{/recipes/home(lang='en')}">🇬🇧 English</a>
+            </div>
+        </footer>
+
+    </body>
+</html>

@@ -1,0 +1,314 @@
+/* Colores corporativos */
+:root {
+    --color-rojo: #a80a2e; /* Rojo oscuro */
+    --color-blanco: #FFFFFF; /* Blanco */
+    --color-negro: #000000; /* Negro */
+}
+
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+/* Enlace del nombre de la receta sin subrayado y con color fijo */
+.recipe-link {
+    text-decoration: none;  /* Quita el subrayado */
+    color: inherit;         /* Mantiene el color del texto normal */
+    
+}
+
+.recipe-link:hover, .recipe-link:visited, .recipe-link:active {
+    text-decoration: none;
+    opacity: 0.8; /* Ligero efecto al pasar el cursor */
+}
+
+.elaboration-steps ul {
+    list-style-type: disc;  /* Utiliza puntos (disco) como marcador de lista */
+    margin-left: 20px;
+    padding-left: 20px;
+}
+
+.elaboration-steps li {
+    margin-bottom: 10px;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.elaboration-steps strong {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+/* Mensajes de éxito y error */
+.message {
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Cabecera */
+.header {
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header-link {
+    text-decoration: none; /* Quita el subrayado */
+}
+
+.header-link h2 {
+    margin: 0;
+    color: var(--color-blanco); /* Mantiene el color original */
+    transition: opacity 0.3s ease-in-out;
+}
+
+.header-link h2:hover {
+    opacity: 0.8; /* Ligero efecto al pasar el cursor */
+}
+
+/* Contenedor de detalles */
+.details-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.details-container h2 {
+    color: #a80a2e;
+    border-bottom: 2px solid #a80a2e;
+    padding-bottom: 0.5rem;
+}
+
+.details-container p {
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+/* Contenedor principal */
+.container {
+    width: 90%;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Tabla de recetas */
+.table-container {
+    margin-top: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.table th, .table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.table th {
+    background-color: #a80a2e;
+    color: white;
+}
+
+/* Botones */
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
+    color: white;
+    background-color: #a80a2e;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.button:hover {
+    background-color: #820822;
+}
+
+/* Controles de paginación */
+.pagination {
+    margin-top: 20px;
+}
+
+.pagination a {
+    margin: 0 5px;
+    padding: 8px 12px;
+    color: #a80a2e;
+    text-decoration: none;
+    border: 1px solid #a80a2e;
+    border-radius: 5px;
+}
+
+.pagination a:hover, .pagination a.active {
+    background-color: #a80a2e;
+    color: white;
+}
+
+#actions {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#actions button {
+    background-color: #ccc; /* Color gris cuando están deshabilitados */
+    color: #666;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: not-allowed;
+    transition: all 0.3s ease;
+}
+
+#actions button:enabled {
+    background-color: var(--color-rojo); /* Rojo oscuro cuando están habilitados */
+    color: white;
+    cursor: pointer;
+}
+
+#actions button:enabled:hover {
+    background-color: #b71c1c; /* Rojo más oscuro al pasar el mouse */
+}
+
+/* Contenedor de botones de navegación */
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Espacio entre botones */
+    background-color: #f8f9fa;
+    padding: 15px 20px;
+    border-bottom: 3px solid #ccc;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Botones dentro de la barra de navegación */
+.button-container .button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    background-color: #a80a2e;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Efecto hover */
+.button-container .button:hover {
+    background-color: #820822;
+    transform: scale(1.05);
+    box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilos del footer */
+footer {
+    background-color: #a80a2e; /* Fondo rojo oscuro */
+    color: white;              /* Texto blanco */
+    text-align: center;        /* Centrado del texto */
+    padding: 20px 0;           /* Espaciado arriba y abajo */
+    font-size: 14px;           /* Tamaño de la fuente */
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Estilo para el símbolo de copyright */
+footer p {
+    margin: 0;
+}
+
+footer a {
+    text-decoration: none; /* Quita el subrayado */
+    color: var(--color-blanco); /* Mantiene el color original */
+    transition: opacity 0.3s ease-in-out;    
+}
+
+footer a:hover {
+    opacity: 0.8; /* Ligero efecto al pasar el cursor */
+}
+
+/* Responsividad con Media Queries */
+
+/* Para pantallas grandes (escritorio) */
+@media (min-width: 1200px) {
+    .main-content {
+        max-width: 1000px;
+        padding: 2rem;
+    }
+
+    .button {
+        font-size: 1.2rem;
+    }
+}
+
+/* Para pantallas medianas (tabletas) */
+@media (max-width: 1199px) and (min-width: 768px) {
+    .main-content {
+        max-width: 90%;
+        padding: 1.5rem;
+    }
+
+    .button-container {
+        justify-content: space-between;
+    }
+}
+
+/* Para pantallas pequeñas (móviles) */
+@media (max-width: 767px) {
+    .header {
+        padding: 0.8rem;
+    }
+
+    .main-content {
+        max-width: 95%;
+        margin: 1rem auto;
+        padding: 1rem;
+    }
+
+    .button-container {
+        flex-direction: column;
+        align-items: center;
+        padding: 0 1rem; /* Añadimos padding a los lados */
+    }
+
+    .button {
+        width: 90%;
+        padding: 1rem;
+        font-size: 1rem;
+    }
+}

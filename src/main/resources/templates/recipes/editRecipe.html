@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{recipe.edit.title}">Editar Receta</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" th:href="@{/css/recipeFormStyle.css}"/>
+    </head>
+    <body>
+        <div class="container">
+            <h2 th:text="#{recipe.edit.heading}">Editar Receta</h2>
+
+            <!-- Mostrar el mensaje de éxito o error si está presente -->
+            <div th:if="${successMessage}" th:class="'message success'">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" th:class="'message error'">
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <form th:action="@{/recipes/edit}" th:object="${recipe}" method="post">                              
+                <input type="text" id="recipeId" th:field="*{id}" readonly hidden />
+
+                <label for="name" th:text="#{recipe.name}">Nombre:</label>
+                <input type="text" id="name" th:field="*{name}" required/>
+
+                <label for="description" th:text="#{recipe.description}">Descripción:</label>
+                <textarea id="description" th:field="*{description}"></textarea>
+
+                <label for="ingredientsDescription" th:text="#{recipe.ingredients}">Ingredientes:</label>
+                <textarea id="ingredientsDescription" th:field="*{ingredientsDescription}"></textarea>
+
+                <label for="kilocalories" th:text="#{recipe.kilocalories}">Kilocalorías:</label>
+                <input type="number" id="kilocalories" th:field="*{kilocalories}" required/>
+
+                <label for="allergenics" th:text="#{recipe.allergens}">Alérgenos:</label>
+                <select id="allergenics" th:field="*{allergenics}" multiple>
+                    <option th:each="allergic : ${allergens}" 
+                            th:value="${allergic.id}" 
+                            th:text="${allergic.name}"></option>
+                </select>
+
+                <button type="submit" class="button" th:text="#{recipe.save}">Guardar Cambios</button>
+            </form>
+
+            <a th:href="@{/recipes/home}" class="button" th:text="#{recipe.back}">Volver al listado</a>             
+        </div>
+    </body>
+</html>
+

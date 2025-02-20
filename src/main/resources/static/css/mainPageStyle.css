@@ -1,25 +1,55 @@
 /* Colores corporativos */
 :root {
     --color-rojo: #a80a2e; /* Rojo oscuro */
+    --color-rojo-hover: #8c0828; /* Rojo más oscuro */
     --color-blanco: #FFFFFF; /* Blanco */
-    --color-negro: #000000; /* Negro */
+    --color-negro: #1a1a1a; /* Negro suave */
+    --color-gris-claro: #f4f4f4; /* Fondo suave */
+    --sombra: rgba(0, 0, 0, 0.2); /* Sombra estándar */
 }
 
 /* Estilos generales */
 body {
     font-family: Arial, sans-serif;
-    background-color: var(--color-blanco);
+    background-color: var(--color-gris-claro);
     color: var(--color-negro);
     margin: 0;
     padding: 0;
+}
+
+.language-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.language-selector a {
+    display: flex;
+    align-items: center;
+    text-decoration: none; /* Sin subrayado */
+    color: #333; /* Color de texto */
+    font-weight: bold;
+    gap: 5px;
+    transition: color 0.3s ease;
+}
+
+.language-selector a:hover {
+    color: #007bff; /* Color al pasar el ratón */
 }
 
 /* Cabecera */
 .header {
     background-color: var(--color-rojo);
     color: var(--color-blanco);
-    padding: 1rem;
+    padding: 1.5rem;
     text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0px 4px 6px var(--sombra);
 }
 
 /* Contenido principal */
@@ -27,92 +57,85 @@ body {
     max-width: 900px;
     margin: 2rem auto;
     background: var(--color-blanco);
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0px 6px 10px var(--sombra);
+    padding: 2rem;
+    text-align: center;
 }
 
-/* Título de la página */
+/* Títulos */
 .main-content h1 {
-    text-align: center;
+    font-size: 2rem;
+    color: var(--color-rojo);
+    margin-bottom: 1rem;
+}
+
+/* Párrafos */
+.main-content p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #444;
     margin-bottom: 1.5rem;
 }
 
-/* Estilo de los botones */
+/* Botones */
 .button-container {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     flex-wrap: wrap;
-    gap: 1rem; /* Espaciado entre los botones */
-    padding: 0 1rem; /* Márgenes laterales para pantallas pequeñas */
+    gap: 1.2rem;
 }
 
 .button {
-    display: inline-block;
-    background-color: var(--color-rojo);
+    background: var(--color-rojo);
     color: var(--color-blanco);
-    padding: 1rem 2rem;
-    margin: 0.5rem;
+    padding: 0.8rem 1.8rem;
+    font-size: 1.2rem;
+    font-weight: bold;
     text-decoration: none;
-    text-align: center;
-    border-radius: 5px;
-    font-size: 1.1rem;
-    transition: background-color 0.3s ease;
-    width: auto;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 4px 6px var(--sombra);
+    border: none;
+    cursor: pointer;
+    display: inline-block;
 }
 
 .button:hover {
-    background-color: #7a0000; /* Sombra más oscura para el hover */
+    background: var(--color-rojo-hover);
+    transform: translateY(-2px);
+    box-shadow: 0px 6px 12px var(--sombra);
 }
 
-/* Responsividad con Media Queries */
-
-/* Para pantallas grandes (escritorio) */
-@media (min-width: 1200px) {
-    .main-content {
-        max-width: 1000px;
-        padding: 2rem;
-    }
-
-    .button {
-        font-size: 1.2rem;
-    }
+.button:active {
+    transform: translateY(1px);
+    box-shadow: 0px 2px 6px var(--sombra);
 }
 
-/* Para pantallas medianas (tabletas) */
-@media (max-width: 1199px) and (min-width: 768px) {
-    .main-content {
-        max-width: 90%;
-        padding: 1.5rem;
-    }
-
-    .button-container {
-        justify-content: space-between;
-    }
+/* Botón de logout */
+form button {
+    width: 100%;
+    max-width: 250px;
 }
 
-/* Para pantallas pequeñas (móviles) */
-@media (max-width: 767px) {
-    .header {
-        padding: 0.8rem;
-    }
+footer {
+    margin-top: 20px;
+}
 
+/* Responsividad */
+@media (max-width: 768px) {
     .main-content {
         max-width: 95%;
-        margin: 1rem auto;
-        padding: 1rem;
+        padding: 1.5rem;
     }
 
     .button-container {
         flex-direction: column;
         align-items: center;
-        padding: 0 1rem; /* Añadimos padding a los lados */
     }
 
     .button {
-        width: 90%; 
-        padding: 1rem;
-        font-size: 1rem;
+        width: 90%;
     }
 }
+

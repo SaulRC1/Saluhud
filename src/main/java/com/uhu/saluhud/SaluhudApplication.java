@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "com.uhu.saluhuddatabaseutils")
+@ComponentScan(basePackages = {"com.uhu.saluhuddatabaseutils", "com.uhu.saluhud"})
 public class SaluhudApplication {
 
 	public static void main(String[] args) {

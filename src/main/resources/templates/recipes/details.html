@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{recipe.details.title}">Detalles de la Receta</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" th:href="@{/css/recipesPageStyle.css}"/>
+    </head>
+    <body>
+        <div class="header">
+            <a th:href="@{/recipes/home}" class="header-link">
+                <h2 th:text="#{recipe.portal.admin}">Portal de Gestión para Administradores</h2>
+            </a>
+        </div>
+
+        <div class="details-container">
+            <h2 th:text="${recipe.name}">Nombre de la Receta</h2>
+
+            <p><strong th:text="#{recipe.id}">ID:</strong> <span th:text="${recipe.id}"></span></p>
+            <p><strong th:text="#{recipe.description}">Descripción:</strong> <span th:text="${recipe.description}"></span></p>
+            <p><strong th:text="#{recipe.ingredients}">Ingredientes:</strong> <span th:text="${recipe.ingredientsDescription}"></span></p>
+            <p><strong th:text="#{recipe.kilocalories}">Calorías:</strong> <span th:text="${recipe.kilocalories}"></span> kcal</p>
+
+            <p><strong th:text="#{recipe.allergens}">Alérgenos:</strong>
+                <span th:each="allergenic : ${recipe.allergenics}" 
+                      th:text="${allergenic.name} + ' '"></span>
+            </p>
+
+            <h3 th:text="#{recipe.steps}">Pasos de Elaboración:</h3>
+            <div class="elaboration-steps">
+                <ul>  
+                    <li th:each="step : ${recipe.elaborationSteps}">
+                        <strong th:text="#{recipe.step} + ' '"></strong>
+                        <span th:text="${step.stepNumber}"></span>:
+                        <span th:text="${step.stepDescription}"></span>
+                    </li>
+                </ul>
+            </div>
+
+            <a th:href="@{/recipes/home}" class="button" th:text="#{recipe.back}">Volver a la Lista</a>
+        </div>
+    </body>
+</html>
+
