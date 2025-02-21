@@ -1,10 +1,12 @@
 package com.uhu.saluhud.configuration.security;
 
+import com.uhu.saluhud.mobileapp.filter.MobileAppAPIKeyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  *
@@ -38,14 +41,16 @@ public class SaluhudWebSecurityConfiguration
     {
         //http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
         http
-                .csrf(csrf -> csrf.disable()) // para evitar problemas con formularios
+                .csrf(Customizer.withDefaults()) // para evitar problemas con formularios
                 .authorizeHttpRequests(auth
                         -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll() // Permite recursos estáticos
                         .requestMatchers("/security/login", "/security/login**").permitAll()
                         .requestMatchers("/recipes/**").permitAll()
+                        .requestMatchers("/saluhud-mobile-app/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                .addFilterBefore(new MobileAppAPIKeyFilter(), UsernamePasswordAuthenticationFilter.class)
                 .formLogin(login
                         -> login
                         .loginPage("/security/login") // Página de login
