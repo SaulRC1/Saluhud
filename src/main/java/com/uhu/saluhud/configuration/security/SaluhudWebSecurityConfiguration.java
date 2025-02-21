@@ -41,10 +41,10 @@ public class SaluhudWebSecurityConfiguration
     {
         //http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
         http
-                .csrf(Customizer.withDefaults()) // para evitar problemas con formularios
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/saluhud-mobile-app/**")) //CSRF is not needed for mobile app interaction 
                 .authorizeHttpRequests(auth
                         -> auth
-                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll() // Permite recursos estáticos
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll() // Allows static resources
                         .requestMatchers("/security/login", "/security/login**").permitAll()
                         .requestMatchers("/recipes/**").permitAll()
                         .requestMatchers("/saluhud-mobile-app/**").permitAll()
@@ -53,9 +53,9 @@ public class SaluhudWebSecurityConfiguration
                 .addFilterBefore(new MobileAppAPIKeyFilter(), UsernamePasswordAuthenticationFilter.class)
                 .formLogin(login
                         -> login
-                        .loginPage("/security/login") // Página de login
-                        .failureUrl("/security/login?error=true") // Redirigir con parámetro error en caso de error de autenticación
-                        .defaultSuccessUrl("/welcome", true) // Redirigir después del login
+                        .loginPage("/security/login") // Login page
+                        .failureUrl("/security/login?error=true") // Redirect with error parameter in case of authentication error
+                        .defaultSuccessUrl("/welcome", true) // Redirect after login
                         .permitAll()
                 )
                 .logout(logout
@@ -66,7 +66,7 @@ public class SaluhudWebSecurityConfiguration
                         .clearAuthentication(true)
                         .permitAll()
                 )
-                .userDetailsService(userDetailsService); // Usa el servicio para cargar usuarios
+                .userDetailsService(userDetailsService); //Uses the service to load users
 
         return http.build();
     }
