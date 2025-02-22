@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{allergenic.details.title}">Detalles del alérgeno</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" th:href="@{/css/allergenicPageStyle.css}"/>
+        <style>
+            /* Estilo para los ingredientes en dos columnas */
+            .ingredients {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr); /* Dos columnas de igual tamaño */
+                gap: 10px; /* Espacio entre los elementos */
+                margin-top: 10px;
+            }
+
+            .ingredient-item {
+                padding: 5px;
+                background-color: #f9f9f9;
+                border-radius: 5px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                text-align: center;
+            }
+
+            .ingredient-item strong {
+                display: block;
+                margin-bottom: 5px;
+            }
+            
+            .details {
+                margin-bottom: 30px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <a th:href="@{/allergenic/home}" class="header-link">
+                <h2 th:text="#{allergenic.portal.admin}">Portal de Gestión para Administradores</h2>
+            </a>
+        </div>
+
+        <div class="details-container">
+            <h2 th:text="${allergenic.name}">Nombre del Alérgeno</h2>
+
+            <div class="details">
+                <p><strong th:text="#{allergenic.id}">ID:</strong> <span th:text="${allergenic.id}"></span></p>
+
+                <div class="ingredients">
+                    <strong th:text="#{allergenic.ingredients}">Ingredientes: </strong>
+                    <div th:each="ingredient : ${allergenic.ingredients}" class="ingredient-item">
+                        <span th:text="${ingredient.name}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <a th:href="@{/allergenic/home}" class="button" th:text="#{allergenic.back}">Volver a la Lista</a>
+        </div>
+    </body>
+</html>

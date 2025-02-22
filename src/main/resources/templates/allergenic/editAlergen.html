@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{allergenic.edit.title}">Editar Alérgeno</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" th:href="@{/css/allergenicFormStyle.css}"/>
+    </head>
+    <body>
+        <div class="container">
+            <h2 th:text="#{allergenic.edit.heading}">Editar Alérgeno</h2>
+
+            <!-- Mostrar el mensaje de éxito o error si está presente -->
+            <div th:if="${successMessage}" th:class="'message success'">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" th:class="'message error'">
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <form th:action="@{/allergenic/edit}" th:object="${allergenic}" method="post">                              
+                <input type="text" id="allergenicId" th:field="*{id}" readonly hidden />
+
+                <label for="name" th:text="#{allergenic.name}">Nombre:</label>
+                <input type="text" id="name" th:field="*{name}" required/>
+
+                <button type="submit" class="button" th:text="#{allergenic.save}">Guardar Cambios</button>
+            </form>
+
+            <a th:href="@{/allergenic/home}" class="button" th:text="#{allergenic.back}">Volver al listado</a>             
+        </div>
+    </body>
+</html>
+
+
