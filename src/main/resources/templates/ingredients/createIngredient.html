@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{create.ingredient.title}">Crear Ingrediente</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" th:href="@{/css/ingredientFormStyle.css}"/>
+    </head>
+    <body>
+        <div class="container">
+            <h2 th:text="#{create.ingredient.title}">Crear Nuevo Ingrediente</h2>
+
+            <!-- Mostrar el mensaje de éxito o error si está presente -->
+            <div th:if="${successMessage}" th:class="'message success'">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" th:class="'message error'">
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <form th:action="@{/ingredients/create}" th:object="${ingredient}" method="post">
+                <!-- Nombre del ingrediente -->
+                <label for="name" th:text="#{name.label}">Nombre:</label>
+                <input type="text" id="name" th:field="*{name}" required/>
+
+                <!-- Kilocalorías -->
+                <label for="kilocalories" th:text="#{kilocalories.label}">Kilocalorías:</label>
+                <input type="number" id="kilocalories" th:field="*{kilocalories}" required/>
+
+                <!-- Proteínas -->
+                <label for="proteinAmount" th:text="#{proteins.label}">Proteínas:</label>
+                <input type="number" id="proteinAmount" th:field="*{proteinAmount}" required/>
+
+                <!-- Carbohidratos -->
+                <label for="carbohydratesAmount" th:text="#{carbohydrates.label}">Carbohidratos:</label>
+                <input type="number" id="carbohydratesAmount" th:field="*{carbohydratesAmount}" required/>
+
+                <!-- Grasas -->
+                <label for="fatAmount" th:text="#{fats.label}">Grasas:</label>
+                <input type="number" id="fatAmount" th:field="*{fatAmount}" required/>
+
+                <!-- Combo box para seleccionar los alérgenos -->
+                <label for="allergens" th:text="#{allergens.label}">Alergenos:</label>
+                <select id="allergens" th:field="*{allergens}" multiple>
+                    <option th:each="allergen : ${allergenics}" 
+                            th:value="${allergen.id}" 
+                            th:text="${allergen.name}"></option>
+                </select>
+
+                <!-- Botón para guardar el ingrediente -->
+                <button type="submit" class="button" th:text="#{save.button}">Guardar Ingrediente</button>
+            </form>
+
+            <!-- Enlace para volver al listado de ingredientes -->
+            <a th:href="@{/ingredients/home}" class="button" th:text="#{back.button}">Volver al listado</a>
+        </div>
+    </body>
+</html>
+

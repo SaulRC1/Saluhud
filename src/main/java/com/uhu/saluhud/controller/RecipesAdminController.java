@@ -1,14 +1,17 @@
 package com.uhu.saluhud.controller;
 
 import com.uhu.saluhuddatabaseutils.models.nutrition.Allergenic;
+import com.uhu.saluhuddatabaseutils.models.nutrition.Ingredient;
 import com.uhu.saluhuddatabaseutils.models.nutrition.Recipe;
+import com.uhu.saluhuddatabaseutils.models.nutrition.RecipeIngredient;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.nutrition.AdministrationPortalAllergenicService;
+import com.uhu.saluhuddatabaseutils.services.administrationportal.nutrition.AdministrationPortalIngredientService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.nutrition.AdministrationPortalRecipeService;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -32,14 +36,33 @@ public class RecipesAdminController
     private AdministrationPortalRecipeService recipeService;
 
     @Autowired
+    private AdministrationPortalIngredientService ingredientService;
+
+    @Autowired
     private AdministrationPortalAllergenicService allergenicService;
+
+    @GetMapping("/ingredients/search")
+    @ResponseBody
+    public List<IngredientDto> searchIngredients(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size)
+    {
+        Page<Ingredient> ingredientsPage = ingredientService.getIngredients(page, size);
+
+        return ingredientsPage.getContent().stream()
+                .map(ingredient -> new IngredientDto(ingredient.getId(), ingredient.getName()))
+                .collect(Collectors.toList());
+    }
+
+    public record IngredientDto(Long id, String name)
+            {
+
+    }
 
     @GetMapping("/home")
     public ModelAndView getRecipes(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size)
     {
         ModelAndView modelAndView = new ModelAndView("recipes/recipesHome");
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Page<Recipe> recipePage = recipeService.getRecipes(page, size);
         modelAndView.addObject("recipes", recipePage.getContent());
         modelAndView.addObject("currentPage", recipePage.getNumber());
@@ -51,8 +74,11 @@ public class RecipesAdminController
     @GetMapping("/create")
     public ModelAndView showCreateForm()
     {
+        Recipe recipe = new Recipe();
+        recipe.setRecipeIngredients(new ArrayList<>());
+
         ModelAndView modelAndView = new ModelAndView("recipes/createRecipe");
-        modelAndView.addObject("recipe", new Recipe());
+        modelAndView.addObject("recipe", recipe);
         modelAndView.addObject("allergenics", allergenicService.findAllAllergenics());
         return modelAndView;
     }
@@ -63,9 +89,31 @@ public class RecipesAdminController
     {
         ModelAndView modelAndView = new ModelAndView("recipes/createRecipe");
         try {
+
+            if (recipe.getRecipeIngredients() != null) {
+                // Filtra y conserva solo los RecipeIngredient que tengan ingredientId (es decir, que se haya seleccionado un ingrediente)
+                List<RecipeIngredient> validIngredients = recipe.getRecipeIngredients().stream()
+                        .filter(ri -> ri.getIngredientId() != null)
+                        .collect(Collectors.toList());
+                if (validIngredients.isEmpty()) {
+                    throw new RuntimeException("Debe seleccionar al menos un ingrediente.");
+                }
+                // Asocia la receta y completa el objeto Ingredient en cada RecipeIngredient
+                for (RecipeIngredient ri : validIngredients) {
+                    Ingredient fullIngredient = ingredientService.getIngredientById(ri.getIngredientId());
+                    if (fullIngredient == null) {
+                        throw new RuntimeException("Ingrediente no encontrado para id: " + ri.getIngredientId());
+                    }
+                    ri.setIngredient(fullIngredient);
+                    ri.setRecipe(recipe);
+                }
+                // Reemplaza la lista original por la lista filtrada
+                recipe.setRecipeIngredients(validIngredients);
+            }
+
             recipeService.saveRecipe(recipe);
             modelAndView.addObject("successMessage", "Receta creada correctamente.");
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             modelAndView.addObject("errorMessage", "Error al crear la receta: " + e.getMessage());
         }
 
@@ -122,6 +170,7 @@ public class RecipesAdminController
         ModelAndView modelAndView = new ModelAndView("recipes/details");
         Recipe recipe = recipeService.getRecipeById(id);
         modelAndView.addObject("recipe", recipe);
+        modelAndView.addObject("recipeIngredients", recipe.getRecipeIngredients());
         return modelAndView;
     }
 }

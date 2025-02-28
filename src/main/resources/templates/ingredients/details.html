@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{ingredient.details.title}">Detalles del Ingrediente</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" th:href="@{/css/ingredientPageStyle.css}"/>
+        <style>
+            /* Estilo para la tarjeta */
+            .card {
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                margin-top: 20px;
+                margin-bottom: 30px;
+            }
+
+            .card h3 {
+                color: #a80a2e;
+                margin-bottom: 10px;
+            }
+
+            .card p {
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
+
+            .card strong {
+                font-weight: bold;
+            }
+
+            /* Estilo para la lista de alérgenos */
+            .allergens {
+                list-style-type: none;
+                padding: 0;
+                margin-top: 10px;
+            }
+
+            .allergens li {
+                padding: 5px;
+                background-color: #f9f9f9;
+                margin-bottom: 5px;
+                border-radius: 5px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Estilo para la sección de ingredientes en las recetas */
+            .recipe-ingredients {
+                margin-top: 20px;
+                margin-bottom: 40px; /* Añadido margen inferior para separar del botón */
+            }
+
+            .recipe-ingredient-item {
+                padding: 8px;
+                background-color: #e9ecef;
+                border-radius: 5px;
+                margin-bottom: 5px;
+            }
+
+            /* Botón de volver a la lista */
+            .back-button {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #a80a2e;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                margin-top: 20px;
+                font-size: 16px;
+                text-align: center;
+            }
+
+            /* Responsive Styles */
+            @media screen and (max-width: 768px) {
+                .card {
+                    padding: 15px;
+                }
+
+                .recipe-ingredients {
+                    margin-top: 15px;
+                    margin-bottom: 45px; /* Añadido margen adicional para móviles */
+                }
+
+                .back-button {
+                    width: 100%;
+                    text-align: center;
+                    padding: 12px;
+                    font-size: 18px;
+                }
+            }
+
+            @media screen and (max-width: 480px) {
+                .card {
+                    padding: 10px;
+                }
+
+                .recipe-ingredient-item {
+                    padding: 6px;
+                }
+
+                .back-button {
+                    width: 100%;
+                    padding: 15px;
+                    font-size: 20px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <a th:href="@{/ingredients/home}" class="header-link">
+                <h2 th:text="#{ingredient.portal.admin}">Portal de Gestión para Administradores</h2>
+            </a>
+        </div>
+
+        <div class="details-container">
+            <h2 th:text="${ingredient.name}">Nombre del Ingrediente</h2>
+
+            <!-- Tarjeta de detalles del ingrediente -->
+            <div class="card">
+                <h3 th:text="#{ingredient.details}">Detalles del Ingrediente</h3>
+                <p><strong th:text="#{ingredient.id}">ID:</strong> <span th:text="${ingredient.id}"></span></p>
+                <p><strong th:text="#{ingredient.kilocalories}">Calorías:</strong> <span th:text="${ingredient.kilocalories}"></span></p>
+                <p><strong th:text="#{ingredient.proteinAmount}">Proteínas:</strong> <span th:text="${ingredient.proteinAmount}"></span></p>
+                <p><strong th:text="#{ingredient.carbohydratesAmount}">Carbohidratos:</strong> <span th:text="${ingredient.carbohydratesAmount}"></span></p>
+                <p><strong th:text="#{ingredient.fatAmount}">Grasas:</strong> <span th:text="${ingredient.fatAmount}"></span></p>
+            </div>
+
+            <!-- Lista de alérgenos -->
+            <div class="allergens-container">
+                <h3 th:text="#{ingredient.allergens}">Alérgenos:</h3>
+                <ul class="allergens">
+                    <li th:each="allergen : ${ingredient.allergens}" th:text="${allergen.name}"></li>
+                </ul>
+            </div>
+
+            <!-- Lista de ingredientes en las recetas -->
+            <div class="recipe-ingredients">
+                <h3 th:text="#{ingredient.recipeIngredients}">Ingredientes en las Recetas: </h3>
+                <div th:each="recipeIngredient : ${ingredient.recipeIngredients}" class="recipe-ingredient-item">
+                    <span th:text="${recipeIngredient.recipe.name}"></span> <!-- Nombre de la receta -->
+                </div>
+            </div>
+
+            <a th:href="@{/ingredients/home}" class="button" th:text="#{ingredient.back}">Volver a la Lista</a>
+        </div>
+    </body>
+</html>
+

@@ -19,7 +19,7 @@
 
             <div class="button-container" sec:authorize="isAuthenticated()">               
                 <a th:href="@{/recipes/home}" class="button" th:text="#{manage.recipes}">Gestionar Recetas</a>
-                <a href="#" class="button" th:text="#{manage.ingredients}">Gestionar Ingredientes</a>
+                <a th:href="@{/ingredients/home}" class="button" th:text="#{manage.ingredients}">Gestionar Ingredientes</a>
                 <a th:href="@{/allergenic/home}" class="button" th:text="#{manage.allergenics}">Gestionar Alérgenos</a>
                 <a href="#" class="button" th:text="#{manage.elaboration.steps}">Gestionar Pasos de Recetas</a>
                 <a href="#" class="button" th:text="#{manage.users}">Gestionar Usuarios</a>

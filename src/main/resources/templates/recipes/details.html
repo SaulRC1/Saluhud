@@ -16,23 +16,34 @@
         <div class="details-container">
             <h2 th:text="${recipe.name}">Nombre de la Receta</h2>
 
-            <p><strong th:text="#{recipe.id}">ID:</strong> <span th:text="${recipe.id}"></span></p>
-            <p><strong th:text="#{recipe.description}">Descripción:</strong> <span th:text="${recipe.description}"></span></p>
-            <p><strong th:text="#{recipe.ingredients}">Ingredientes:</strong> <span th:text="${recipe.ingredientsDescription}"></span></p>
-            <p><strong th:text="#{recipe.kilocalories}">Calorías:</strong> <span th:text="${recipe.kilocalories}"></span> kcal</p>
+            <p><strong th:text="#{recipe.id}">ID</strong> <span th:text="${recipe.id}"></span></p>
+            <p><strong th:text="#{recipe.description}">Descripción</strong> <span th:text="${recipe.description}"></span></p>
+            <p><strong th:text="#{recipe.ingredients}">Descripción Ingredientes</strong> <span th:text="${recipe.ingredientsDescription}"></span></p>
+            <p><strong th:text="#{recipe.kilocalories}">Calorías</strong> <span th:text="${recipe.kilocalories}"></span> kcal</p>
 
-            <p><strong th:text="#{recipe.allergens}">Alérgenos:</strong>
+            <p><strong th:text="#{recipe.allergens}">Alérgenos</strong>
                 <span th:each="allergenic : ${recipe.allergenics}" 
                       th:text="${allergenic.name} + ' '"></span>
             </p>
 
-            <h3 th:text="#{recipe.steps}">Pasos de Elaboración:</h3>
+            <h3 th:text="#{recipe.steps}">Pasos de Elaboración</h3>
             <div class="elaboration-steps">
                 <ul>  
                     <li th:each="step : ${recipe.elaborationSteps}">
                         <strong th:text="#{recipe.step} + ' '"></strong>
                         <span th:text="${step.stepNumber}"></span>:
                         <span th:text="${step.stepDescription}"></span>
+                    </li>
+                </ul>
+            </div>
+
+            <h3 th:text="#{recipe.ingredients.details}">Ingredientes y Cantidades</h3>
+            <div class="ingredients-list">
+                <ul>
+                    <li th:each="recipeIngredient : ${recipeIngredients}">
+                        <strong th:text="${recipeIngredient.ingredient.name}"></strong>: 
+                        <span th:text="${recipeIngredient.quantity}"></span>
+                        <span th:text="${recipeIngredient.unit}"></span>
                     </li>
                 </ul>
             </div>
