@@ -36,6 +36,20 @@ public class UserRegistrationController
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
         
+        if(mobileAppSaluhudUserService.existsByEmailIgnoreCase(saluhudUser.getEmail()))
+        {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "The email specified is already in use.");
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        
+        if(mobileAppSaluhudUserService.existsByPhoneNumber(saluhudUser.getPhoneNumber()))
+        {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "The phone number specified is already in use.");
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        
         mobileAppSaluhudUserService.saveUser(saluhudUser);
         
         return ResponseEntity.ok("User registered successfully");
