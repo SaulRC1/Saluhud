@@ -141,6 +141,21 @@ footer {
     margin-top: auto; /* Permite que el footer siempre quede al final */
 }
 
+/* Selector de idioma en footer */
+footer .language-selector {
+    margin-top: 10px;
+}
+
+footer .language-selector a {
+    color: var(--color-blanco);
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+footer .language-selector a:hover {
+    text-decoration: underline;
+}
+
 /* Mensajes de éxito y error */
 .message {
     padding: 10px;
@@ -160,21 +175,6 @@ footer {
     background-color: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
-}
-
-/* Selector de idioma en footer */
-footer .language-selector {
-    margin-top: 10px;
-}
-
-footer .language-selector a {
-    color: var(--color-blanco);
-    text-decoration: none;
-    margin: 0 5px;
-}
-
-footer .language-selector a:hover {
-    text-decoration: underline;
 }
 
 /* ======================== */
@@ -251,4 +251,3 @@ a {
 a:hover {
     opacity: 0.8; /* Reduce la opacidad ligeramente al pasar el cursor */
 }
-
