@@ -9,8 +9,11 @@ import com.uhu.saluhuddatabaseutils.services.administrationportal.nutrition.Admi
 import com.uhu.saluhuddatabaseutils.services.administrationportal.nutrition.AdministrationPortalRecipeService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +43,9 @@ public class RecipesAdminController
 
     @Autowired
     private AdministrationPortalAllergenicService allergenicService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @GetMapping("/ingredients/search")
     @ResponseBody
@@ -85,7 +91,7 @@ public class RecipesAdminController
 
     // Guardar nueva receta
     @PostMapping("/create")
-    public ModelAndView createRecipe(@ModelAttribute Recipe recipe)
+    public ModelAndView createRecipe(@ModelAttribute Recipe recipe, Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("recipes/createRecipe");
         try {
@@ -112,9 +118,11 @@ public class RecipesAdminController
             }
 
             recipeService.saveRecipe(recipe);
-            modelAndView.addObject("successMessage", "Receta creada correctamente.");
+            String successMessage = messageSource.getMessage("recipe.created.success", null, locale);
+            modelAndView.addObject("successMessage", successMessage);
         } catch (RuntimeException e) {
-            modelAndView.addObject("errorMessage", "Error al crear la receta: " + e.getMessage());
+            String errorMessage = messageSource.getMessage("recipe.created.error", new Object[]{e.getMessage()}, locale);
+            modelAndView.addObject("errorMessage", errorMessage);
         }
 
         return modelAndView;
@@ -134,15 +142,16 @@ public class RecipesAdminController
 
     // Guardar edición de receta
     @PostMapping("/edit")
-    public ModelAndView updateRecipe(@ModelAttribute Recipe recipe)
+    public ModelAndView updateRecipe(@ModelAttribute Recipe recipe, Locale locale)
     {
-        System.out.println("Recibida solicitud de actualización para ID: " + recipe.getId());
         ModelAndView modelAndView = new ModelAndView("recipes/editRecipe");
         try {
             recipeService.updateRecipe(recipe);
-            modelAndView.addObject("successMessage", "Receta actualizada correctamente.");
-        } catch (Exception e) {
-            modelAndView.addObject("errorMessage", "Error al actualizar la receta: " + e.getMessage());
+            String successMessage = messageSource.getMessage("recipe.updated.success", null, locale);
+            modelAndView.addObject("successMessage", successMessage);
+        } catch (NoSuchMessageException e) {
+            String errorMessage = messageSource.getMessage("recipe.updated.error", new Object[]{e.getMessage()}, locale);
+            modelAndView.addObject("errorMessage", errorMessage);
         }
 
         return modelAndView;
@@ -150,15 +159,18 @@ public class RecipesAdminController
 
     // Eliminar receta
     @GetMapping("/delete/{id}")
-    public ModelAndView deleteRecipe(@PathVariable long id, RedirectAttributes redirectAttributes)
+    public ModelAndView deleteRecipe(@PathVariable long id, RedirectAttributes redirectAttributes,
+            Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("redirect:/recipes/home");
         try {
             Recipe recipe = recipeService.getRecipeById(id);
             recipeService.deleteRecipe(recipe);
-            redirectAttributes.addFlashAttribute("successMessage", "Receta eliminada correctamente.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error al eliminar la receta: " + e.getMessage());
+            String successMessage = messageSource.getMessage("recipe.deleted.success", null, locale);
+            redirectAttributes.addFlashAttribute("successMessage", successMessage);
+        } catch (NoSuchMessageException e) {
+            String errorMessage = messageSource.getMessage("recipe.deleted.error", new Object[]{e.getMessage()}, locale);
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         }
 
         return modelAndView;

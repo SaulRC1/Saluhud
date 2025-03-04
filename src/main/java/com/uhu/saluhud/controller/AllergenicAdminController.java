@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
@@ -59,7 +58,8 @@ public class AllergenicAdminController
 
     // Guardar edición de alergeno
     @PostMapping("/edit")
-    public ModelAndView updateAllergenic(@ModelAttribute Allergenic allergenic, Locale locale)
+    public ModelAndView updateAllergenic(@ModelAttribute Allergenic allergenic, 
+            Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("allergenic/editAlergen");
         try {
@@ -70,22 +70,6 @@ public class AllergenicAdminController
             String errorMessage = messageSource.getMessage("allergen.updated.error", new Object[]{e.getMessage()}, locale);
             modelAndView.addObject("errorMessage", errorMessage);
         }
-        return modelAndView;
-    }
-
-    // Eliminar alergeno
-    @GetMapping("/delete/{id}")
-    public ModelAndView deleteAlergen(@PathVariable long id, RedirectAttributes redirectAttributes)
-    {
-        ModelAndView modelAndView = new ModelAndView("redirect:/allergenic/home");
-        try {
-            Allergenic alergen = allergenicService.findById(id);
-            allergenicService.deleteAllergenic(alergen);
-            redirectAttributes.addFlashAttribute("successMessage", "Alérgeno eliminado correctamente.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error al eliminar el alérgeno: " + e.getMessage());
-        }
-
         return modelAndView;
     }
 

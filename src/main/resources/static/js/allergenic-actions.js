@@ -19,13 +19,4 @@ document.addEventListener("DOMContentLoaded", function () {
             window.location.href = '/allergenic/edit/' + selectedId;
         }
     });
-    
-    // Acción del botón Eliminar
-    deleteButton.addEventListener('click', function () {
-        if (selectedId) {
-            if (confirm('¿Estás seguro de que quieres eliminar este alérgeno?')) {
-                window.location.href = '/allergenic/delete/' + selectedId;
-            }
-        }
-    });
 });

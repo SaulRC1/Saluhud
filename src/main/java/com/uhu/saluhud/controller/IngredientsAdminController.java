@@ -3,7 +3,10 @@ package com.uhu.saluhud.controller;
 import com.uhu.saluhuddatabaseutils.models.nutrition.Ingredient;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.nutrition.AdministrationPortalAllergenicService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.nutrition.AdministrationPortalIngredientService;
+import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +33,9 @@ public class IngredientsAdminController
     @Autowired
     private AdministrationPortalAllergenicService allergenicService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @GetMapping("/home")
     public ModelAndView getIngredients(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size)
@@ -54,14 +60,17 @@ public class IngredientsAdminController
 
     // Guardar nuevo ingrediente
     @PostMapping("/create")
-    public ModelAndView createIngredient(@ModelAttribute Ingredient ingredient)
+    public ModelAndView createIngredient(@ModelAttribute Ingredient ingredient,
+            Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("ingredients/createIngredient");
         try {
             ingredientService.saveIngredient(ingredient);
-            modelAndView.addObject("successMessage", "Ingrediente creado correctamente.");
-        } catch (Exception e) {
-            modelAndView.addObject("errorMessage", "Error al crear el ingrediente: " + e.getMessage());
+            String successMessage = messageSource.getMessage("ingredients.created.success", null, locale);
+            modelAndView.addObject("successMessage", successMessage);
+        } catch (NoSuchMessageException e) {
+            String errorMessage = messageSource.getMessage("ingredients.created.error", new Object[]{e.getMessage()}, locale);
+            modelAndView.addObject("errorMessage", errorMessage);
         }
 
         return modelAndView;
@@ -80,14 +89,17 @@ public class IngredientsAdminController
 
     // Guardar edición de ingrediente
     @PostMapping("/edit")
-    public ModelAndView updateIngredient(@ModelAttribute Ingredient ingredient)
+    public ModelAndView updateIngredient(@ModelAttribute Ingredient ingredient,
+            Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("ingredients/editIngredient");
         try {
             ingredientService.updateIngredient(ingredient);
-            modelAndView.addObject("successMessage", "Ingrediente actualizado correctamente.");
-        } catch (Exception e) {
-            modelAndView.addObject("errorMessage", "Error al actualizar el ingrediente: " + e.getMessage());
+            String successMessage = messageSource.getMessage("ingredients.updated.success", null, locale);
+            modelAndView.addObject("successMessage", successMessage);
+        } catch (NoSuchMessageException e) {
+            String errorMessage = messageSource.getMessage("ingredients.updated.error", new Object[]{e.getMessage()}, locale);
+            modelAndView.addObject("errorMessage", errorMessage);
         }
 
         return modelAndView;
@@ -95,15 +107,18 @@ public class IngredientsAdminController
 
     // Eliminar ingrediente
     @GetMapping("/delete/{id}")
-    public ModelAndView deleteIngredient(@PathVariable long id, RedirectAttributes redirectAttributes)
+    public ModelAndView deleteIngredient(@PathVariable long id, RedirectAttributes redirectAttributes,
+            Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("redirect:/ingredients/home");
         try {
             Ingredient ingredient = ingredientService.getIngredientById(id);
             ingredientService.deleteIngredient(ingredient);
-            redirectAttributes.addFlashAttribute("successMessage", "Ingrediente eliminado correctamente.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error al eliminar el ingrediente: " + e.getMessage());
+            String successMessage = messageSource.getMessage("ingredients.delete.success", null, locale);
+            redirectAttributes.addFlashAttribute("successMessage", successMessage);
+        } catch (NoSuchMessageException e) {
+            String errorMessage = messageSource.getMessage("ingredients.delete.error", new Object[]{e.getMessage()}, locale);
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         }
 
         return modelAndView;

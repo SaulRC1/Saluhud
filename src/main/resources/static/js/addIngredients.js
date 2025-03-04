@@ -6,20 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
         addIngredientField();
     });
 
-    const form = document.querySelector("form"); // Asegúrate de seleccionar el formulario correcto
-    form.addEventListener("submit", function (event) {
-        // Encuentra todas las entradas de ingredientes
-        const ingredientEntries = document.querySelectorAll("[name^='recipeIngredients']");
-        ingredientEntries.forEach(entry => {
-            // Busca el select de ingredientId en la entrada
-            const select = entry.closest(".ingredient-entry").querySelector("select[name$='.ingredientId']");
-            if (select && !select.value) {
-                // Si no se seleccionó ningún ingrediente, elimina toda la entrada
-                select.closest(".ingredient-entry").remove();
-            }
-        });
-    });
-
     function addIngredientField() {
         const index = ingredientsContainer.children.length;
         const ingredientEntry = document.createElement("div");
