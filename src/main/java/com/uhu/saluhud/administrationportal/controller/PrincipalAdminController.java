@@ -1,4 +1,4 @@
-package com.uhu.saluhud.controller;
+package com.uhu.saluhud.administrationportal.controller;
 
 import com.uhu.saluhuddatabaseutils.models.security.UserAccount;
 import org.springframework.security.core.Authentication;
