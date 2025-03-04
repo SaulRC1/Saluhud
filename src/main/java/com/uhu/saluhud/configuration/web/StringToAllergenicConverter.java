@@ -1,5 +1,5 @@
 
-package com.uhu.saluhud.administrationportal.configuration.web;
+package com.uhu.saluhud.configuration.web;
 
 import com.uhu.saluhuddatabaseutils.models.nutrition.Allergenic;
 import com.uhu.saluhuddatabaseutils.repositories.administrationportal.nutrition.AdministrationPortalAllergenicRepository;

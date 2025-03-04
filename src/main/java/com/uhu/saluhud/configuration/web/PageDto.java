@@ -1,4 +1,4 @@
-package com.uhu.saluhud.administrationportal.configuration.web;
+package com.uhu.saluhud.configuration.web;
 
 import java.util.List;
 import org.springframework.data.domain.Page;
