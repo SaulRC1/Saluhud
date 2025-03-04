@@ -1,4 +1,4 @@
-package com.uhu.saluhud.controller;
+package com.uhu.saluhud.administrationPortal.controller;
 
 import com.uhu.saluhuddatabaseutils.models.security.Credentials;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.security.AdministrationPortalLoginService;

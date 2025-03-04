@@ -1,4 +1,4 @@
-package com.uhu.saluhud.controller;
+package com.uhu.saluhud.administrationPortal.controller;
 
 import com.uhu.saluhuddatabaseutils.models.nutrition.Ingredient;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.nutrition.AdministrationPortalAllergenicService;

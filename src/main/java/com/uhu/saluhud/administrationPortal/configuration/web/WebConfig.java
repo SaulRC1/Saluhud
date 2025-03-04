@@ -1,4 +1,4 @@
-package com.uhu.saluhud.configuration.web;
+package com.uhu.saluhud.administrationportal.configuration.web;
 
 import java.util.Locale;
 import org.springframework.context.annotation.Bean;
