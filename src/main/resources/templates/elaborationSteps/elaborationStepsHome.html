@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title th:text="#{allergenic.list.title}">Gestión de Alérgenos</title>
+        <title th:text="#{elaborationStep.list.title}">Gestión de Pasos de Elaboración</title>
         <meta charset="UTF-8"/>
-        <link rel="stylesheet" th:href="@{/css/allergenicPageStyle.css}"/>
+        <link rel="stylesheet" th:href="@{/css/elaborationStepStyle.css}"/>
     </head>
     <body>
 
-        <script th:src="@{/js/allergenic-actions.js}"></script>
+        <script th:src="@{/js/elaborationStep-actions.js}"></script>
 
         <div class="header">
             <a th:href="@{/welcome}" class="header-link">
@@ -32,28 +32,29 @@
         </div>
 
         <div class="container">
-            <h2 th:text="#{allergenic.list.title}">Lista de Alérgenos</h2>
+            <h2 th:text="#{elaborationStep.list.title}">Lista de Pasos de Elaboración</h2>
 
             <div class="table-container">
                 <table class="table">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Seleccionar</th>
+                            <th th:text="#{elaborationStep.number}">Número de Paso</th>
+                            <th th:text="#{elaborationStep.recipe}">Receta</th>
+                            <th th:text="#{elaborationStep.select}">Seleccionar</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="allergenic : ${allergenics}">
-                            <td th:text="${allergenic.id}"></td>
+                        <tr th:each="step : ${elaborationSteps}">
                             <td> 
-                                <a th:href="@{/allergenic/details/{id}(id=${allergenic.id})}"
-                                   th:text="${allergenic.name}"
+                                <a th:href="@{/elaborationSteps/details/{id}(id=${step.id})}"
+                                   th:text="${step.id}"
                                    class="recipe-link"></a>
-                            </td>                          
+                            </td>
+                            <td th:text="${step.stepNumber}"></td>
+                            <td th:text="${step.recipe.name}"></td>
                             <td>
-                                <input type="radio" name="selectedAllergenic" th:value="${allergenic.id}" 
-                                       th:attr="data-name=${allergenic.name}" />
+                                <input type="radio" name="selectedStep" th:value="${step.id}" />
                             </td>
                         </tr>
                     </tbody>
@@ -62,20 +63,25 @@
         </div>
 
         <div class="pagination">
-            <a th:if="${currentPage > 0}" th:href="@{/allergenic/home(page=${currentPage - 1})}" class="page-link" th:text="#{pagination.previous}">Anterior</a>
+            <a th:if="${currentPage > 0}" th:href="@{/elaborationSteps/home(page=${currentPage - 1})}" class="page-link" th:text="#{pagination.previous}">Anterior</a>
             <span th:text="${currentPage + 1} + ' de ' + ${totalPages}"></span>
-            <a th:if="${currentPage + 1 < totalPages}" th:href="@{/allergenic/home(page=${currentPage + 1})}" class="page-link" th:text="#{pagination.next}">Siguiente</a>
+            <a th:if="${currentPage + 1 < totalPages}" th:href="@{/elaborationSteps/home(page=${currentPage + 1})}" class="page-link" th:text="#{pagination.next}">Siguiente</a>
         </div>
 
         <div id="actions">
-            <button disabled id="updateButton" th:text="#{update.button}">Modificar</button>
+            <button disabled id="updateButton" th:text="#{elaborationStep.edit}">Modificar</button>
+            <button disabled id="deleteButton" th:text="#{elaborationStep.delete}">Eliminar</button>
+        </div>
+
+        <div style="padding-top: 25px; padding-bottom: 25px;">
+            <a th:href="@{/elaborationSteps/create}" class="button" th:text="#{elaborationStep.create}">Crear Nuevo Paso</a>
         </div>
 
         <footer>
             <p th:text="#{footer.copyright}">© 2025 Saluhud. Todos los derechos reservados.</p>
             <div class="language-selector">
-                <a th:href="@{/allergenic/home(lang='es')}">🇪🇸 Español</a> |
-                <a th:href="@{/allergenic/home(lang='en')}">🇬🇧 English</a>
+                <a th:href="@{/elaborationSteps/home(lang='es')}">🇪🇸 Español</a> |
+                <a th:href="@{/elaborationSteps/home(lang='en')}">🇬🇧 English</a>
             </div>
         </footer>
     </body>

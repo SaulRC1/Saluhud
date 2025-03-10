@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{create.elaborationStep.title}">Crear Paso de Elaboración</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" th:href="@{/css/elaborationStepFormStyle.css}"/>
+    </head>
+    <body>
+        <div class="container">
+            <h2 th:text="#{elaborationStep.create.title}">Crear Nuevo Paso de Elaboración</h2>
+
+            <!-- Mostrar el mensaje de éxito o error si está presente -->
+            <div th:if="${successMessage}" th:class="'message success'">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" th:class="'message error'">
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <form th:action="@{/elaborationSteps/create}" th:object="${elaborationStepDTO}" method="post">
+                
+                <!-- Descripción del paso -->
+                <label for="stepDescription" th:text="#{elaborationStep.description}">Descripción:</label>
+                <textarea id="stepDescription" th:field="*{stepDescription}" required></textarea>
+                
+                <!-- Número de paso -->
+                <label for="stepNumber" th:text="#{elaborationStep.number}">Número de Paso:</label>
+                <input type="number" id="stepNumber" th:field="*{stepNumber}" required/>
+
+                <!-- Selección de la receta asociada -->
+                <label for="recipe" th:text="#{elaborationStep.recipe}">Receta:</label>
+                <select id="recipe" th:field="*{recipeId}">
+                    <option th:each="rec : ${recipes}" 
+                            th:value="${rec.id}" 
+                            th:text="${rec.name}"></option>
+                </select>
+
+                <!-- Botón para guardar el paso -->
+                <button type="submit" class="button" th:text="#{elaborationStep.save}">Guardar Paso</button>
+            </form>
+
+            <!-- Enlace para volver al listado de pasos -->
+            <a th:href="@{/elaborationSteps/home}" class="button" th:text="#{elaborationStep.back}">Volver al listado</a>
+        </div>
+    </body>
+</html>

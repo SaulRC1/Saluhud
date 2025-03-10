@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{elaborationStep.details.title}">Detalles del Paso</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" th:href="@{/css/recipesPageStyle.css}"/>
+    </head>
+    <body>
+        <div class="header">
+            <a th:href="@{/elaborationSteps/home}" class="header-link">
+                <h2 th:text="#{elaborationStep.portal.admin}">Portal de Gestión para Administradores</h2>
+            </a>
+        </div>
+
+        <div class="details-container">
+            <h2 th:text="#{elaborationStep.details.title}">Detalles del Paso de Elaboración</h2>
+
+            <p><strong th:text="#{elaborationStep.id}">ID</strong>: <span th:text="${elaborationStep.id}"></span></p>
+            <p><strong th:text="#{elaborationStep.number}">Número de Paso</strong>: <span th:text="${elaborationStep.stepNumber}"></span></p>
+            <p><strong th:text="#{elaborationStep.description}">Descripción</strong>: <span th:text="${elaborationStep.stepDescription}"></span></p>
+            <p><strong th:text="#{elaborationStep.recipe}">Receta</strong>: 
+                <a th:href="@{/recipes/details/{id}(id=${elaborationStep.recipe.id})}" th:text="${elaborationStep.recipe.name}"></a>
+            </p>
+
+            <a th:href="@{/elaborationSteps/home}" class="button" th:text="#{elaborationStep.back}">Volver a la Lista</a>
+        </div>
+    </body>
+</html>

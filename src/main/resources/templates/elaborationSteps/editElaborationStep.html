@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{elaborationStep.edit.title}">Editar Paso de Elaboración</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" th:href="@{/css/elaborationStepFormStyle.css}"/>
+    </head>
+    <body>
+        <div class="container">
+            <h2 th:text="#{elaborationStep.edit.heading}">Editar Paso de Elaboración</h2>
+
+            <!-- Mensajes de éxito o error -->
+            <div th:if="${successMessage}" th:class="'message success'">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" th:class="'message error'">
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <form th:action="@{/elaborationSteps/edit}" th:object="${elaborationStep}" method="post">                              
+                <input type="text" id="stepId" th:field="*{id}" readonly hidden />
+
+                <label for="stepNumber" th:text="#{elaborationStep.number}">Número de Paso:</label>
+                <input type="number" id="stepNumber" th:field="*{stepNumber}" required/>
+
+                <label for="stepDescription" th:text="#{elaborationStep.description}">Descripción:</label>
+                <textarea id="stepDescription" th:field="*{stepDescription}" required></textarea>
+
+                <button type="submit" class="button" th:text="#{elaborationStep.save}">Guardar Cambios</button>
+            </form>
+
+            <a th:href="@{/elaborationSteps/home}" class="button" th:text="#{elaborationStep.back}">Volver al listado</a>             
+        </div>
+    </body>
+</html>
