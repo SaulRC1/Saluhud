@@ -16,6 +16,7 @@ public class SaluhudJWTProperties
     private final String subject;
     private final String secretKeyPlain;
     private final String secretKeyBase64;
+    private final int expirationTime;
     
     public SaluhudJWTProperties() throws IOException
     {
@@ -28,6 +29,7 @@ public class SaluhudJWTProperties
         this.subject = (String) saluhudJWTProperties.get("com.uhu.saluhud.jwt.subject");
         this.secretKeyPlain = (String) saluhudJWTProperties.get("com.uhu.saluhud.jwt.secretKeyPlain");
         this.secretKeyBase64 = (String) saluhudJWTProperties.get("com.uhu.saluhud.jwt.secretKeyBase64");
+        this.expirationTime = Integer.parseInt((String) saluhudJWTProperties.get("com.uhu.saluhud.jwt.expirationTime"));
     }
 
     public String getIssuer()
@@ -48,5 +50,16 @@ public class SaluhudJWTProperties
     public String getSecretKeyBase64()
     {
         return secretKeyBase64;
+    }
+
+    /**
+     * Gets the JSON Web Token expiration time in seconds. This expiration must 
+     * be aggregated to the "issued at" time.
+     * 
+     * @return The JSON Web Token expiration time in seconds.
+     */
+    public int getExpirationTime()
+    {
+        return expirationTime;
     }
 }

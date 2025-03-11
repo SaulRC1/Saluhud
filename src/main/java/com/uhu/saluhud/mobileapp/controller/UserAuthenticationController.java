@@ -6,6 +6,8 @@ import com.uhu.saluhud.mobileapp.security.SaluhudJWTProperties;
 import com.uhu.saluhud.mobileapp.service.JWTService;
 import com.uhu.saluhuddatabaseutils.models.user.SaluhudUser;
 import com.uhu.saluhuddatabaseutils.services.mobileapp.user.MobileAppSaluhudUserService;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -54,7 +56,6 @@ public class UserAuthenticationController
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
         
-        
         if(!passwordEncoder.matches(password, saluhudUser.get().getPassword()))
         {
             Map<String, String> errorResponse = new HashMap<>();
@@ -67,6 +68,15 @@ public class UserAuthenticationController
         jwtRegisteredClaims.put(JWTRegisteredClaim.ISSUER, saluhudJWTProperties.getIssuer());
         jwtRegisteredClaims.put(JWTRegisteredClaim.SUBJECT, saluhudJWTProperties.getSubject());
         
+        Date currentDate = new Date();
+        jwtRegisteredClaims.put(JWTRegisteredClaim.ISSUED_AT, currentDate);
+        
+        Calendar c = Calendar.getInstance();
+        c.setTime(currentDate);
+        c.add(Calendar.SECOND, (int) saluhudJWTProperties.getExpirationTime());
+        Date expirationDate = c.getTime();
+        
+        jwtRegisteredClaims.put(JWTRegisteredClaim.EXPIRATION_TIME, expirationDate);
         
         Map<String, String> jwtPrivateClaims = new HashMap<>();
         jwtPrivateClaims.put(JWTSaluhudPrivateClaim.SALUHUD_USERNAME.getClaimName(), username);
