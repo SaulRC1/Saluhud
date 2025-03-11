@@ -18,7 +18,7 @@
                 <p th:text="${errorMessage}"></p>
             </div>
 
-            <form th:action="@{/elaborationSteps/create}" th:object="${elaborationStepDTO}" method="post">
+            <form th:action="@{/elaborationSteps/create}" th:object="${elaborationStep}" method="post">
                 
                 <!-- Descripción del paso -->
                 <label for="stepDescription" th:text="#{elaborationStep.description}">Descripción:</label>
@@ -30,7 +30,7 @@
 
                 <!-- Selección de la receta asociada -->
                 <label for="recipe" th:text="#{elaborationStep.recipe}">Receta:</label>
-                <select id="recipe" th:field="*{recipeId}">
+                <select id="recipe" th:field="*{recipe}">
                     <option th:each="rec : ${recipes}" 
                             th:value="${rec.id}" 
                             th:text="${rec.name}"></option>

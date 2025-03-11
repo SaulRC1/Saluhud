@@ -44,10 +44,10 @@ public class SaluhudWebSecurityConfiguration
                         -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll() // Allows static resources
                         .requestMatchers("/security/login", "/security/login**").permitAll()
-                        .requestMatchers("/recipes/**").permitAll()
-                        .requestMatchers("/allergenic/**").permitAll()
-                        .requestMatchers("/ingredients/**").permitAll()
-                        .requestMatchers("/elaborationSteps/**").permitAll()
+                        .requestMatchers("/recipes/**").authenticated()
+                        .requestMatchers("/allergenic/**").authenticated()
+                        .requestMatchers("/ingredients/**").authenticated()
+                        .requestMatchers("/elaborationSteps/**").authenticated()
                         .requestMatchers("/saluhud-mobile-app/**").permitAll()
                         .anyRequest().authenticated()
                 )

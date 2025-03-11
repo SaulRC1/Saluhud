@@ -177,6 +177,27 @@ footer .language-selector a:hover {
     border: 1px solid #f5c6cb;
 }
 
+/* Contenedor de detalles */
+.details-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.details-container h2 {
+    color: #a80a2e;
+    border-bottom: 2px solid #a80a2e;
+    padding-bottom: 0.5rem;
+}
+
+.details-container p {
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
 /* ======================== */
 /*        MEDIA QUERIES     */
 /* ======================== */

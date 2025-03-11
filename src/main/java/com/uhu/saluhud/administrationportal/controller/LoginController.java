@@ -1,7 +1,5 @@
 package com.uhu.saluhud.administrationportal.controller;
 
-import com.uhu.saluhuddatabaseutils.models.security.Credentials;
-import com.uhu.saluhuddatabaseutils.services.administrationportal.security.AdministrationPortalLoginService;
 import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -22,9 +20,6 @@ public class LoginController
 {
 
     @Autowired
-    private AdministrationPortalLoginService loginService;
-
-    @Autowired
     private MessageSource messageSource;
 
     /**
@@ -35,6 +30,7 @@ public class LoginController
 
     }
 
+    /*
     @GetMapping("/login")
     public ModelAndView loginPage(@RequestParam(value = "error", required = false) String error, Locale locale)
     {
@@ -46,6 +42,20 @@ public class LoginController
         }
 
         modelAndView.addObject("credentials", new Credentials()); // Agregar objeto vacío para el formulario
+
+        return modelAndView;
+    }*/
+    
+    @GetMapping("/login")
+    public ModelAndView loginPage(@RequestParam(value = "error", required = false) String error,
+            Locale locale)
+    {
+        ModelAndView modelAndView = new ModelAndView("security/login");
+
+        if (error != null) {
+            String errorMessage = messageSource.getMessage("login.error", null, locale);
+            modelAndView.addObject("errorMsg", errorMessage);
+        }
 
         return modelAndView;
     }

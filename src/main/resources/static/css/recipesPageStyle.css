@@ -262,53 +262,67 @@ footer a:hover {
     opacity: 0.8; /* Ligero efecto al pasar el cursor */
 }
 
-/* Responsividad con Media Queries */
+/* ======================== */
+/*        MEDIA QUERIES     */
+/* ======================== */
 
-/* Para pantallas grandes (escritorio) */
-@media (min-width: 1200px) {
-    .main-content {
-        max-width: 1000px;
-        padding: 2rem;
-    }
-
-    .button {
+/* Teléfonos (pantallas pequeñas) */
+@media screen and (max-width: 600px) {
+    .header h2 {
         font-size: 1.2rem;
     }
-}
-
-/* Para pantallas medianas (tabletas) */
-@media (max-width: 1199px) and (min-width: 768px) {
-    .main-content {
-        max-width: 90%;
-        padding: 1.5rem;
-    }
 
     .button-container {
-        justify-content: space-between;
-    }
-}
-
-/* Para pantallas pequeñas (móviles) */
-@media (max-width: 767px) {
-    .header {
-        padding: 0.8rem;
-    }
-
-    .main-content {
-        max-width: 95%;
-        margin: 1rem auto;
-        padding: 1rem;
-    }
-
-    .button-container {
-        flex-direction: column;
-        align-items: center;
-        padding: 0 1rem; /* Añadimos padding a los lados */
+        flex-direction: column; /* Los botones se apilan verticalmente */
+        gap: 5px;
     }
 
     .button {
+        width: 90%; /* Botones más grandes para facilitar el clic */
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    .container {
+        width: 95%;
+    }
+
+    .table th, .table td {
+        padding: 6px;
+        font-size: 0.85rem; /* Reduce el tamaño del texto en la tabla */
+    }
+
+    .pagination {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .page-link {
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    #updateButton, #deleteButton {
         width: 90%;
-        padding: 1rem;
-        font-size: 1rem;
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    footer {
+        font-size: 0.85rem;
+        padding: 8px;
+    }
+}
+
+/* Tablets (pantallas medianas) */
+@media screen and (max-width: 900px) {
+    .container {
+        width: 95%;
+    }
+
+    .table th, .table td {
+        font-size: 0.9rem;
     }
 }

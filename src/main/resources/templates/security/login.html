@@ -13,20 +13,20 @@
         </header>
 
         <div class="login-container">
-            <!-- Mensaje de error -->
+
             <div th:if="${errorMsg}" class="error-message">
                 <p th:text="${errorMsg}"></p>
             </div>
 
             <!-- Formulario de login. Spring Security espera los parámetros 'username' y 'password' -->
-            <form th:action="@{/security/login}" method="post" th:object="${credentials}">
+            <form id="loginForm" th:action="@{/security/login}" method="post">
                 <div>
-                    <label th:text="#{login.username}">Usuario:</label>
-                    <input type="text" th:field="*{username}" th:placeholder="#{login.username.placeholder}" required />
+                    <label for="username" th:text="#{login.username}">Usuario:</label>
+                    <input type="text" id="username" name="username" th:placeholder="#{login.username.placeholder}" required />
                 </div>
                 <div>
-                    <label th:text="#{login.password}">Contraseña:</label>
-                    <input type="password" th:field="*{password}" th:placeholder="#{login.password.placeholder}" required />
+                    <label for="password" th:text="#{login.password}">Contraseña:</label>
+                    <input type="password" id="password" name="password" th:placeholder="#{login.password.placeholder}" required />
                 </div>
                 <div>
                     <button type="submit" th:text="#{login.button}">Entrar</button>

@@ -1,6 +1,5 @@
 package com.uhu.saluhud.administrationportal.controller;
 
-import com.uhu.saluhud.administrationportal.configuration.web.RecipeElaborationStepDTO;
 import com.uhu.saluhuddatabaseutils.models.nutrition.Recipe;
 import com.uhu.saluhuddatabaseutils.models.nutrition.RecipeElaborationStep;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.nutrition.AdministrationPortalRecipeElaborationStepService;
@@ -58,38 +57,25 @@ public class ElaborationStepsAdminController
     {
         List<Recipe> recipes = recipeService.findAllRecipes(); // Obtén todas las recetas
         ModelAndView modelAndView = new ModelAndView("elaborationSteps/createElaborationStep");
-        modelAndView.addObject("elaborationStepDTO", new RecipeElaborationStepDTO());
+        modelAndView.addObject("elaborationStep", new RecipeElaborationStep());
         modelAndView.addObject("recipes", recipes);
         return modelAndView;
     }
 
     // Guardar nuevo paso
     @PostMapping("/create")
-    public ModelAndView createElaborationStep(@ModelAttribute("elaborationStepDTO") 
-            RecipeElaborationStepDTO elaborationStepDTO,
+    public ModelAndView createElaborationStep(@ModelAttribute("elaborationStep") 
+            RecipeElaborationStep elaborationStep,
             BindingResult result, Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("elaborationSteps/createElaborationStep");
 
-        /*if (result.hasErrors()) {
+        if (result.hasErrors()) {
             // Si hay errores, devolver el formulario con los errores
-            List<Recipe> recipes = recipeService.findAllRecipes(); // Necesitas las recetas de nuevo
+            List<Recipe> recipes = recipeService.findAllRecipes();
             modelAndView.addObject("recipes", recipes);
             return modelAndView;
-        }*/
-
-        // Obtener el ID de la receta desde el DTO
-        Long recipeId = elaborationStepDTO.getRecipeId().getId();
-        System.out.println("ID: " + recipeId);
-
-        // Buscar la receta en la base de datos usando el ID
-        Recipe recipe = recipeService.getRecipeById(recipeId);
-        
-        // Convertir el DTO a RecipeElaborationStep
-        RecipeElaborationStep elaborationStep = new RecipeElaborationStep();
-        elaborationStep.setStepNumber(elaborationStepDTO.getStepNumber());
-        elaborationStep.setStepDescription(elaborationStepDTO.getStepDescription());
-        elaborationStep.setRecipe(recipe);
+        }
 
         try {
             elaborationStepService.saveRecipeElaborationStep(elaborationStep);
