@@ -22,7 +22,7 @@
                 <a th:href="@{/ingredients/home}" class="button" th:text="#{manage.ingredients}">Gestionar Ingredientes</a>
                 <a th:href="@{/allergenic/home}" class="button" th:text="#{manage.allergenics}">Gestionar Alérgenos</a>
                 <a th:href="@{/elaborationSteps/home}" class="button" th:text="#{manage.elaboration.steps}">Gestionar Pasos de Recetas</a>
-                <a href="#" class="button" th:text="#{manage.users}">Gestionar Usuarios</a>
+                <a th:href="@{/users/home}" class="button" th:text="#{manage.users}">Gestionar Usuarios</a>
             </div>
 
             <p sec:authorize="isAuthenticated()" th:text="#{welcome.message(${#authentication.name})}"></p>

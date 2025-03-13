@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{user.details.title}">Detalles del Usuario</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" th:href="@{/css/usersStyle.css}"/>
+    </head>
+    <body>
+        <div class="header">
+            <a th:href="@{/users/home}" class="header-link">
+                <h2 th:text="#{user.portal.admin}">Portal de Gestión para Administradores</h2>
+            </a>
+        </div>
+
+        <div class="details-container">
+            <h2 th:text="#{user.details.title}">Detalles del Usuario</h2>
+
+            <p><strong th:text="#{user.id}">ID</strong>: <span th:text="${user.id}"></span></p>
+            <p><strong th:text="#{user.username}">Nombre de Usuario</strong>: <span th:text="${user.username}"></span></p>
+            <p><strong th:text="#{user.name}">Nombre</strong>: <span th:text="${user.name}"></span></p>
+            <p><strong th:text="#{user.surname}">Apellido</strong>: <span th:text="${user.surname}"></span></p>
+            <p><strong th:text="#{user.email}">Correo Electrónico</strong>: <span th:text="${user.email}"></span></p>
+            <p><strong th:text="#{user.phoneNumber}">Número de Teléfono</strong>: <span th:text="${user.phoneNumber}"></span></p>
+
+            <a th:href="@{/users/home}" class="button" th:text="#{user.back}">Volver al Listado</a>
+        </div>
+    </body>
+</html>
+

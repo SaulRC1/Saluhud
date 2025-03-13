@@ -1,0 +1,274 @@
+/* Colores corporativos */
+:root {
+    --color-rojo: #a80a2e; /* Rojo oscuro */
+    --color-blanco: #FFFFFF; /* Blanco */
+    --color-negro: #000000; /* Negro */
+}
+
+/* Ajuste general para mejor responsividad */
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--color-blanco);
+    color: var(--color-negro);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+    overflow-x: hidden;
+}
+
+/* Header responsivo */
+.header {
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+    padding: 1rem;
+    width: 100%;
+    text-align: center;
+}
+
+/* Contenedor flexible para los botones */
+.button-container {
+    margin: 1rem 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Permite que los botones se ajusten en pantallas pequeñas */
+    gap: 10px;
+}
+
+/* Botones responsivos */
+.button {
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
+    white-space: nowrap; /* Evita que el texto se corte en varias líneas */
+}
+
+.button:hover {
+    background-color: #7a0000;
+}
+
+/* Contenedor principal responsivo */
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin-top: 20px;
+}
+
+/* Tabla responsiva */
+.table-container {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table th, .table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.table th {
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+}
+
+.table td {
+    background-color: #f9f9f9;
+}
+
+/* Paginación */
+.pagination {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.page-link {
+    text-decoration: none;
+    font-weight: bold;
+    color: var(--color-rojo);
+    margin: 0 10px;
+}
+
+.page-link:hover {
+    text-decoration: underline;
+}
+
+/* Botones de acciones */
+#actions {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+#updateButton, #deleteButton {
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#updateButton:disabled, #deleteButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#updateButton:hover:not(:disabled), #deleteButton:hover:not(:disabled) {
+    background-color: #7a0000;
+}
+
+/* Footer fijo al final */
+footer {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+    text-align: center;
+    margin-top: auto; /* Permite que el footer siempre quede al final */
+}
+
+/* Selector de idioma en footer */
+footer .language-selector {
+    margin-top: 10px;
+}
+
+footer .language-selector a {
+    color: var(--color-blanco);
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+footer .language-selector a:hover {
+    text-decoration: underline;
+}
+
+/* Mensajes de éxito y error */
+.message {
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Contenedor de detalles */
+.details-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.details-container h2 {
+    color: #a80a2e;
+    border-bottom: 2px solid #a80a2e;
+    padding-bottom: 0.5rem;
+}
+
+.details-container p {
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+/* ======================== */
+/*        MEDIA QUERIES     */
+/* ======================== */
+
+/* Teléfonos (pantallas pequeñas) */
+@media screen and (max-width: 600px) {
+    .header h2 {
+        font-size: 1.2rem;
+    }
+
+    .button-container {
+        flex-direction: column; /* Los botones se apilan verticalmente */
+        gap: 5px;
+    }
+
+    .button {
+        width: 90%; /* Botones más grandes para facilitar el clic */
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    .container {
+        width: 95%;
+    }
+
+    .table th, .table td {
+        padding: 6px;
+        font-size: 0.85rem; /* Reduce el tamaño del texto en la tabla */
+    }
+
+    .pagination {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .page-link {
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    #updateButton, #deleteButton {
+        width: 90%;
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    footer {
+        font-size: 0.85rem;
+        padding: 8px;
+    }
+}
+
+/* Tablets (pantallas medianas) */
+@media screen and (max-width: 900px) {
+    .container {
+        width: 95%;
+    }
+
+    .table th, .table td {
+        font-size: 0.9rem;
+    }
+}
+
+a {
+    color: inherit;  /* Mantiene el color del texto circundante */
+    text-decoration: none; /* Elimina el subrayado */
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    opacity: 0.8; /* Reduce la opacidad ligeramente al pasar el cursor */
+}

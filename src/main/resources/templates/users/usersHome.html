@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title th:text="#{ingredient.list.title}">Gestión de Ingredientes</title>
+        <title th:text="#{user.home.title}">Gestión de Usuarios</title>
         <meta charset="UTF-8"/>
-        <link rel="stylesheet" th:href="@{/css/ingredientPageStyle.css}"/>
+        <link rel="stylesheet" th:href="@{/css/usersStyle.css}"/>
     </head>
     <body>
 
-        <script th:src="@{/js/ingredients-actions.js}"></script>
+        <script th:src="@{/js/users-actions.js}"></script>
 
         <div class="header">
             <a th:href="@{/welcome}" class="header-link">
@@ -32,36 +32,31 @@
         </div>
 
         <div class="container">
-            <h2 th:text="#{ingredient.list.title}">Lista de Ingredientes</h2>
+            <h2 th:text="#{user.list.title}">Lista de Usuarios</h2>
 
             <div class="table-container">
                 <table class="table">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Calorías</th>
-                            <th>Proteínas</th>
-                            <th>Carbohidratos</th>
-                            <th>Grasas</th>
-                            <th>Seleccionar</th>
+                            <th th:text="#{user.name}">Nombre</th>
+                            <th th:text="#{user.username}">Nombre de usuario</th> 
+                            <th th:text="#{user.email}">Email</th>
+                            <th th:text="#{user.select}">Seleccionar</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="ingredient : ${ingredients}">
-                            <td th:text="${ingredient.id}"></td>
+                        <tr th:each="user : ${users}">
+                            <td th:text="${user.id}"></td>
+                            <td th:text="${user.username}"></td>
                             <td> 
-                                <a th:href="@{/ingredients/details/{id}(id=${ingredient.id})}"
-                                   th:text="${ingredient.name}"
-                                   class="recipe-link"></a>
+                                <a th:href="@{/users/details/{id}(id=${user.id})}"
+                                    th:text="${user.name}">                                       
+                                </a>
                             </td>
-                            <td th:text="${ingredient.kilocalories}"></td>
-                            <td th:text="${ingredient.proteinAmount}"></td>
-                            <td th:text="${ingredient.carbohydratesAmount}"></td>
-                            <td th:text="${ingredient.fatAmount}"></td>
+                            <td th:text="${user.email}"></td>
                             <td>
-                                <input type="radio" name="selectedIngredient" th:value="${ingredient.id}" 
-                                       th:attr="data-name=${ingredient.name}" />
+                                <input type="radio" name="selectedUser" th:value="${user.id}" />
                             </td>
                         </tr>
                     </tbody>
@@ -70,27 +65,26 @@
         </div>
 
         <div class="pagination">
-            <a th:if="${currentPage > 0}" th:href="@{/ingredients/home(page=${currentPage - 1})}" class="page-link" th:text="#{pagination.previous}">Anterior</a>
+            <a th:if="${currentPage > 0}" th:href="@{/users/home(page=${currentPage - 1})}" class="page-link" th:text="#{pagination.previous}">Anterior</a>
             <span th:text="${currentPage + 1} + ' de ' + ${totalPages}"></span>
-            <a th:if="${currentPage + 1 < totalPages}" th:href="@{/ingredients/home(page=${currentPage + 1})}" class="page-link" th:text="#{pagination.next}">Siguiente</a>
+            <a th:if="${currentPage + 1 < totalPages}" th:href="@{/users/home(page=${currentPage + 1})}" class="page-link" th:text="#{pagination.next}">Siguiente</a>
         </div>
 
         <div id="actions">
-            <button disabled id="updateButton" th:text="#{update.button}">Modificar</button>
-            <button disabled id="deleteButton" th:text="#{delete.button}">Eliminar</button>
+            <button disabled id="updateButton" th:text="#{user.edit}">Modificar</button>
+            <button disabled id="deleteButton" th:text="#{user.delete}">Eliminar</button>
         </div>
-        
+
         <div style="padding-top: 25px; padding-bottom: 25px;">
-            <a th:href="@{/ingredients/create}" class="button" th:text="#{create.new.ingredient}">Crear Nuevo Ingrediente</a>
+            <a th:href="@{/users/create}" class="button" th:text="#{user.create}">Crear Nuevo Usuario</a>
         </div>
 
         <footer>
             <p th:text="#{footer.copyright}">© 2025 Saluhud. Todos los derechos reservados.</p>
             <div class="language-selector">
-                <a th:href="@{/ingredients/home(lang='es')}">🇪🇸 Español</a> |
-                <a th:href="@{/ingredients/home(lang='en')}">🇬🇧 English</a>
+                <a th:href="@{/users/home(lang='es')}">🇪🇸 Español</a> |
+                <a th:href="@{/users/home(lang='en')}">🇬🇧 English</a>
             </div>
         </footer>
     </body>
 </html>
-

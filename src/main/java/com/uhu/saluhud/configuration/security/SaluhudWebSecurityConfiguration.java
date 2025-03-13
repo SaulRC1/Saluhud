@@ -48,6 +48,7 @@ public class SaluhudWebSecurityConfiguration
                         .requestMatchers("/allergenic/**").authenticated()
                         .requestMatchers("/ingredients/**").authenticated()
                         .requestMatchers("/elaborationSteps/**").authenticated()
+                        .requestMatchers("/users/**").authenticated()
                         .requestMatchers("/saluhud-mobile-app/**").permitAll()
                         .anyRequest().authenticated()
                 )

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{user.edit.title}">Editar Usuario</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" th:href="@{/css/userFormStyle.css}"/>
+    </head>
+    <body>
+        <div class="container">
+            <h2 th:text="#{user.edit.heading}">Editar Usuario</h2>
+
+            <!-- Mensajes de éxito o error -->
+            <div th:if="${successMessage}" th:class="'message success'">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" th:class="'message error'">
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <form th:action="@{/users/edit}" th:object="${user}" method="post">
+                <!-- ID del usuario (oculto) -->
+                <input type="text" id="userId" th:field="*{id}" readonly hidden />
+
+                <!-- Nombre de usuario -->
+                <label for="username" th:text="#{user.username}">Nombre de Usuario:</label>
+                <input type="text" id="username" th:field="*{username}" required/>
+
+                <!-- Contraseña -->
+                <label for="rawPassword" th:text="#{user.rawPassword}">Contraseña:</label>
+                <input type="password" id="rawPassword" th:field="*{rawPassword}" required/>
+
+                <!-- Correo electrónico -->
+                <label for="email" th:text="#{user.email}">Correo Electrónico:</label>
+                <input type="email" id="email" th:field="*{email}" required/>
+
+                <!-- Nombre -->
+                <label for="name" th:text="#{user.name}">Nombre:</label>
+                <input type="text" id="name" th:field="*{name}" required/>
+
+                <!-- Apellido -->
+                <label for="surname" th:text="#{user.surname}">Apellido:</label>
+                <input type="text" id="surname" th:field="*{surname}" />
+
+                <!-- Número de teléfono -->
+                <label for="phoneNumber" th:text="#{user.phoneNumber}">Número de Teléfono:</label>
+                <input type="tel" id="phoneNumber" th:field="*{phoneNumber}" />
+
+                <!-- Botón para guardar los cambios -->
+                <button type="submit" class="button" th:text="#{user.save}">Guardar Cambios</button>
+            </form>
+
+            <!-- Enlace para volver al listado de usuarios -->
+            <a th:href="@{/users/home}" class="button" th:text="#{user.back}">Volver al listado</a>
+        </div>
+    </body>
+</html>
+
