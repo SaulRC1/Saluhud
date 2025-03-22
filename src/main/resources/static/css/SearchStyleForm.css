@@ -1,0 +1,146 @@
+/* Colores corporativos */
+:root {
+    --color-rojo: #a80a2e; /* Rojo oscuro */
+    --color-blanco: #FFFFFF; /* Blanco */
+    --color-negro: #000000; /* Negro */
+    --color-gris-claro: #f4f4f4;
+    --color-gris-oscuro: #333;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--color-gris-claro);
+    color: var(--color-negro);
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    background: var(--color-blanco);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: var(--color-rojo);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Estilo de los campos de búsqueda */
+.search-bar {
+    background: var(--color-rojo);
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    color: var(--color-blanco);
+}
+
+.search-group input[type="text"] {
+    padding: 8px;
+    width: 200px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+}
+
+.filters {
+    display: flex;
+    gap: 15px;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.filter-group label {
+    font-size: 14px;
+}
+
+.filter-group input[type="range"] {
+    width: 100px;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.filter-group input[type="range"]:hover {
+    opacity: 1;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: var(--color-negro);
+    color: var(--color-blanco);
+}
+
+/* Tabla de resultados */
+.table-container {
+    overflow-x: auto;
+    border-radius: 8px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--color-blanco);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+thead {
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+}
+
+td, th {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Paginación */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.pagination a {
+    text-decoration: none;
+    color: var(--color-blanco);
+    background-color: var(--color-rojo);
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background 0.3s;
+}
+
+.pagination a:hover {
+    background-color: var(--color-negro);
+}

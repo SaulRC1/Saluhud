@@ -23,6 +23,9 @@
                 <a th:href="@{/allergenic/home}" class="button" th:text="#{manage.allergenics}">Gestionar Alérgenos</a>
                 <a th:href="@{/elaborationSteps/home}" class="button" th:text="#{manage.elaboration.steps}">Gestionar Pasos de Recetas</a>
                 <a th:href="@{/users/home}" class="button" th:text="#{manage.users}">Gestionar Usuarios</a>
+
+                <!-- Enlace a la vista de búsqueda avanzada -->
+                <a th:href="@{/search/advanced}" class="button" th:text="#{search.advanced}">Búsqueda Avanzada</a>
             </div>
 
             <p sec:authorize="isAuthenticated()" th:text="#{welcome.message(${#authentication.name})}"></p>
