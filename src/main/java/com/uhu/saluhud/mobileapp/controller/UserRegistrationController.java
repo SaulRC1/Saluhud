@@ -1,10 +1,14 @@
 package com.uhu.saluhud.mobileapp.controller;
 
+import com.uhu.saluhud.mobileapp.dto.user.SaluhudUserRegistrationDTO;
+import com.uhu.saluhud.mobileapp.localization.MobileAppLocaleProvider;
+import com.uhu.saluhud.mobileapp.response.ApiErrorResponse;
+import com.uhu.saluhud.mobileapp.response.ApiInformationResponse;
 import com.uhu.saluhuddatabaseutils.models.user.SaluhudUser;
 import com.uhu.saluhuddatabaseutils.services.mobileapp.user.MobileAppSaluhudUserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,33 +30,58 @@ public class UserRegistrationController
     @Autowired
     private MobileAppSaluhudUserService mobileAppSaluhudUserService;
     
+    @Autowired
+    private MobileAppLocaleProvider mobileAppLocaleProvider;
+    
     @PostMapping
-    public ResponseEntity<Object> registerSaluhudUser(@RequestBody @Valid SaluhudUser saluhudUser)
-    {   
-        if(mobileAppSaluhudUserService.existsByUsername(saluhudUser.getUsername()))
+    public ResponseEntity<Object> registerSaluhudUser(@RequestBody @Valid SaluhudUserRegistrationDTO saluhudUserRegistrationDTO, HttpServletRequest request)
+    {
+        String mobileAppLanguage = request.getHeader("Accept-Language");
+        Locale mobileAppLocale = mobileAppLanguage != null ? Locale.of(mobileAppLanguage) : Locale.ENGLISH;
+        
+        sanitizeSaluhudUserRegistrationDTO(saluhudUserRegistrationDTO);
+        
+        if(mobileAppSaluhudUserService.existsByUsername(saluhudUserRegistrationDTO.getUsername()))
         {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "The username specified is already in use.");
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            ApiErrorResponse apiErrorResponse = new ApiErrorResponse(request.getServletPath(), 
+                    mobileAppLocaleProvider.getTranslation("registration.usernameAlreadyInUse", 
+                            MobileAppLocaleProvider.ERROR_MESSAGES_RESOURCE_BUNDLE_KEY, mobileAppLocale));
+            return new ResponseEntity<>(apiErrorResponse, HttpStatus.BAD_REQUEST);
         }
         
-        if(mobileAppSaluhudUserService.existsByEmailIgnoreCase(saluhudUser.getEmail()))
+        if(mobileAppSaluhudUserService.existsByEmailIgnoreCase(saluhudUserRegistrationDTO.getEmail()))
         {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "The email specified is already in use.");
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            ApiErrorResponse apiErrorResponse = new ApiErrorResponse(request.getServletPath(), 
+                    mobileAppLocaleProvider.getTranslation("registration.emailAlreadyInUse", 
+                            MobileAppLocaleProvider.ERROR_MESSAGES_RESOURCE_BUNDLE_KEY, mobileAppLocale));
+            return new ResponseEntity<>(apiErrorResponse, HttpStatus.BAD_REQUEST);
         }
         
-        if(mobileAppSaluhudUserService.existsByPhoneNumber(saluhudUser.getPhoneNumber()))
+        if(mobileAppSaluhudUserService.existsByPhoneNumber(saluhudUserRegistrationDTO.getPhoneNumber()))
         {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "The phone number specified is already in use.");
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            ApiErrorResponse apiErrorResponse = new ApiErrorResponse(request.getServletPath(), 
+                    mobileAppLocaleProvider.getTranslation("registration.phoneAlreadyInUse", 
+                            MobileAppLocaleProvider.ERROR_MESSAGES_RESOURCE_BUNDLE_KEY, mobileAppLocale));
+            return new ResponseEntity<>(apiErrorResponse, HttpStatus.BAD_REQUEST);
         }
         
-        mobileAppSaluhudUserService.saveUser(saluhudUser);
+        SaluhudUser saluhudUser = new SaluhudUser(saluhudUserRegistrationDTO.getUsername(), 
+                saluhudUserRegistrationDTO.getRawPassword(), saluhudUserRegistrationDTO.getEmail(), 
+                saluhudUserRegistrationDTO.getName(), saluhudUserRegistrationDTO.getSurname(), saluhudUserRegistrationDTO.getPhoneNumber());
         
-        return ResponseEntity.ok("User registered successfully");
+        mobileAppSaluhudUserService.registerSaluhudUser(saluhudUser);
+        
+        return ResponseEntity.ok(new ApiInformationResponse(request.getServletPath(), 
+                mobileAppLocaleProvider.getTranslation("registration.userRegisteredSuccessfully", 
+                            MobileAppLocaleProvider.MESSAGES_RESOURCE_BUNDLE_KEY, mobileAppLocale)));
+    }
+    
+    private void sanitizeSaluhudUserRegistrationDTO(SaluhudUserRegistrationDTO saluhudUserRegistrationDTO)
+    {
+        if(saluhudUserRegistrationDTO.getPhoneNumber().isBlank())
+        {
+            saluhudUserRegistrationDTO.setPhoneNumber(null);
+        }
     }
     
 }
