@@ -75,7 +75,7 @@ public class UserAdminController
         }
 
         try {
-            String encryptedPassword = passwordEncryptionService.encryptPassword(user.getRawPassword());
+            String encryptedPassword = passwordEncryptionService.encryptPassword(user.getPassword());
             user.setPassword(encryptedPassword);
             saluhudUserService.saveUser(user);
             String successMessage = messageSource.getMessage("user.success.create", null, locale);
@@ -105,7 +105,7 @@ public class UserAdminController
     {
         ModelAndView modelAndView = new ModelAndView("users/editUser");
         try {
-            String encryptedPassword = passwordEncryptionService.encryptPassword(user.getRawPassword());
+            String encryptedPassword = passwordEncryptionService.encryptPassword(user.getPassword());
             user.setPassword(encryptedPassword);
             saluhudUserService.updateUser(user);
             String successMessage = messageSource.getMessage("user.success.edit", null, locale);
