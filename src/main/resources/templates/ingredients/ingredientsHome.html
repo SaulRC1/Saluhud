@@ -39,12 +39,12 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Calorías</th>
-                            <th>Proteínas</th>
-                            <th>Carbohidratos</th>
-                            <th>Grasas</th>
-                            <th>Seleccionar</th>
+                            <th th:text="#{ingredient.name}">Nombre</th>
+                            <th th:text="#{ingredient.kilocalories}">Calorías</th>
+                            <th th:text="#{ingredient.proteinAmount}">Proteínas</th>
+                            <th th:text="#{ingredient.carbohydratesAmount}">Carbohidratos</th>
+                            <th th:text="#{ingredient.fatAmount}">Grasas</th>
+                            <th th:text="#{ingredient.select}">Seleccionar</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -40,11 +40,11 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Ingredientes</th>
-                            <th>Calorías</th>
-                            <th>Alérgenos</th>
-                            <th>Seleccionar</th>
+                            <th th:text="#{recipe.name.label}">Nombre</th>
+                            <th th:text="#{ingredients.description.label}">Ingredientes</th>
+                            <th th:text="#{kilocalories.label}">Calorías</th>
+                            <th th:text="#{allergens.label}">Alérgenos</th>
+                            <th th:text="#{recipe.select}">Seleccionar</th>
                         </tr>
                     </thead>
                     <tbody>
