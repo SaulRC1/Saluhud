@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+    <head>        
+        <meta charset="UTF-8"/>
+        <title th:text="#{search.recipes.title}">Búsqueda de Recetas</title>
+        <link rel="stylesheet" th:href="@{/css/SearchStyleForm.css}"> 
+    </head>
+
+    <body>
+        <div class="header">
+            <a th:href="@{/welcome}" class="header-link">
+                <h2 th:text="#{header.portal}">Portal de Gestión para Administradores</h2>
+            </a>
+        </div>
+
+        <h1 th:text="#{search.recipes.title}">Búsqueda Avanzada de Recetas</h1>
+
+        <!-- Formulario de búsqueda -->
+        <form th:action="@{/search/recipes}" method="get">
+            <div class="filters-container">
+                <div class="filter-row">
+                    <!-- Filtro por nombre -->
+                    <div class="filter-group" style="margin-top: 19px;">
+                        <label for="name" th:text="#{search.recipes.name}">Nombre</label>
+                        <input type="text" id="name" name="name" th:value="${searchDTO.name}">
+                    </div>
+
+                    <!-- Filtro por calorías -->
+                    <div class="filter-group" style="margin-top: 19px;">
+                        <label for="maxKilocalories" th:text="#{search.recipes.maxKilocalories}">Máx. Kilocalorías</label>
+                        <input type="number" id="maxKilocalories" name="maxKilocalories" th:value="${searchDTO.maxKilocalories}">
+                    </div>
+
+                    <!-- Filtro por ingredientes con paginación -->
+                    <div class="filter-group ingredient-filter" style="margin-right: 100px";>
+                        <input type="checkbox" id="filterIngredient" onchange="toggleInput('ingredientId')">
+                            <label for="filterIngredient" th:text="#{search.recipes.ingredient}">Ingrediente</label>
+                            <select id="ingredientId" name="ingredientId" th:value="${searchDTO.ingredientId}" disabled>
+                                <option value="" th:text="#{search.select}">-- Selecciona un ingrediente --</option>
+                                <option th:each="ingredient : ${ingredientsPage}" th:value="${ingredient.id}" th:text="${ingredient.name}"></option>
+                            </select>
+
+                            <!-- Paginación debajo del select solo para ingredientes -->
+                            <div class="ingredient-pagination">
+                                <a th:if="${ingredientCurrentPage > 0}"
+                                   th:href="@{/search/recipes(page=${currentPage}, ingredientPage=${ingredientCurrentPage - 1}, name=${searchDTO.name}, maxKilocalories=${searchDTO.maxKilocalories}, ingredientId=${searchDTO.ingredientId}, allergenicId=${searchDTO.allergenicId}, allergenicExclusionId=${searchDTO.allergenicExclusionId})}"
+                                   class="page-link">Anterior</a>
+
+                                <span th:text="${ingredientCurrentPage + 1} + ' de ' + ${ingredientTotalPages}"></span>
+
+                                <a th:if="${ingredientCurrentPage + 1 < ingredientTotalPages}"
+                                   th:href="@{/search/recipes(page=${currentPage}, ingredientPage=${ingredientCurrentPage + 1}, name=${searchDTO.name}, maxKilocalories=${searchDTO.maxKilocalories}, ingredientId=${searchDTO.ingredientId}, allergenicId=${searchDTO.allergenicId}, allergenicExclusionId=${searchDTO.allergenicExclusionId})}"
+                                   class="page-link">Siguiente</a>
+                            </div>
+
+                    </div>
+                </div>
+
+                <!-- Filtros por alérgenos -->
+                <div class="second-row">
+                    <div class="filter-group">
+                        <input type="checkbox" id="filterAllergenic" onchange="toggleInput('allergenicId')">
+                            <label for="filterAllergenic" th:text="#{search.recipes.containsAllergenic}">Contiene Alérgeno</label>
+                            <select id="allergenicId" name="allergenicId" disabled>
+                                <option value="" th:text="#{search.select}">-- Selecciona un alérgeno --</option>
+                                <option th:each="allergenic : ${allergenics}" th:value="${allergenic.id}" th:text="${allergenic.name}"></option>
+                            </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <input type="checkbox" id="filterExcludeAllergenic" onchange="toggleInput('allergenicExclusionId')">
+                            <label for="filterExcludeAllergenic" th:text="#{search.recipes.excludeAllergenic}">Sin Alérgeno</label>
+                            <select id="allergenicExclusionId" name="allergenicExclusionId" disabled>
+                                <option value="" th:text="#{search.select}">-- Selecciona un alérgeno --</option>
+                                <option th:each="allergenic : ${allergenics}" th:value="${allergenic.id}" th:text="${allergenic.name}"></option>
+                            </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="button-group">
+                <button type="submit" th:text="#{search.button.search}">Buscar</button>
+                <a href="/search/recipes"><button type="button" th:text="#{search.button.reset}">Restablecer</button></a>
+            </div>
+        </form>
+
+        <!-- Tabla de resultados -->       
+        <div class="container">
+            <h2 th:text="#{search.results}">Resultados</h2>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th th:text="#{search.recipes.id}">ID</th>
+                            <th th:text="#{search.recipes.name}">Nombre</th>
+                            <th th:text="#{search.recipes.description}">Descripción</th>
+                            <th th:text="#{search.recipes.ingredients}">Ingredientes</th>
+                            <th th:text="#{search.recipes.kcal}">Kcal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="recipe : ${recipesPage}">
+                            <td th:text="${recipe.id}"></td>
+                            <td>
+                                <a th:href="@{/recipes/details/{id}(id=${recipe.id})}"
+                                   th:text="${recipe.name}"
+                                   class="recipe-link"></a>
+                            </td>
+                            <td th:text="${recipe.description}"></td>
+                            <td th:text="${recipe.ingredientsDescription}"></td>
+                            <td th:text="${recipe.kilocalories}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginación -->
+            <div class="pagination">
+                <a th:if="${recipesPage.hasPrevious()}" th:href="@{/search/recipes(page=${recipesPage.number - 1})}" class="page-link">&laquo; Anterior</a>
+                <span th:text="|Página ${recipesPage.number + 1} de ${recipesPage.totalPages}|"></span>
+                <a th:if="${recipesPage.hasNext()}" th:href="@{/search/recipes(page=${recipesPage.number + 1})}" class="page-link">Siguiente &raquo;</a>
+            </div>
+        </div>
+
+        <script>
+            function toggleInput(id) {
+                var input = document.getElementById(id);
+                input.disabled = !input.disabled;
+            }
+        </script>
+    </body>
+</html>
+

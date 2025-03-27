@@ -18,9 +18,9 @@
             <h2 th:text="#{search.advanced.title}">Búsqueda Avanzada</h2>
 
             <div>
-                <p>Bienvenido al panel de búsquedas del portal. Aquí podrás realizar diversas consultas sobre las siguientes entidades:</p>
+                <p th:text="#{search.advanced.welcome}">Bienvenido al panel de búsquedas del portal. Aquí podrás realizar diversas consultas sobre las siguientes entidades:</p>
             </div>
-            
+
             <div class="button-container">
                 <a th:href="@{/search/ingredients}" class="button" th:text="#{search.ingredients}">Buscar Ingredientes</a>
                 <a th:href="@{/search/recipes}" class="button" th:text="#{search.recipes}">Buscar Recetas</a>
@@ -28,5 +28,14 @@
             </div>            
         </div>
     </body>
+
+    <footer>
+        <p th:text="#{footer.copyright}">© 2025 Saluhud. Todos los derechos reservados.</p>
+        <div class="language-selector">
+            <a th:href="@{/search/advanced(lang='es')}">🇪🇸 Español</a> |
+            <a th:href="@{/search/advanced(lang='en')}">🇬🇧 English</a>
+        </div>
+    </footer>
+
 </html>
 

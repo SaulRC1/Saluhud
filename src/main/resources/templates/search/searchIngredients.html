@@ -3,8 +3,8 @@
       xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="UTF-8"/>
-        <title th:text="#{search.advanced.title}">Búsqueda Avanzada</title>
-        <link rel="stylesheet" th:href="@{/css/searchStyleForm.css}"> 
+        <title th:text="#{search.ingredients.title}">Búsqueda Avanzada</title>
+        <link rel="stylesheet" th:href="@{/css/SearchStyleForm.css}"> 
     </head>
 
     <script>
@@ -19,44 +19,51 @@
         }
     </script>
 
-    <body>
-        <h1>Búsqueda Avanzada de Ingredientes</h1>
+    <body>       
+        <div class="header">
+            <a th:href="@{/welcome}" class="header-link">
+                <h2 th:text="#{header.title}">Portal de Gestión para Administradores</h2>
+            </a>
+        </div>
+
+        <h1 th:text="#{search.ingredients.title}">Búsqueda Avanzada de Ingredientes</h1>
 
         <!-- Formulario de búsqueda -->
         <form th:action="@{/search/ingredients}" method="get">
-            <!-- Campo de búsqueda por nombre -->
-            <div class="search-group">
-                <input type="text" id="name" name="name" th:value="${searchDTO.name}" placeholder="Buscar ingrediente..."/>
-            </div>
-
             <!-- Contenedor de filtros -->
-            <div class="filters">
+            <div class="filters-container">
+                <!-- Campo de búsqueda por nombre -->
+                <div class="filter-group">
+                    <label for="name" th:text="#{search.ingredients.name}">Nombre</label>
+                    <input type="text" id="name" name="name" th:value="${searchDTO.name}"/>
+                </div>
+
                 <div class="filter-group">
                     <input type="checkbox" id="filterKilocalories" onchange="toggleInput('kilocalories')">
-                        <label for="filterKilocalories">Kilocalorías</label>
+                        <label for="filterKilocalories" th:text="#{search.ingredients.kilocalories}">Kilocalorías</label>
                         <input type="range" id="kilocalories" name="maxKilocalories" th:value="${searchDTO.maxKilocalories}" min="0" max="1000" step="10" disabled/>
-                        <span id="kilocaloriesValue">Máx: 1000</span>
+                        <span id="kilocaloriesValue" th:text="#{search.ingredients.max} + '1000'">Máx: 1000</span>
                 </div>
 
                 <div class="filter-group">
                     <input type="checkbox" id="filterProtein" onchange="toggleInput('protein')">
-                        <label for="filterProtein">Proteína</label>
+                        <label for="filterProtein" th:text="#{search.ingredients.protein}">Proteína</label>
                         <input type="range" id="protein" name="minProteinAmount" th:value="${searchDTO.minProteinAmount}" min="0" max="100" step="1" disabled/>
-                        <span id="proteinValue">Mín: 0</span>
+                        <span id="proteinValue" th:text="#{search.ingredients.min} + '0'">Mín: 0</span>
                 </div>
 
                 <div class="filter-group">
                     <input type="checkbox" id="filterCarbs" onchange="toggleInput('carbs')">
-                        <label for="filterCarbs">Carbohidratos</label>
+                        <label for="filterCarbs" th:text="#{search.ingredients.carbohydrates}">Carbohidratos</label>
                         <input type="range" id="carbs" name="minCarbohydratesAmount" th:value="${searchDTO.minCarbohydratesAmount}" min="0" max="200" step="5" disabled/>
-                        <span id="carbsValue">Mín: 0</span>
+                        <span id="carbsValue" th:text="#{search.ingredients.min} + '0'">Mín: 0</span>
                 </div>
 
                 <div class="filter-group">
                     <input type="checkbox" id="filterFat" onchange="toggleInput('fat')">
-                        <label for="filterFat">Grasas</label>
+                        <label for="filterFat" th:text="#{search.ingredients.fat}">Grasas</label>
                         <input type="range" id="fat" name="minFatAmount" th:value="${searchDTO.minFatAmount}" min="0" max="100" step="1" disabled/>
-                        <span id="fatValue">Mín: 0</span>
+                        <span id="fatValue" th:text="#{search.ingredients.min} + '0'">Mín: 0</span>
                 </div>
             </div>
 
@@ -68,55 +75,67 @@
 
             <!-- Botones -->
             <div class="button-group">
-                <button type="submit">Buscar</button>
-                <a href="/search/ingredients"><button type="button">Restablecer</button></a>
+                <button type="submit" th:text="#{search.ingredients.search}">Buscar</button>
+                <a href="/search/ingredients">
+                    <button type="button" th:text="#{search.ingredients.reset}">Restablecer</button>
+                </a>
             </div>
         </form>
 
-        <!-- Tabla de resultados -->
-        <h2>Resultados</h2>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Kcal</th>
-                    <th>Proteínas (g)</th>
-                    <th>Carbohidratos (g)</th>
-                    <th>Grasas (g)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="ingredient : ${ingredientsPage}">
-                    <td th:text="${ingredient.id}"></td>
-                    <td th:text="${ingredient.name}"></td>
-                    <td th:text="${ingredient.kilocalories}"></td>
-                    <td th:text="${ingredient.proteinAmount}"></td>
-                    <td th:text="${ingredient.carbohydratesAmount}"></td>
-                    <td th:text="${ingredient.fatAmount}"></td>
-                </tr>
-            </tbody>
-        </table>
+        <!-- Tabla de resultados -->      
+        <div class="container">
+            <h2 th:text="#{search.ingredients.results}">Resultados</h2>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th th:text="#{search.ingredients.id}">ID</th>
+                            <th th:text="#{search.ingredients.name}">Nombre</th>
+                            <th th:text="#{search.ingredients.kcal}">Kcal</th>
+                            <th th:text="#{search.ingredients.protein.amount}">Proteínas (g)</th>
+                            <th th:text="#{search.ingredients.carbohydrates.amount}">Carbohidratos (g)</th>
+                            <th th:text="#{search.ingredients.fat.amount}">Grasas (g)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ingredient : ${ingredientsPage}">
+                            <td th:text="${ingredient.id}"></td>
+                            <td> 
+                                <a th:href="@{/ingredients/details/{id}(id=${ingredient.id})}"
+                                   th:text="${ingredient.name}"
+                                   class="recipe-link"></a>
+                            </td>
+                            <td th:text="${ingredient.kilocalories}"></td>
+                            <td th:text="${ingredient.proteinAmount}"></td>
+                            <td th:text="${ingredient.carbohydratesAmount}"></td>
+                            <td th:text="${ingredient.fatAmount}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-        <!-- Paginación -->
-        <div class="pagination">
-            <a th:if="${currentPage > 0}" 
-               th:href="@{/search/ingredients(page=${currentPage - 1}, 
-               name=${searchDTO.name}, maxKilocalories=${searchDTO.maxKilocalories}, 
-               minProteinAmount=${searchDTO.minProteinAmount}, 
-               minCarbohydratesAmount=${searchDTO.minCarbohydratesAmount}, 
-               minFatAmount=${searchDTO.minFatAmount})}" 
-               class="page-link">Anterior</a>
+            <!-- Paginación -->
+            <div class="pagination">
+                <a th:if="${currentPage > 0}" 
+                   th:href="@{/search/ingredients(page=${currentPage - 1}, 
+                   name=${searchDTO.name}, maxKilocalories=${searchDTO.maxKilocalories}, 
+                   minProteinAmount=${searchDTO.minProteinAmount}, 
+                   minCarbohydratesAmount=${searchDTO.minCarbohydratesAmount}, 
+                   minFatAmount=${searchDTO.minFatAmount})}" 
+                   class="page-link" 
+                   th:text="#{search.ingredients.previous}">Anterior</a>
 
-            <span th:text="${currentPage + 1} + ' de ' + ${totalPages}"></span>
+                <span th:text="#{search.ingredients.pagination(${currentPage + 1}, ${totalPages})}">1 de 10</span>
 
-            <a th:if="${currentPage + 1 < totalPages}" 
-               th:href="@{/search/ingredients(page=${currentPage + 1}, 
-               name=${searchDTO.name}, maxKilocalories=${searchDTO.maxKilocalories}, 
-               minProteinAmount=${searchDTO.minProteinAmount}, 
-               minCarbohydratesAmount=${searchDTO.minCarbohydratesAmount}, 
-               minFatAmount=${searchDTO.minFatAmount})}" 
-               class="page-link">Siguiente</a>
+                <a th:if="${currentPage + 1 < totalPages}" 
+                   th:href="@{/search/ingredients(page=${currentPage + 1}, 
+                   name=${searchDTO.name}, maxKilocalories=${searchDTO.maxKilocalories}, 
+                   minProteinAmount=${searchDTO.minProteinAmount}, 
+                   minCarbohydratesAmount=${searchDTO.minCarbohydratesAmount}, 
+                   minFatAmount=${searchDTO.minFatAmount})}" 
+                   class="page-link" 
+                   th:text="#{search.ingredients.next}">Siguiente</a>
+            </div>
         </div>
     </body>
 </html>

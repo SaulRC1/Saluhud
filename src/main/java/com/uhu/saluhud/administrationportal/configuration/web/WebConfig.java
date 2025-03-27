@@ -49,7 +49,7 @@ public class WebConfig implements WebMvcConfigurer
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasenames("messages_users", "messages_elaborationSteps", 
                 "messages_ingredients","messages_recipes", "messages_allergenic", 
-                "messages_login", "messages_home");
+                "messages_login", "messages_home", "messages_search");
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }

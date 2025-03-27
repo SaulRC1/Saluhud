@@ -30,117 +30,202 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* Estilo de los campos de búsqueda */
-.search-bar {
-    background: var(--color-rojo);
-    padding: 10px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    color: var(--color-blanco);
-}
-
-.search-group input[type="text"] {
-    padding: 8px;
-    width: 200px;
-    border-radius: 5px;
-    border: none;
-    outline: none;
-}
-
-.filters {
-    display: flex;
-    gap: 15px;
-}
-
-.filter-group {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.filter-group label {
-    font-size: 14px;
-}
-
-.filter-group input[type="range"] {
-    width: 100px;
-    opacity: 0.7;
-    transition: opacity 0.3s;
-}
-
-.filter-group input[type="range"]:hover {
-    opacity: 1;
-}
-
-.button-group {
-    display: flex;
-    gap: 10px;
-}
-
-button {
+/* Cabecera */
+.header {
     background-color: var(--color-rojo);
     color: var(--color-blanco);
-    padding: 8px 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: var(--color-negro);
-    color: var(--color-blanco);
-}
-
-/* Tabla de resultados */
-.table-container {
-    overflow-x: auto;
-    border-radius: 8px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--color-blanco);
-    border-radius: 8px;
-    overflow: hidden;
+    padding: 1.5rem;
+    text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-thead {
+.header-link {
+    text-decoration: none; /* Quita el subrayado */
+}
+
+.header-link h2 {
+    margin: 0;
+    color: var(--color-blanco); /* Mantiene el color original */
+    transition: opacity 0.3s ease-in-out;
+}
+
+.header-link h2:hover {
+    opacity: 0.8; /* Ligero efecto al pasar el cursor */
+}
+
+/* Contenedor principal de los filtros */
+.filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center; /* Centra los filtros */
+    padding: 15px;
+    background-color: var(--color-gris-claro);
+    border-radius: 8px;
+}
+
+/* Agrupar los primeros 3 filtros en una fila */
+.filter-row {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* Filtros de la segunda fila */
+.second-row {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* Estilo para cada grupo de filtro */
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 220px; /* Tamaño mínimo */
+    flex: 1;
+}
+
+/* Asegurar que el label e input/select estén alineados */
+.filter-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* Estilos para los inputs y selects */
+.filter-group input,
+.filter-group select {
+    padding: 10px;
+    border: 1px solid var(--color-gris-oscuro);
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: var(--color-blanco);
+    color: var(--color-negro);
+}
+
+/* Botones de paginación debajo del input de ingredientes */
+.ingredients-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.ingredients-pagination button {
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.ingredients-pagination button:hover {
+    background-color: darkred;
+}
+
+/* Estilos para los botones */
+.button-group {
+    display: flex;
+    justify-content: center; /* Centra los botones horizontalmente */
+    align-items: center;     /* Centra los botones verticalmente */
+    gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.button-group button {
+    padding: 10px 15px;
+    border: none;
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.button-group button:hover {
+    background-color: var(--color-negro);
+}
+
+/* Tabla responsiva */
+.table-container {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table th, .table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.table th {
     background-color: var(--color-rojo);
     color: var(--color-blanco);
 }
 
-td, th {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-tbody tr:hover {
-    background-color: #f1f1f1;
+.table td {
+    background-color: #f9f9f9;
 }
 
 /* Paginación */
 .pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
-.pagination a {
+.page-link {
     text-decoration: none;
-    color: var(--color-blanco);
-    background-color: var(--color-rojo);
-    padding: 8px 12px;
-    border-radius: 6px;
-    transition: background 0.3s;
+    font-weight: bold;
+    color: var(--color-rojo);
+    margin: 0 10px;
 }
 
-.pagination a:hover {
-    background-color: var(--color-negro);
+.page-link:hover {
+    text-decoration: underline;
+}
+
+.recipe-link {
+    text-decoration: none;
+    font-weight: bold;
+    color: var(--color-rojo);
+}
+
+.recipe-link:hover {
+    text-decoration: underline;
+}
+
+/* Estilos del footer */
+footer {
+    background-color: #a80a2e; /* Fondo rojo oscuro */
+    color: white;              /* Texto blanco */
+    text-align: center;        /* Centrado del texto */
+    padding: 20px 0;           /* Espaciado arriba y abajo */
+    font-size: 14px;           /* Tamaño de la fuente */
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Estilo para el símbolo de copyright */
+footer p {
+    margin: 0;
+}
+
+footer a {
+    text-decoration: none; /* Quita el subrayado */
+    color: var(--color-blanco); /* Mantiene el color original */
+    transition: opacity 0.3s ease-in-out;    
+}
+
+footer a:hover {
+    opacity: 0.8; /* Ligero efecto al pasar el cursor */
 }
