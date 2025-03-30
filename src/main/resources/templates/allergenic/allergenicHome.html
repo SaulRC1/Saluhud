@@ -78,5 +78,14 @@
                 <a th:href="@{/allergenic/home(lang='en')}">🇬🇧 English</a>
             </div>
         </footer>
+        
+        <!-- Elementos invisibles con mensajes de internacionalización -->
+        <div id="messages" style="display: none;">
+            <span id="editConfirmTitle" th:text="#{allergenic.edit.confirm.title}">Confirmar edición</span>
+            <span id="editConfirmMessage" th:text="#{allergenic.edit.confirm.message}">¿Seguro que deseas editar este alérgeno?</span>
+            <span id="buttonYes" th:text="#{button.yes}">Sí</span>
+            <span id="buttonNo" th:text="#{button.no}">No</span>
+        </div>
+        
     </body>
 </html>

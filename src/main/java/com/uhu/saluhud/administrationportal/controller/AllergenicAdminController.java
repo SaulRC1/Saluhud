@@ -58,18 +58,24 @@ public class AllergenicAdminController
 
     // Guardar edición de alergeno
     @PostMapping("/edit")
-    public ModelAndView updateAllergenic(@ModelAttribute Allergenic allergenic, 
+    public ModelAndView updateAllergenic(@ModelAttribute Allergenic allergenic,
             Locale locale)
     {
-        ModelAndView modelAndView = new ModelAndView("allergenic/editAlergen");
-        try {
+        ModelAndView modelAndView = new ModelAndView("users/editAlergen");
+        try
+        {
             allergenicService.updateAllergenic(allergenic);
-            String successMessage = messageSource.getMessage("allergen.updated.success", null, locale);
+            String successMessage = messageSource.getMessage("allergenic.success.edit", null, locale);
             modelAndView.addObject("successMessage", successMessage);
-        } catch (NoSuchMessageException e) {
-            String errorMessage = messageSource.getMessage("allergen.updated.error", new Object[]{e.getMessage()}, locale);
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("allergenic.error.edit", new Object[]
+            {
+                e.getMessage()
+            }, locale);
             modelAndView.addObject("errorMessage", errorMessage);
         }
+
         return modelAndView;
     }
 
