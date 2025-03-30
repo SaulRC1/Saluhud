@@ -8,6 +8,7 @@ import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -28,15 +29,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/users")
 public class UserAdminController
 {
+
     @Autowired
     private MessageSource messageSource;
-    
+
     @Autowired
     private PasswordEncryptionService passwordEncryptionService;
-    
+
     @Autowired
     private AdministrationPortalSaluhudUserService saluhudUserService;
-    
+
     @GetMapping("/home")
     public ModelAndView getUsers(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size)
@@ -62,27 +64,50 @@ public class UserAdminController
 
     // Guardar nuevo usuario
     @PostMapping("/create")
-    public ModelAndView createUser(@ModelAttribute("user") 
-            SaluhudUser user, BindingResult result, Locale locale)
+    public ModelAndView createUser(@ModelAttribute("user") SaluhudUser user, BindingResult result, Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("users/createUser");
 
-        if (result.hasErrors()) {
-            // Si hay errores, devolver el formulario con los errores
-            List<SaluhudUser> users = saluhudUserService.findAllUsers();
-            modelAndView.addObject("users", users);
+        if (result.hasErrors())
+        {
+            modelAndView.addObject("users", saluhudUserService.findAllUsers());
             return modelAndView;
         }
 
-        try {
+        try
+        {
+            if (saluhudUserService.existsByUsername(user.getUsername()))
+            {
+                modelAndView.addObject("errorMessage", messageSource.getMessage("user.error.username.exists", null, locale));
+                return modelAndView;
+            }
+            if (saluhudUserService.existsByEmail(user.getEmail()))
+            {
+                modelAndView.addObject("errorMessage", messageSource.getMessage("user.error.email.exists", null, locale));
+                return modelAndView;
+            }
+            if (user.getPhoneNumber() != null && saluhudUserService.existsByPhoneNumber(user.getPhoneNumber()))
+            {
+                modelAndView.addObject("errorMessage", messageSource.getMessage("user.error.phone.exists", null, locale));
+                return modelAndView;
+            }
+
             String encryptedPassword = passwordEncryptionService.encryptPassword(user.getPassword());
             user.setPassword(encryptedPassword);
             saluhudUserService.saveUser(user);
-            String successMessage = messageSource.getMessage("user.success.create", null, locale);
-            modelAndView.addObject("successMessage", successMessage);
-        } catch (NoSuchMessageException e) {
-            String errorMessage = messageSource.getMessage("user.error.create", new Object[]{e.getMessage()}, locale);
-            modelAndView.addObject("errorMessage", errorMessage);
+            modelAndView.addObject("successMessage", messageSource.getMessage("user.success.create", null, locale));
+        } catch (NoSuchMessageException e)
+        {
+            modelAndView.addObject("errorMessage", "Error retrieving message: " + e.getMessage());
+        } catch (DataIntegrityViolationException e)
+        {
+            modelAndView.addObject("errorMessage", messageSource.getMessage("user.error.duplicate", null, locale));
+        } catch (Exception e)
+        {
+            modelAndView.addObject("errorMessage", messageSource.getMessage("user.error.create", new Object[]
+            {
+                e.getMessage()
+            }, locale));
         }
 
         return modelAndView;
@@ -100,18 +125,23 @@ public class UserAdminController
 
     // Guardar edición de usuario
     @PostMapping("/edit")
-    public ModelAndView updateUser(@ModelAttribute("user") SaluhudUser user, 
+    public ModelAndView updateUser(@ModelAttribute("user") SaluhudUser user,
             Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("users/editUser");
-        try {
+        try
+        {
             String encryptedPassword = passwordEncryptionService.encryptPassword(user.getPassword());
             user.setPassword(encryptedPassword);
             saluhudUserService.updateUser(user);
             String successMessage = messageSource.getMessage("user.success.edit", null, locale);
             modelAndView.addObject("successMessage", successMessage);
-        } catch (NoSuchMessageException e) {
-            String errorMessage = messageSource.getMessage("user.error.edit", new Object[]{e.getMessage()}, locale);
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("user.error.edit", new Object[]
+            {
+                e.getMessage()
+            }, locale);
             modelAndView.addObject("errorMessage", errorMessage);
         }
 
@@ -124,13 +154,18 @@ public class UserAdminController
             Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("redirect:/users/home");
-        try {
+        try
+        {
             SaluhudUser user = saluhudUserService.getUserById(id);
             saluhudUserService.deleteUser(user);
             String successMessage = messageSource.getMessage("user.success.delete", null, locale);
             redirectAttributes.addFlashAttribute("successMessage", successMessage);
-        } catch (NoSuchMessageException e) {
-            String errorMessage = messageSource.getMessage("user.error.delete", new Object[]{e.getMessage()}, locale);
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("user.error.delete", new Object[]
+            {
+                e.getMessage()
+            }, locale);
             redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         }
 

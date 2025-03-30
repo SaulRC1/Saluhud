@@ -48,12 +48,12 @@
                     <tbody>
                         <tr th:each="user : ${users}">
                             <td th:text="${user.id}"></td>
-                            <td th:text="${user.username}"></td>
                             <td> 
                                 <a th:href="@{/users/details/{id}(id=${user.id})}"
-                                    th:text="${user.name}">                                       
+                                   th:text="${user.name}">                                       
                                 </a>
                             </td>
+                            <td th:text="${user.username}"></td>                           
                             <td th:text="${user.email}"></td>
                             <td>
                                 <input type="radio" name="selectedUser" th:value="${user.id}" />
@@ -86,5 +86,16 @@
                 <a th:href="@{/users/home(lang='en')}">🇬🇧 English</a>
             </div>
         </footer>
+
+        <!-- Elementos invisibles con mensajes de internacionalización -->
+        <div id="messages" style="display: none;">
+            <span id="editConfirmTitle" th:text="#{user.edit.confirm.title}">Confirmar edición</span>
+            <span id="editConfirmMessage" th:text="#{user.edit.confirm.message}">¿Seguro que deseas editar este usuario?</span>
+            <span id="deleteConfirmTitle" th:text="#{user.delete.confirm.title}">Confirmar eliminación</span>
+            <span id="deleteConfirmMessage" th:text="#{user.delete.confirm.message}">¿Seguro que deseas eliminar este usuario?</span>
+            <span id="buttonYes" th:text="#{button.yes}">Sí</span>
+            <span id="buttonNo" th:text="#{button.no}">No</span>
+        </div>
+
     </body>
 </html>
