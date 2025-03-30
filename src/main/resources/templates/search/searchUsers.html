@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+    <head>        
+        <meta charset="UTF-8"/>
+        <title th:text="#{search.users.title}">Búsqueda de Usuarios</title>
+        <link rel="stylesheet" th:href="@{/css/SearchStyleForm.css}"/> 
+    </head>
+
+    <body>
+        <div class="header">
+            <a th:href="@{/welcome}" class="header-link">
+                <h2 th:text="#{header.portal}">Portal de Gestión para Administradores</h2>
+            </a>
+        </div>
+
+        <h1 th:text="#{search.users.title}">Búsqueda Avanzada de Usuarios</h1>
+
+        <!-- Formulario de búsqueda -->
+        <form th:action="@{/search/users}" method="get">
+            <div class="filters-container">
+                <div class="filter-row">
+                    <!-- Filtro por nombre de usuario -->
+                    <div class="filter-group">
+                        <label for="username" th:text="#{search.users.username}">Nombre de Usuario</label>
+                        <input type="text" id="username" name="username" th:value="${searchDTO.username}">
+                    </div>
+
+                    <!-- Filtro por nombre -->
+                    <div class="filter-group">
+                        <label for="name" th:text="#{search.users.name}">Nombre</label>
+                        <input type="text" id="name" name="name" th:value="${searchDTO.name}">
+                    </div>
+
+                    <!-- Filtro por apellido -->
+                    <div class="filter-group">
+                        <label for="surname" th:text="#{search.users.surname}">Apellido</label>
+                        <input type="text" id="surname" name="surname" th:value="${searchDTO.surname}">
+                    </div>
+                </div>
+
+                <div class="filter-row">
+                    <!-- Filtro por email -->
+                    <div class="filter-group">
+                        <label for="email" th:text="#{search.users.email}">Correo Electrónico</label>
+                        <input type="email" id="email" name="email" th:value="${searchDTO.email}">
+                    </div>
+
+                    <!-- Filtro por teléfono -->
+                    <div class="filter-group">
+                        <label for="phoneNumber" th:text="#{search.users.phoneNumber}">Número de Teléfono</label>
+                        <input type="text" id="phoneNumber" name="phoneNumber" th:value="${searchDTO.phoneNumber}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="button-group">
+                <button type="submit" th:text="#{search.button.search}">Buscar</button>
+                <a href="/search/users"><button type="button" th:text="#{search.button.reset}">Restablecer</button></a>
+            </div>
+        </form>
+
+        <!-- Tabla de resultados -->       
+        <div class="container">
+            <h2 th:text="#{search.results}">Resultados</h2>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th th:text="#{search.users.id}">ID</th>
+                            <th th:text="#{search.users.username}">Nombre de Usuario</th>
+                            <th th:text="#{search.users.name}">Nombre</th>
+                            <th th:text="#{search.users.surname}">Apellido</th>
+                            <th th:text="#{search.users.email}">Correo Electrónico</th>
+                            <th th:text="#{search.users.phoneNumber}">Teléfono</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="user : ${usersPage}">
+                            <td th:text="${user.id}"></td>
+                            <td th:text="${user.username}"></td>
+                            <td th:text="${user.name}"></td>
+                            <td th:text="${user.surname}"></td>
+                            <td th:text="${user.email}"></td>
+                            <td th:text="${user.phoneNumber}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginación -->
+            <div class="pagination">
+                <a th:if="${usersPage.hasPrevious()}" th:href="@{/search/users(page=${usersPage.number - 1})}" class="page-link">&laquo; Anterior</a>
+                <span th:text="|Página ${usersPage.number + 1} de ${usersPage.totalPages}|"></span>
+                <a th:if="${usersPage.hasNext()}" th:href="@{/search/users(page=${usersPage.number + 1})}" class="page-link">Siguiente &raquo;</a>
+            </div>
+        </div>
+    </body>
+</html>
+

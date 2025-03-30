@@ -2,12 +2,15 @@ package com.uhu.saluhud.administrationportal.controller;
 
 import com.uhu.saluhud.administrationportal.configuration.web.IngredientSearchDTO;
 import com.uhu.saluhud.administrationportal.configuration.web.RecipeSearchDTO;
+import com.uhu.saluhud.administrationportal.configuration.web.UserSearchDTO;
 import com.uhu.saluhuddatabaseutils.models.nutrition.Allergenic;
 import com.uhu.saluhuddatabaseutils.models.nutrition.Ingredient;
 import com.uhu.saluhuddatabaseutils.models.nutrition.Recipe;
+import com.uhu.saluhuddatabaseutils.models.user.SaluhudUser;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.nutrition.AdministrationPortalAllergenicService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.nutrition.AdministrationPortalIngredientService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.nutrition.AdministrationPortalRecipeService;
+import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalSaluhudUserService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -40,6 +43,9 @@ public class SearchsAdminController
 
     @Autowired
     private AdministrationPortalRecipeService recipeService;
+    
+    @Autowired
+    private AdministrationPortalSaluhudUserService userService;
 
     @GetMapping("/advanced")
     public ModelAndView showAdvancedSearchPage()
@@ -136,20 +142,67 @@ public class SearchsAdminController
         }
         else
         {
-            recipes = recipeService.getRecipes(page, size); 
+            recipes = recipeService.getRecipes(page, size);
         }
 
         modelAndView.addObject("recipesPage", recipes);
         modelAndView.addObject("currentPage", page);
         modelAndView.addObject("totalPages", recipes.getTotalPages());
-        
+
         modelAndView.addObject("ingredientsPage", ingredientsPage.getContent());
         modelAndView.addObject("ingredientCurrentPage", ingredientsPage.getNumber());
         modelAndView.addObject("ingredientTotalPages", ingredientsPage.getTotalPages());
-        
+
         modelAndView.addObject("allergenics", allergenics);
         modelAndView.addObject("searchDTO", new RecipeSearchDTO(name, maxKilocalories,
                 ingredientId, allergenicId, allergenicExclusionId));
+
+        return modelAndView;
+    }
+
+    @GetMapping("/users")
+    public ModelAndView searchUsers(
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String surname,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String phoneNumber,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size)
+    {
+
+        ModelAndView modelAndView = new ModelAndView("search/searchUsers");
+        Page<SaluhudUser> users;
+
+        if (username != null && !username.isEmpty())
+        {
+            users = userService.searchByUsername(username, page, size);
+        }
+        else if (name != null && !name.isEmpty())
+        {
+            users = userService.searchByName(name, page, size);
+        }
+        else if (surname != null && !surname.isEmpty())
+        {
+            users = userService.searchBySurname(surname, page, size);
+        }
+        else if (email != null && !email.isEmpty())
+        {
+            users = userService.searchByEmail(email, page, size);
+        }
+        else if (phoneNumber != null && !phoneNumber.isEmpty())
+        {
+            users = userService.searchByPhoneNumber(phoneNumber, page, size);
+        }
+        else
+        {
+            users = userService.getUsers(page, size);
+        }
+
+        modelAndView.addObject("usersPage", users);
+        modelAndView.addObject("currentPage", page);
+        modelAndView.addObject("totalPages", users.getTotalPages());
+        modelAndView.addObject("searchDTO", new UserSearchDTO(username, name, surname, email, phoneNumber));
 
         return modelAndView;
     }
