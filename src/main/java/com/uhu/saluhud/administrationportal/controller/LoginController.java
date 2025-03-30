@@ -29,22 +29,6 @@ public class LoginController
     {
 
     }
-
-    /*
-    @GetMapping("/login")
-    public ModelAndView loginPage(@RequestParam(value = "error", required = false) String error, Locale locale)
-    {
-        ModelAndView modelAndView = new ModelAndView("security/login"); // Especificamos la vista
-
-        if (error != null) {
-            String errorMessage = messageSource.getMessage("login.error", null, locale);
-            modelAndView.addObject("errorMsg", errorMessage);
-        }
-
-        modelAndView.addObject("credentials", new Credentials()); // Agregar objeto vacío para el formulario
-
-        return modelAndView;
-    }*/
     
     @GetMapping("/login")
     public ModelAndView loginPage(@RequestParam(value = "error", required = false) String error,

@@ -87,37 +87,47 @@ public class IngredientsAdminController
         return modelAndView;
     }
 
-    // Guardar edición de ingrediente
+    // Guardar edición de ingredient
     @PostMapping("/edit")
-    public ModelAndView updateIngredient(@ModelAttribute Ingredient ingredient,
+    public ModelAndView updateUser(@ModelAttribute("user") Ingredient ingredient,
             Locale locale)
     {
-        ModelAndView modelAndView = new ModelAndView("ingredients/editIngredient");
-        try {
+        ModelAndView modelAndView = new ModelAndView("users/editUser");
+        try
+        {
             ingredientService.updateIngredient(ingredient);
-            String successMessage = messageSource.getMessage("ingredients.updated.success", null, locale);
+            String successMessage = messageSource.getMessage("ingredients.success.edit", null, locale);
             modelAndView.addObject("successMessage", successMessage);
-        } catch (NoSuchMessageException e) {
-            String errorMessage = messageSource.getMessage("ingredients.updated.error", new Object[]{e.getMessage()}, locale);
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("ingredients.error.edit", new Object[]
+            {
+                e.getMessage()
+            }, locale);
             modelAndView.addObject("errorMessage", errorMessage);
         }
 
         return modelAndView;
     }
 
-    // Eliminar ingrediente
+    // Eliminar ingredient
     @GetMapping("/delete/{id}")
     public ModelAndView deleteIngredient(@PathVariable long id, RedirectAttributes redirectAttributes,
             Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("redirect:/ingredients/home");
-        try {
+        try
+        {
             Ingredient ingredient = ingredientService.getIngredientById(id);
             ingredientService.deleteIngredient(ingredient);
-            String successMessage = messageSource.getMessage("ingredients.delete.success", null, locale);
+            String successMessage = messageSource.getMessage("ingredients.success.delete", null, locale);
             redirectAttributes.addFlashAttribute("successMessage", successMessage);
-        } catch (NoSuchMessageException e) {
-            String errorMessage = messageSource.getMessage("ingredients.delete.error", new Object[]{e.getMessage()}, locale);
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("ingredients.error.delete", new Object[]
+            {
+                e.getMessage()
+            }, locale);
             redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         }
 
