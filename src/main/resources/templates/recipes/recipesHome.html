@@ -94,5 +94,15 @@
             </div>
         </footer>
 
+         <!-- Elementos invisibles con mensajes de internacionalización -->
+        <div id="messages" style="display: none;">
+            <span id="editConfirmTitle" th:text="#{recipe.edit.confirm.title}">Confirmar edición</span>
+            <span id="editConfirmMessage" th:text="#{recipe.edit.confirm.message}">¿Seguro que deseas editar esta receta?</span>
+            <span id="deleteConfirmTitle" th:text="#{recipe.delete.confirm.title}">Confirmar eliminación</span>
+            <span id="deleteConfirmMessage" th:text="#{recipe.delete.confirm.message}">¿Seguro que deseas eliminar esta receta</span>
+            <span id="buttonYes" th:text="#{button.yes}">Sí</span>
+            <span id="buttonNo" th:text="#{button.no}">No</span>
+        </div>
+         
     </body>
 </html>

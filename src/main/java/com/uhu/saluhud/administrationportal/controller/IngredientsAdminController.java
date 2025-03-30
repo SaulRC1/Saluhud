@@ -89,18 +89,18 @@ public class IngredientsAdminController
 
     // Guardar edición de ingredient
     @PostMapping("/edit")
-    public ModelAndView updateUser(@ModelAttribute("user") Ingredient ingredient,
+    public ModelAndView updateIngredient(@ModelAttribute("ingredient") Ingredient ingredient,
             Locale locale)
     {
-        ModelAndView modelAndView = new ModelAndView("users/editUser");
+        ModelAndView modelAndView = new ModelAndView("ingredients/editIngredient");
         try
         {
             ingredientService.updateIngredient(ingredient);
-            String successMessage = messageSource.getMessage("ingredients.success.edit", null, locale);
+            String successMessage = messageSource.getMessage("ingredients.updated.success", null, locale);
             modelAndView.addObject("successMessage", successMessage);
         } catch (NoSuchMessageException e)
         {
-            String errorMessage = messageSource.getMessage("ingredients.error.edit", new Object[]
+            String errorMessage = messageSource.getMessage("ingredients.updated.error", new Object[]
             {
                 e.getMessage()
             }, locale);
@@ -120,11 +120,11 @@ public class IngredientsAdminController
         {
             Ingredient ingredient = ingredientService.getIngredientById(id);
             ingredientService.deleteIngredient(ingredient);
-            String successMessage = messageSource.getMessage("ingredients.success.delete", null, locale);
+            String successMessage = messageSource.getMessage("ingredients.delete.success", null, locale);
             redirectAttributes.addFlashAttribute("successMessage", successMessage);
         } catch (NoSuchMessageException e)
         {
-            String errorMessage = messageSource.getMessage("ingredients.error.delete", new Object[]
+            String errorMessage = messageSource.getMessage("ingredients.delete.error", new Object[]
             {
                 e.getMessage()
             }, locale);

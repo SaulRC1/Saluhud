@@ -61,15 +61,15 @@ public class AllergenicAdminController
     public ModelAndView updateAllergenic(@ModelAttribute Allergenic allergenic,
             Locale locale)
     {
-        ModelAndView modelAndView = new ModelAndView("users/editAlergen");
+        ModelAndView modelAndView = new ModelAndView("allergenic/editAlergen");
         try
         {
             allergenicService.updateAllergenic(allergenic);
-            String successMessage = messageSource.getMessage("allergenic.success.edit", null, locale);
+            String successMessage = messageSource.getMessage("allergen.updated.success", null, locale);
             modelAndView.addObject("successMessage", successMessage);
         } catch (NoSuchMessageException e)
         {
-            String errorMessage = messageSource.getMessage("allergenic.error.edit", new Object[]
+            String errorMessage = messageSource.getMessage("allergen.updated.error", new Object[]
             {
                 e.getMessage()
             }, locale);

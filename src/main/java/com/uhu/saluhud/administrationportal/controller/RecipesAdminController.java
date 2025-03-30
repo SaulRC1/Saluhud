@@ -140,36 +140,47 @@ public class RecipesAdminController
         return modelAndView;
     }
 
-    // Guardar edición de receta
+    // Guardar edición de ingredient
     @PostMapping("/edit")
-    public ModelAndView updateRecipe(@ModelAttribute Recipe recipe, Locale locale)
+    public ModelAndView updateRecipe(@ModelAttribute("recipe") Recipe recipe,
+            Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("recipes/editRecipe");
-        try {
+        try
+        {
             recipeService.updateRecipe(recipe);
             String successMessage = messageSource.getMessage("recipe.updated.success", null, locale);
             modelAndView.addObject("successMessage", successMessage);
-        } catch (NoSuchMessageException e) {
-            String errorMessage = messageSource.getMessage("recipe.updated.error", new Object[]{e.getMessage()}, locale);
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("recipe.updated.error", new Object[]
+            {
+                e.getMessage()
+            }, locale);
             modelAndView.addObject("errorMessage", errorMessage);
         }
 
         return modelAndView;
     }
 
-    // Eliminar receta
+    // Eliminar ingredient
     @GetMapping("/delete/{id}")
     public ModelAndView deleteRecipe(@PathVariable long id, RedirectAttributes redirectAttributes,
             Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("redirect:/recipes/home");
-        try {
+        try
+        {
             Recipe recipe = recipeService.getRecipeById(id);
             recipeService.deleteRecipe(recipe);
             String successMessage = messageSource.getMessage("recipe.deleted.success", null, locale);
             redirectAttributes.addFlashAttribute("successMessage", successMessage);
-        } catch (NoSuchMessageException e) {
-            String errorMessage = messageSource.getMessage("recipe.deleted.error", new Object[]{e.getMessage()}, locale);
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("recipe.deleted.error", new Object[]
+            {
+                e.getMessage()
+            }, locale);
             redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         }
 
