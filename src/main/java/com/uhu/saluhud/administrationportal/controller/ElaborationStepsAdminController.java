@@ -64,25 +64,30 @@ public class ElaborationStepsAdminController
 
     // Guardar nuevo paso
     @PostMapping("/create")
-    public ModelAndView createElaborationStep(@ModelAttribute("elaborationStep") 
-            RecipeElaborationStep elaborationStep,
+    public ModelAndView createElaborationStep(@ModelAttribute("elaborationStep") RecipeElaborationStep elaborationStep,
             BindingResult result, Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("elaborationSteps/createElaborationStep");
 
-        if (result.hasErrors()) {
+        if (result.hasErrors())
+        {
             // Si hay errores, devolver el formulario con los errores
             List<Recipe> recipes = recipeService.findAllRecipes();
             modelAndView.addObject("recipes", recipes);
             return modelAndView;
         }
 
-        try {
+        try
+        {
             elaborationStepService.saveRecipeElaborationStep(elaborationStep);
             String successMessage = messageSource.getMessage("elaborationStep.success.create", null, locale);
             modelAndView.addObject("successMessage", successMessage);
-        } catch (NoSuchMessageException e) {
-            String errorMessage = messageSource.getMessage("elaborationStep.error.create", new Object[]{e.getMessage()}, locale);
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("elaborationStep.error.create", new Object[]
+            {
+                e.getMessage()
+            }, locale);
             modelAndView.addObject("errorMessage", errorMessage);
         }
 
@@ -101,17 +106,21 @@ public class ElaborationStepsAdminController
 
     // Guardar edición de ingrediente
     @PostMapping("/edit")
-    public ModelAndView updateElaborationStep(@ModelAttribute("elaborationStep") 
-            RecipeElaborationStep elaborationStep,
+    public ModelAndView updateElaborationStep(@ModelAttribute("elaborationStep") RecipeElaborationStep elaborationStep,
             Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("elaborationSteps/editElaborationStep");
-        try {
+        try
+        {
             elaborationStepService.updateRecipeElaborationStep(elaborationStep);
             String successMessage = messageSource.getMessage("elaborationStep.success.edit", null, locale);
             modelAndView.addObject("successMessage", successMessage);
-        } catch (NoSuchMessageException e) {
-            String errorMessage = messageSource.getMessage("elaborationStep.error.edit", new Object[]{e.getMessage()}, locale);
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("elaborationStep.error.edit", new Object[]
+            {
+                e.getMessage()
+            }, locale);
             modelAndView.addObject("errorMessage", errorMessage);
         }
 
@@ -124,13 +133,18 @@ public class ElaborationStepsAdminController
             Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("redirect:/elaborationSteps/home");
-        try {
+        try
+        {
             RecipeElaborationStep elaborationStep = elaborationStepService.getStepById(id);
             elaborationStepService.deleteRecipeElaborationStep(elaborationStep);
             String successMessage = messageSource.getMessage("elaborationStep.success.delete", null, locale);
             redirectAttributes.addFlashAttribute("successMessage", successMessage);
-        } catch (NoSuchMessageException e) {
-            String errorMessage = messageSource.getMessage("elaborationStep.error.delete", new Object[]{e.getMessage()}, locale);
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("elaborationStep.deleted.error", new Object[]
+            {
+                e.getMessage()
+            }, locale);
             redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         }
 
