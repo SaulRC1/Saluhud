@@ -70,7 +70,7 @@ public class SearchsAdminController
 
         if (name != null && !name.isEmpty())
         {
-            ingredientsPage = ingredientService.searchByName(name, page, size);
+            ingredientsPage = ingredientService.searchByStartName(name, page, size);
         }
         else if (maxKilocalories != null)
         {
