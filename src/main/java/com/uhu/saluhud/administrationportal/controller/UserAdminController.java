@@ -1,10 +1,14 @@
 package com.uhu.saluhud.administrationportal.controller;
 
 import com.uhu.saluhuddatabaseutils.models.user.SaluhudUser;
+import com.uhu.saluhuddatabaseutils.models.user.SaluhudUserFitnessData;
 import com.uhu.saluhuddatabaseutils.security.PasswordEncryptionService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalSaluhudUserService;
+import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalUserFitnessDataService;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
@@ -38,6 +42,9 @@ public class UserAdminController
 
     @Autowired
     private AdministrationPortalSaluhudUserService saluhudUserService;
+
+    @Autowired
+    private AdministrationPortalUserFitnessDataService fitnessDataService;
 
     @GetMapping("/home")
     public ModelAndView getUsers(@RequestParam(defaultValue = "0") int page,
@@ -180,5 +187,57 @@ public class UserAdminController
         SaluhudUser user = saluhudUserService.getUserById(id);
         modelAndView.addObject("user", user);
         return modelAndView;
+    }
+
+    @GetMapping("/fitness/create/{userId}")
+    public ModelAndView showCreateFitnessDataForm(@PathVariable Long userId)
+    {
+        SaluhudUser user = saluhudUserService.getUserById(userId);
+        if (user == null)
+        {
+            return new ModelAndView("redirect:/users/home");
+        }
+
+        SaluhudUserFitnessData fitnessData = new SaluhudUserFitnessData();
+        ModelAndView mav = new ModelAndView("users/createFitnessData");
+        mav.addObject("fitnessData", fitnessData);
+        mav.addObject("userId", userId);
+        return mav;
+    }
+
+    @PostMapping("/fitness/create")
+    public ModelAndView createFitnessData(@Valid @ModelAttribute("fitnessData") SaluhudUserFitnessData fitnessData,
+            BindingResult result,
+            @RequestParam("userId") Long userId,
+            Locale locale)
+    {
+        ModelAndView model = new ModelAndView("users/createFitnessData");
+        if (result.hasErrors())
+        {
+            model.addObject("userId", userId);
+        }
+
+        try
+        {
+            SaluhudUser user = saluhudUserService.getUserById(userId);
+            fitnessData.setSaluhudUser(user);
+            user.setFitnessData(fitnessData);
+            fitnessDataService.saveFitnessData(fitnessData);
+            model.addObject("successMessage", messageSource.getMessage("user.successFitness.create", null, locale));
+
+        } catch (DataIntegrityViolationException e)
+        {
+            model.addObject("errorMessage", messageSource.getMessage("user.errorFitness.duplicate", null, locale) + e.getMessage());
+            
+        } catch (NoSuchElementException e)
+        {
+            model.addObject("errorMessage", messageSource.getMessage("user.errorFitness.find", null, locale) + e.getMessage());
+            
+        } catch (RuntimeException e)
+        {
+            model.addObject("errorMessage", messageSource.getMessage("user.errorFitness.saving", null, locale) + e.getMessage());
+        }
+
+        return model;
     }
 }
