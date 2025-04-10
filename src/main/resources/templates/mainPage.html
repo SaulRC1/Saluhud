@@ -8,6 +8,9 @@
         <link rel="stylesheet" th:href="@{/css/mainPageStyle.css}">
     </head>
     <body>
+        
+        <script th:src="@{/js/login-actions.js}"></script>
+        
         <div class="header">
             <h2 th:text="#{header.portal}">Portal de Gestión para Administradores</h2>
         </div>
@@ -34,10 +37,16 @@
             <a th:href="@{/security/login}" sec:authorize="!isAuthenticated()" class="button" th:text="#{login}">Iniciar Sesión</a>
 
             <!-- Muestra solo si el usuario está autenticado -->
-            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
-                <button type="submit" class="button" th:text="#{logout}">Cerrar Sesión</button>
+            <form id="logoutForm" th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+                <button type="button" id="logoutButton" class="button" th:text="#{logout}">Cerrar Sesión</button>
             </form>
 
+            <div id="messages" style="display: none;">
+                <span id="logoutConfirmTitle" th:text="#{logout.confirm.title}">Confirmar cierre de sesión</span>
+                <span id="logoutConfirmMessage" th:text="#{logout.confirm.message}">¿Estás seguro de que deseas cerrar sesión?</span>
+                <span id="buttonYes" th:text="#{button.yes}">Sí</span>
+                <span id="buttonNo" th:text="#{button.no}">No</span>
+            </div>
         </div>
 
         <footer>
@@ -47,18 +56,5 @@
                 <a th:href="@{/welcome(lang='en')}">🇬🇧 English</a>
             </div>
         </footer>
-
-        <!-- Script para mostrar mensajes emergentes -->
-        <script th:inline="javascript">
-            /*<![CDATA[*/
-            var urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('loginSuccess') === 'true') {
-                alert("¡Inicio de sesión exitoso!");
-            }
-            if (urlParams.get('logoutSuccess') === 'true') {
-                alert("¡Cerrada sesión correctamente!");
-            }
-            /*]]>*/
-        </script>
     </body>
 </html>
