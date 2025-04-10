@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8"/>
+        <title th:text="#{user.fitnessData.editTitle}">Editar Datos Fitness</title>
+        <link rel="stylesheet" th:href="@{/css/userFormStyle.css}"/>
+    </head>
+    <body>
+
+        <div class="container">
+            <h2 th:text="#{user.fitnessData.editTitle}">Editar Datos Fitness</h2>
+
+            <!-- Mensajes de éxito o error -->
+            <div th:if="${successMessage}" th:class="'message success'">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" th:class="'message error'">
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <form th:action="@{/users/fitness/edit/{userId}(userId=${userId})}" th:object="${fitnessData}" method="post">
+                <div>
+                    <label th:for="weight" th:text="#{user.fitnessData.weight}">Peso (kg):</label>
+                    <input type="number" th:field="*{weight}" min="0" step="0.1"/>
+                    <div th:if="${#fields.hasErrors('weight')}" th:errors="*{weight}"></div>
+                </div>
+
+                <div>
+                    <label th:for="height" th:text="#{user.fitnessData.height}">Altura (cm):</label>
+                    <input type="number" th:field="*{height}" min="0" step="0.1"/>
+                    <div th:if="${#fields.hasErrors('height')}" th:errors="*{height}"></div>
+                </div>
+
+                <div>
+                    <label th:for="biologicalSex" th:text="#{user.fitnessData.sex}">Sexo biológico:</label>
+                    <select th:field="*{biologicalSex}">
+                        <option value="MALE" th:text="#{user.fitnessData.sex.male}">Masculino</option>
+                        <option value="FEMALE" th:text="#{user.fitnessData.sex.female}">Femenino</option>
+                    </select>
+                    <div th:if="${#fields.hasErrors('biologicalSex')}" th:errors="*{biologicalSex}"></div>
+                </div>
+
+                <div>
+                    <label th:for="age" th:text="#{user.fitnessData.age}">Edad:</label>
+                    <input type="number" th:field="*{age}" min="0"/>
+                    <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></div>
+                </div>
+
+                <div>
+                    <label th:for="bodyComposition" th:text="#{user.fitnessData.bodyComposition}">Composición corporal:</label>
+                    <select th:field="*{bodyComposition}">
+                        <option value="" th:text="#{fitnessData.bodyComposition.selectOption}">-- Selecciona una opción --</option>
+                        <option value="ECTOMORPH" th:text="#{fitnessData.bodyComposition.ectomorph}">Ectomorfo</option>
+                        <option value="MESOMORPH" th:text="#{fitnessData.bodyComposition.mesomorph}">Mesomorfo</option>
+                        <option value="ENDOMORPH" th:text="#{fitnessData.bodyComposition.endomorph}">Endomorfo</option>
+                    </select>
+                    <div th:if="${#fields.hasErrors('bodyComposition')}" th:errors="*{bodyComposition}"></div>
+                </div>
+
+                <div>
+                    <label th:for="recommendedDailyWaterLiters" th:text="#{user.fitnessData.litres}">Litros de agua recomendados:</label>
+                    <input type="number" th:field="*{recommendedDailyWaterLiters}" min="0" step="0.1"/>
+                    <div th:if="${#fields.hasErrors('recommendedDailyWaterLiters')}" th:errors="*{recommendedDailyWaterLiters}"></div>
+                </div>
+
+                <div>
+                    <label th:for="recommendedSleepHours" th:text="#{user.fitnessData.hours}">Horas de sueño recomendadas:</label>
+                    <input type="number" th:field="*{recommendedSleepHours}" min="0" step="0.1"/>
+                    <div th:if="${#fields.hasErrors('recommendedSleepHours')}" th:errors="*{recommendedSleepHours}"></div>
+                </div>
+
+                <div>
+                    <label th:for="recommendedDailySteps" th:text="#{user.fitnessData.steps}">Pasos diarios recomendados:</label>
+                    <input type="number" th:field="*{recommendedDailySteps}" min="0"/>
+                    <div th:if="${#fields.hasErrors('recommendedDailySteps')}" th:errors="*{recommendedDailySteps}"></div>
+                </div>
+
+                <div>
+                    <label th:for="dailyKilocaloriesObjective" th:text="#{user.fitnessData.kcal}">Kcal diarias objetivo:</label>
+                    <input type="number" th:field="*{dailyKilocaloriesObjective}" min="0"/>
+                    <div th:if="${#fields.hasErrors('dailyKilocaloriesObjective')}" th:errors="*{dailyKilocaloriesObjective}"></div>
+                </div>
+
+                <div>
+                    <label th:for="bodyMassIndex" th:text="#{user.fitnessData.massIndex}">Índice de masa corporal:</label>
+                    <input type="number" th:field="*{bodyMassIndex}" min="0" step="0.01"/>
+                    <div th:if="${#fields.hasErrors('bodyMassIndex')}" th:errors="*{bodyMassIndex}"></div>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" class="button" th:text="#{user.fitnessData.editButton}">Actualizar</button>
+                    <a th:href="@{/users/home}" class="button" th:text="#{button.back}">Volver al listado</a>
+                </div>
+            </form>
+        </div>
+
+    </body>
+</html>
+

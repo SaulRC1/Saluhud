@@ -7,10 +7,20 @@
         <link rel="stylesheet" th:href="@{/css/usersStyle.css}"/>
     </head>
     <body>
+
+        <script th:src="@{/js/deleteFitness-action.js}"></script>
+
         <div class="header">
             <a th:href="@{/users/home}" class="header-link">
                 <h2 th:text="#{user.portal.admin}">Portal de Gestión para Administradores</h2>
             </a>
+        </div>
+
+        <div th:if="${successMessage}" th:class="'message success'">
+            <p th:text="${successMessage}"></p>
+        </div>
+        <div th:if="${errorMessage}" th:class="'message error'">
+            <p th:text="${errorMessage}"></p>
         </div>
 
         <div class="details-container">
@@ -47,7 +57,30 @@
                    th:text="#{fitnessData.create.title}">
                     Crear Datos Fitness
                 </a>
-            </div>           
+
+                <a th:href="@{/users/fitness/edit/{userId}(userId=${user.id})}"
+                   class="button"
+                   th:if="${user.fitnessData != null}"
+                   th:text="#{user.fitnessData.editButton}">
+                    Editar Datos Fitness
+                </a>
+
+                <a th:href="@{/users/fitness/delete/{userId}(userId=${user.id})}"
+                   id="deleteButton" 
+                   class="button" 
+                   th:if="${user.fitnessData != null}"
+                   th:text="#{user.fitnessData.deleteButton}"        
+                   th:data-user-id="${user.id}">
+                    Eliminar Datos Fitness
+                </a>
+
+            </div>  
+
+            <!-- Mensajes i18n ocultos -->
+            <span id="deleteConfirmTitle" th:text="#{fitnessData.delete.confirmTitle}" style="display:none;"></span>
+            <span id="deleteConfirmMessage" th:text="#{fitnessData.delete.confirmMessage}" style="display:none;"></span>
+            <button id="buttonYes" th:text="#{button.yes}" style="display:none;"></button>
+            <button id="buttonNo" th:text="#{button.no}" style="display:none;"></button>
         </div>
     </body>
 </html>

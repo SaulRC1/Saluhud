@@ -228,11 +228,11 @@ public class UserAdminController
         } catch (DataIntegrityViolationException e)
         {
             model.addObject("errorMessage", messageSource.getMessage("user.errorFitness.duplicate", null, locale) + e.getMessage());
-            
+
         } catch (NoSuchElementException e)
         {
             model.addObject("errorMessage", messageSource.getMessage("user.errorFitness.find", null, locale) + e.getMessage());
-            
+
         } catch (RuntimeException e)
         {
             model.addObject("errorMessage", messageSource.getMessage("user.errorFitness.saving", null, locale) + e.getMessage());
@@ -240,4 +240,81 @@ public class UserAdminController
 
         return model;
     }
+
+    @GetMapping("/fitness/edit/{userId}")
+    public ModelAndView showEditFitnessDataForm(@PathVariable Long userId)
+    {
+        SaluhudUser user = saluhudUserService.getUserById(userId);
+        if (user == null || user.getFitnessData() == null)
+        {
+            return new ModelAndView("redirect:/users/home");
+        }
+
+        ModelAndView mav = new ModelAndView("users/editFitnessData");
+        mav.addObject("fitnessData", user.getFitnessData());
+        mav.addObject("userId", userId);
+        return mav;
+    }
+
+    @PostMapping("/fitness/edit/{userId}")
+    public ModelAndView updateFitnessData(@PathVariable Long userId,
+            @ModelAttribute("fitnessData") SaluhudUserFitnessData fitnessData,
+            Locale locale)
+    {
+        ModelAndView mav = new ModelAndView("users/editFitnessData");
+
+        try
+        {
+            SaluhudUser user = saluhudUserService.getUserById(userId);
+            user.setFitnessData(fitnessData);
+            fitnessDataService.updateFitnessData(fitnessData);
+            String successMessage = messageSource.getMessage("user.fitnessData.success.edit", null, locale);
+            mav.addObject("successMessage", successMessage);
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("user.fitnessData.error.edit", new Object[]
+            {
+                e.getMessage()
+            }, locale);
+            mav.addObject("errorMessage", errorMessage);
+        }
+
+        mav.addObject("fitnessData", fitnessData);
+        mav.addObject("userId", userId);
+        return mav;
+    }
+
+    @GetMapping("/fitness/delete/{userId}")
+    public ModelAndView deleteFitnessData(@PathVariable Long userId, RedirectAttributes redirectAttributes, Locale locale)
+    {
+        ModelAndView modelAndView = new ModelAndView("redirect:/users/home");
+        try
+        {
+            SaluhudUser user = saluhudUserService.getUserById(userId);
+            SaluhudUserFitnessData fitnessData = user.getFitnessData();
+            if (user != null && user.getFitnessData() != null)
+            {
+                user.setFitnessData(null);
+                saluhudUserService.saveUser(user);
+                fitnessDataService.deleteFitnessData(fitnessData); 
+
+                String successMessage = messageSource.getMessage("fitnessData.success.delete", null, locale);
+                redirectAttributes.addFlashAttribute("successMessage", successMessage);
+            }
+            else
+            {
+                String errorMessage = messageSource.getMessage("fitnessData.error.deleteNotFound", null, locale);
+                redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+            }
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("fitnessData.error.delete", new Object[]
+            {
+                e.getMessage()
+            }, locale);
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+        }
+        return modelAndView;
+    }
+
 }
