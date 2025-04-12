@@ -88,5 +88,5 @@ public class SaluhudWebSecurityConfiguration
         return http.getSharedObject(AuthenticationManagerBuilder.class)
             .authenticationProvider(authProvider())  // Usa el proveedor de autenticación
             .build();
-    }  
+    }
 }
