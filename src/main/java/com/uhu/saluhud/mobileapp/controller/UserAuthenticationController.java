@@ -1,14 +1,20 @@
 package com.uhu.saluhud.mobileapp.controller;
 
+import com.uhu.saluhud.mobileapp.dto.user.SaluhudUserAuthenticationDTO;
 import com.uhu.saluhud.mobileapp.enums.JWTRegisteredClaim;
 import com.uhu.saluhud.mobileapp.enums.JWTSaluhudPrivateClaim;
+import com.uhu.saluhud.mobileapp.localization.MobileAppLocaleProvider;
+import com.uhu.saluhud.mobileapp.response.ApiErrorResponse;
 import com.uhu.saluhud.mobileapp.security.SaluhudJWTProperties;
 import com.uhu.saluhud.mobileapp.service.JWTService;
 import com.uhu.saluhuddatabaseutils.models.user.SaluhudUser;
 import com.uhu.saluhuddatabaseutils.services.mobileapp.user.MobileAppSaluhudUserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,26 +47,34 @@ public class UserAuthenticationController
     @Autowired
     private PasswordEncoder passwordEncoder;
     
+    @Autowired
+    private MobileAppLocaleProvider mobileAppLocaleProvider;
+    
     @PostMapping
-    public ResponseEntity<Object> authenticateUser(@RequestBody Map<String, String> credentials)
+    public ResponseEntity<Object> authenticateUser(@RequestBody @Valid SaluhudUserAuthenticationDTO saluhudUserAuthenticationDTO, HttpServletRequest request)
     {
-        String username = credentials.get("username");
-        String password = credentials.get("password");
+        String mobileAppLanguage = request.getHeader("Accept-Language");
+        Locale mobileAppLocale = mobileAppLanguage != null ? Locale.of(mobileAppLanguage) : Locale.ENGLISH;
+        
+        String username = saluhudUserAuthenticationDTO.getUsername();
+        String password = saluhudUserAuthenticationDTO.getRawPassword();
         
         Optional<SaluhudUser> saluhudUser = mobileAppSaluhudUserService.findByUsername(username);
         
         if(saluhudUser.isEmpty())
         {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "The username specified does not exist.");
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            ApiErrorResponse apiErrorResponse = new ApiErrorResponse(request.getServletPath(), 
+                    mobileAppLocaleProvider.getTranslation("authentication.usernameNotExistent", 
+                            MobileAppLocaleProvider.ERROR_MESSAGES_RESOURCE_BUNDLE_KEY, mobileAppLocale));
+            return new ResponseEntity<>(apiErrorResponse, HttpStatus.BAD_REQUEST);
         }
         
         if(!passwordEncoder.matches(password, saluhudUser.get().getPassword()))
         {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", "Incorrect password for this user.");
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            ApiErrorResponse apiErrorResponse = new ApiErrorResponse(request.getServletPath(), 
+                    mobileAppLocaleProvider.getTranslation("authentication.incorrectPassword", 
+                            MobileAppLocaleProvider.ERROR_MESSAGES_RESOURCE_BUNDLE_KEY, mobileAppLocale));
+            return new ResponseEntity<>(apiErrorResponse, HttpStatus.BAD_REQUEST);
         }
         
         Map<JWTRegisteredClaim, Object> jwtRegisteredClaims = new HashMap<>();
