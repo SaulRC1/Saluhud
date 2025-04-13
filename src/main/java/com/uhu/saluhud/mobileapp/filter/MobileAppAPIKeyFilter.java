@@ -34,6 +34,12 @@ public class MobileAppAPIKeyFilter implements Filter
     {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         
+        if(!httpRequest.getServletPath().startsWith("/saluhud-mobile-app"))
+        {
+            fc.doFilter(request, response);
+            return;
+        }
+        
         String requestApiKey = httpRequest.getHeader(saluhudMobileAppProperties.getApiKeyHTTPRequestHeader());
         
         if(requestApiKey == null || requestApiKey.isBlank() || !requestApiKey.equals(saluhudMobileAppProperties.getApiKey()))
