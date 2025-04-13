@@ -27,10 +27,10 @@ public class NutritionLocaleProvider
 
     private String translationsRootFolder;
     
-    private static final String RECIPES_TRANSLATION_BUNDLE_PREFIX = "recipes";
-    private static final String INGREDIENTS_TRANSLATION_BUNDLE_PREFIX = "ingredients";
-    private static final String RECIPE_ELABORATION_STEPS_TRANSLATION_BUNDLE_PREFIX = "recipeElaborationSteps";
-    private static final String RECIPE_INGREDIENT_TRANSLATION_BUNDLE_PREFIX = "recipeIngredient";
+    public static final String RECIPES_TRANSLATION_BUNDLE_PREFIX = "recipes";
+    public static final String INGREDIENTS_TRANSLATION_BUNDLE_PREFIX = "ingredients";
+    public static final String RECIPE_ELABORATION_STEPS_TRANSLATION_BUNDLE_PREFIX = "recipeElaborationSteps";
+    public static final String RECIPE_INGREDIENT_TRANSLATION_BUNDLE_PREFIX = "recipeIngredient";
 
     private Map<String, Properties> translationBundles;
 
