@@ -183,4 +183,14 @@ public class NutritionLocaleProvider
 
         return (String) translationBundle.get(key);
     }
+
+    public Map<String, Properties> getTranslationBundles()
+    {
+        return translationBundles;
+    }
+
+    public String getTranslationsRootFolder()
+    {
+        return translationsRootFolder;
+    }
 }
