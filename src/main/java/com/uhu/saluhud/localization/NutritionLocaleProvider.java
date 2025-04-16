@@ -34,6 +34,7 @@ public class NutritionLocaleProvider
     public static final String INGREDIENTS_TRANSLATION_BUNDLE_PREFIX = "ingredients";
     public static final String RECIPE_ELABORATION_STEPS_TRANSLATION_BUNDLE_PREFIX = "recipeElaborationSteps";
     public static final String RECIPE_INGREDIENT_TRANSLATION_BUNDLE_PREFIX = "recipeIngredient";
+    public static final String ALLERGENIC_TRANSLATION_BUNDLE_PREFIX = "allergenic";
 
     private Map<String, Properties> translationBundles;
 
@@ -138,6 +139,30 @@ public class NutritionLocaleProvider
                 translationBundles.put(RECIPE_INGREDIENT_TRANSLATION_BUNDLE_PREFIX + "_" + supportedLocale.toLanguageTag(), recipeIngredientTranslationsBundle);
 
                 logger.log(Level.INFO, "Loaded recipe ingredient translations bundle for locale \"{0}\" succesfully", supportedLocale.toLanguageTag());
+            } catch (Exception e)
+            {
+                throw e;
+            }
+            
+            String allergenicTranslationsBundlePath = this.translationsRootFolder + File.separator
+                    + ALLERGENIC_TRANSLATION_BUNDLE_PREFIX + "_" + supportedLocale.toLanguageTag() + ".properties";
+
+            logger.log(Level.INFO, "Loading recipe ingredient translations bundle for locale \"{0}\" from: \"{1}\"", new String[]
+            {
+                supportedLocale.toLanguageTag(),
+                allergenicTranslationsBundlePath
+            });
+            
+            try (InputStreamReader inputStreamReader = new InputStreamReader(new FileInputStream(allergenicTranslationsBundlePath), StandardCharsets.UTF_8); 
+                    BufferedReader reader = new BufferedReader(inputStreamReader))
+            {
+
+                Properties allergenicTranslationsBundle = new Properties();
+                allergenicTranslationsBundle.load(reader);
+
+                translationBundles.put(ALLERGENIC_TRANSLATION_BUNDLE_PREFIX + "_" + supportedLocale.toLanguageTag(), allergenicTranslationsBundle);
+
+                logger.log(Level.INFO, "Loaded allergenic translations bundle for locale \"{0}\" succesfully", supportedLocale.toLanguageTag());
             } catch (Exception e)
             {
                 throw e;
