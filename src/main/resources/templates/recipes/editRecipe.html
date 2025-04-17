@@ -35,9 +35,9 @@
 
                 <label for="allergenics" th:text="#{recipe.allergens}">Alérgenos:</label>
                 <select id="allergenics" th:field="*{allergenics}" multiple>
-                    <option th:each="allergic : ${allergens}" 
-                            th:value="${allergic.id}" 
-                            th:text="${allergic.name}"></option>
+                    <option th:each="allergic : ${translatedAllergenics}" 
+                            th:value="${allergic.key}" 
+                            th:text="${allergic.value}"></option>
                 </select>
 
                 <button type="submit" class="button" th:text="#{recipe.save}">Guardar Cambios</button>

@@ -147,7 +147,7 @@ public class NutritionLocaleProvider
             String allergenicTranslationsBundlePath = this.translationsRootFolder + File.separator
                     + ALLERGENIC_TRANSLATION_BUNDLE_PREFIX + "_" + supportedLocale.toLanguageTag() + ".properties";
 
-            logger.log(Level.INFO, "Loading recipe ingredient translations bundle for locale \"{0}\" from: \"{1}\"", new String[]
+            logger.log(Level.INFO, "Loading allergenic translations bundle for locale \"{0}\" from: \"{1}\"", new String[]
             {
                 supportedLocale.toLanguageTag(),
                 allergenicTranslationsBundlePath

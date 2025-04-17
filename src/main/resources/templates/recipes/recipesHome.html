@@ -58,7 +58,7 @@
                             <td th:text="${receta.ingredientsDescription}"></td>
                             <td th:text="${receta.kilocalories}"></td>
                             <td>
-                                <span th:each="allergenic : ${receta.allergenics}" th:text="${allergenic.name} + ' ' "></span>
+                                <span th:each="allergenic : ${receta.allergenicsDTO}" th:text="${allergenic.name} + ' ' "></span>
                             </td>
                             <td>
                                 <input type="radio" name="selectedRecipe" th:value="${receta.id}" 

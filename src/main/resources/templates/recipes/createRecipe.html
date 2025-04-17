@@ -37,18 +37,18 @@
                 <!-- Combo box para seleccionar los alérgenos -->
                 <label for="allergens" th:text="#{allergens.label}">Alergenos:</label>
                 <select id="allergens" th:field="*{allergenics}" multiple>
-                    <option th:each="allergen : ${allergenics}" 
-                            th:value="${allergen.id}" 
-                            th:text="${allergen.name}"></option>
+                    <option th:each="allergen : ${translatedAllergenics}" 
+                            th:value="${allergen.key}" 
+                            th:text="${allergen.value}"></option>
                 </select>
 
                 <div id="ingredientsContainer">
                     <label th:text="#{recipe.ingredients.label}">Ingredientes:</label>
                     <div th:each="recipeIngredient, stat : *{recipeIngredients}" class="ingredient-entry">
                         <select th:field="*{recipeIngredients[__${stat.index}__].ingredientId}">
-                            <option th:each="ingredient : ${ingredients}"
-                                    th:value="${ingredient.id}"
-                                    th:text="${ingredient.name}">
+                            <option th:each="ingredient : ${translatedIngredients}"
+                                    th:value="${ingredient.key}"
+                                    th:text="${ingredient.value}">
                             </option>
                         </select>
                         <input type="number" step="0.01" th:field="*{recipeIngredients[__${stat.index}__].quantity}" th:placeholder="#{recipe.ingredients.quantity}" required/>
