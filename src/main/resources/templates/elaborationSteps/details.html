@@ -20,7 +20,7 @@
             <p><strong th:text="#{elaborationStep.number}">Número de Paso</strong>: <span th:text="${elaborationStep.stepNumber}"></span></p>
             <p><strong th:text="#{elaborationStep.description}">Descripción</strong>: <span th:text="${elaborationStep.stepDescription}"></span></p>
             <p><strong th:text="#{elaborationStep.recipe}">Receta</strong>: 
-                <a th:href="@{/recipes/details/{id}(id=${elaborationStep.recipe.id})}" th:text="${elaborationStep.recipe.name}"></a>
+                <a th:href="@{/recipes/details/{id}(id=${elaborationStep.recipeDTO.id})}" th:text="${elaborationStep.recipeDTO.name}"></a>
             </p>
 
             <a th:href="@{/elaborationSteps/home}" class="button" th:text="#{elaborationStep.back}">Volver a la Lista</a>

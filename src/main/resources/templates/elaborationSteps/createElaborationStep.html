@@ -32,8 +32,8 @@
                 <label for="recipe" th:text="#{elaborationStep.recipe}">Receta:</label>
                 <select id="recipe" th:field="*{recipe}">
                     <option th:each="rec : ${recipes}" 
-                            th:value="${rec.id}" 
-                            th:text="${rec.name}"></option>
+                            th:value="${rec.key}" 
+                            th:text="${rec.value}"></option>
                 </select>
 
                 <!-- Botón para guardar el paso -->
