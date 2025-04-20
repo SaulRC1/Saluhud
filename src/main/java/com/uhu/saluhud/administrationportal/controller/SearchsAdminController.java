@@ -3,6 +3,7 @@ package com.uhu.saluhud.administrationportal.controller;
 import com.uhu.saluhud.administrationportal.configuration.web.IngredientSearchDTO;
 import com.uhu.saluhud.administrationportal.configuration.web.RecipeSearchDTO;
 import com.uhu.saluhud.administrationportal.configuration.web.UserSearchDTO;
+import com.uhu.saluhud.localization.NutritionLocaleProvider;
 import com.uhu.saluhuddatabaseutils.models.nutrition.Allergenic;
 import com.uhu.saluhuddatabaseutils.models.nutrition.Ingredient;
 import com.uhu.saluhuddatabaseutils.models.nutrition.Recipe;
@@ -12,6 +13,7 @@ import com.uhu.saluhuddatabaseutils.services.administrationportal.nutrition.Admi
 import com.uhu.saluhuddatabaseutils.services.administrationportal.nutrition.AdministrationPortalRecipeService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalSaluhudUserService;
 import java.util.List;
+import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -43,9 +45,12 @@ public class SearchsAdminController
 
     @Autowired
     private AdministrationPortalRecipeService recipeService;
-    
+
     @Autowired
     private AdministrationPortalSaluhudUserService userService;
+
+    @Autowired
+    private NutritionLocaleProvider nutritionLocaleProvider;
 
     @GetMapping("/advanced")
     public ModelAndView showAdvancedSearchPage()
@@ -62,7 +67,7 @@ public class SearchsAdminController
             @RequestParam(required = false) Integer minCarbohydratesAmount,
             @RequestParam(required = false) Integer minFatAmount,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size)
+            @RequestParam(defaultValue = "20") int size, Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("search/searchIngredients");
         Pageable pageable = PageRequest.of(page, size);
@@ -93,7 +98,21 @@ public class SearchsAdminController
             ingredientsPage = ingredientService.getIngredients(page, size);
         }
 
-        modelAndView.addObject("ingredientsPage", ingredientsPage.getContent());
+        // Traducir nombres de ingredientes antes de mostrarlos
+        List<Ingredient> translatedIngredients = ingredientsPage.getContent().stream()
+                .map(ingredient ->
+                {
+                    String translatedName = nutritionLocaleProvider.getTranslation(
+                            ingredient.getName(),
+                            NutritionLocaleProvider.INGREDIENTS_TRANSLATION_BUNDLE_PREFIX,
+                            locale
+                    );
+                    ingredient.setName(translatedName);
+                    return ingredient;
+                })
+                .toList();
+
+        modelAndView.addObject("ingredientsPage", translatedIngredients);
         modelAndView.addObject("currentPage", ingredientsPage.getNumber());
         modelAndView.addObject("totalPages", ingredientsPage.getTotalPages());
         modelAndView.addObject("searchDTO", new IngredientSearchDTO(name, maxKilocalories, minProteinAmount, minCarbohydratesAmount, minFatAmount));
@@ -111,15 +130,43 @@ public class SearchsAdminController
             @RequestParam(defaultValue = "0") int ingredientPage,
             @RequestParam(defaultValue = "20") int ingredientSize,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size)
+            @RequestParam(defaultValue = "10") int size, Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("search/searchRecipes");
+
+        // Ingredientes
         Page<Ingredient> ingredientsPage = ingredientService.getIngredients(ingredientPage, ingredientSize);
+        List<Ingredient> translatedIngredients = ingredientsPage.getContent().stream()
+                .map(ingredient ->
+                {
+                    String translatedName = nutritionLocaleProvider.getTranslation(
+                            ingredient.getName(),
+                            NutritionLocaleProvider.INGREDIENTS_TRANSLATION_BUNDLE_PREFIX,
+                            locale
+                    );
+                    ingredient.setName(translatedName);
+                    return ingredient;
+                })
+                .toList();
+
+        // Alérgenos
+        List<Allergenic> allergenics = allergenicService.findAllAllergenics();
+        List<Allergenic> translatedAllergenics = allergenics.stream()
+                .map(allergenic ->
+                {
+                    String translatedName = nutritionLocaleProvider.getTranslation(
+                            allergenic.getName(),
+                            NutritionLocaleProvider.ALLERGENIC_TRANSLATION_BUNDLE_PREFIX,
+                            locale
+                    );
+                    allergenic.setName(translatedName);
+                    return allergenic;
+                })
+                .toList();
+
         Page<Recipe> recipes;
 
         // Cargar todos los alérgenos sin paginar
-        List<Allergenic> allergenics = allergenicService.findAllAllergenics();
-
         if (name != null && !name.isEmpty())
         {
             recipes = recipeService.searchByName(name, page, size);
@@ -145,15 +192,38 @@ public class SearchsAdminController
             recipes = recipeService.getRecipes(page, size);
         }
 
-        modelAndView.addObject("recipesPage", recipes);
-        modelAndView.addObject("currentPage", page);
+        List<Recipe> translatedRecipes = recipes.getContent().stream().peek(recipe ->
+        {
+            String translatedName = nutritionLocaleProvider.getTranslation(
+                    recipe.getName(),
+                    NutritionLocaleProvider.RECIPES_TRANSLATION_BUNDLE_PREFIX,
+                    locale
+            );
+            String translatedDescription = nutritionLocaleProvider.getTranslation(
+                    recipe.getDescription(),
+                    NutritionLocaleProvider.RECIPES_TRANSLATION_BUNDLE_PREFIX,
+                    locale
+            );
+            String translatedIngredientsDescription = nutritionLocaleProvider.getTranslation(
+                    recipe.getIngredientsDescription(),
+                    NutritionLocaleProvider.RECIPES_TRANSLATION_BUNDLE_PREFIX,
+                    locale
+            );
+
+            recipe.setName(translatedName);
+            recipe.setDescription(translatedDescription);
+            recipe.setIngredientsDescription(translatedIngredientsDescription);
+        }).toList();
+
+        modelAndView.addObject("recipesPage", translatedRecipes);
+        modelAndView.addObject("currentPage", recipes.getNumber());
         modelAndView.addObject("totalPages", recipes.getTotalPages());
 
-        modelAndView.addObject("ingredientsPage", ingredientsPage.getContent());
+        modelAndView.addObject("ingredientsPage", translatedIngredients);
         modelAndView.addObject("ingredientCurrentPage", ingredientsPage.getNumber());
         modelAndView.addObject("ingredientTotalPages", ingredientsPage.getTotalPages());
 
-        modelAndView.addObject("allergenics", allergenics);
+        modelAndView.addObject("allergenics", translatedAllergenics);
         modelAndView.addObject("searchDTO", new RecipeSearchDTO(name, maxKilocalories,
                 ingredientId, allergenicId, allergenicExclusionId));
 

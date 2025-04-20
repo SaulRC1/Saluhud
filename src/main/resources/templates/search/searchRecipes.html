@@ -116,11 +116,26 @@
                 </table>
             </div>
 
-            <!-- Paginación -->
             <div class="pagination">
-                <a th:if="${recipesPage.hasPrevious()}" th:href="@{/search/recipes(page=${recipesPage.number - 1})}" class="page-link">&laquo; Anterior</a>
-                <span th:text="|Página ${recipesPage.number + 1} de ${recipesPage.totalPages}|"></span>
-                <a th:if="${recipesPage.hasNext()}" th:href="@{/search/recipes(page=${recipesPage.number + 1})}" class="page-link">Siguiente &raquo;</a>
+                <a th:if="${currentPage > 0}"
+                   th:href="@{/search/recipes(page=${currentPage - 1},
+                   name=${searchDTO.name},
+                   maxKilocalories=${searchDTO.maxKilocalories},
+                   ingredientId=${searchDTO.ingredientId},
+                   allergenicId=${searchDTO.allergenicId},
+                   allergenicExclusionId=${searchDTO.allergenicExclusionId})}"
+                   class="page-link">&laquo; Anterior</a>
+
+                <span th:text="|Página ${currentPage + 1} de ${totalPages}|"></span>
+
+                <a th:if="${currentPage + 1 < totalPages}"
+                   th:href="@{/search/recipes(page=${currentPage + 1},
+                   name=${searchDTO.name},
+                   maxKilocalories=${searchDTO.maxKilocalories},
+                   ingredientId=${searchDTO.ingredientId},
+                   allergenicId=${searchDTO.allergenicId},
+                   allergenicExclusionId=${searchDTO.allergenicExclusionId})}"
+                   class="page-link">Siguiente &raquo;</a>
             </div>
         </div>
 
