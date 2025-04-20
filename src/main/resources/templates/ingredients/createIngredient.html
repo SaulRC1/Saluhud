@@ -43,8 +43,8 @@
                 <label for="allergens" th:text="#{allergens.label}">Alergenos:</label>
                 <select id="allergens" th:field="*{allergens}" multiple>
                     <option th:each="allergen : ${allergenics}" 
-                            th:value="${allergen.id}" 
-                            th:text="${allergen.name}"></option>
+                            th:value="${allergen.key}" 
+                            th:text="${allergen.value}"></option>
                 </select>
 
                 <!-- Botón para guardar el ingrediente -->

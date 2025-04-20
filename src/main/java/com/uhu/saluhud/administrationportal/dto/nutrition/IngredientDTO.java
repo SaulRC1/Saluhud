@@ -40,6 +40,16 @@ public class IngredientDTO
         this.recipeIngredients = recipeIngredients;
     }
 
+    public IngredientDTO(long id, String name, int kilocalories, int proteinAmount, int carbohydratesAmount, int fatAmount)
+    {
+        this.id = id;
+        this.name = name;
+        this.kilocalories = kilocalories;
+        this.proteinAmount = proteinAmount;
+        this.carbohydratesAmount = carbohydratesAmount;
+        this.fatAmount = fatAmount;
+    }
+    
     public IngredientDTO(long id, String name)
     {
         this.id = id;

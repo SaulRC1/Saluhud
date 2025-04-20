@@ -40,8 +40,8 @@
                 <label for="allergens" th:text="#{ingredient.allergens}">Alérgenos:</label>
                 <select id="allergens" th:field="*{allergens}" multiple>
                     <option th:each="allergen : ${allergenics}" 
-                            th:value="${allergen.id}" 
-                            th:text="${allergen.name}"></option>
+                            th:value="${allergen.key}" 
+                            th:text="${allergen.value}"></option>
                 </select>
 
                 <button type="submit" class="button" th:text="#{ingredient.save}">Guardar Cambios</button>

@@ -163,7 +163,7 @@ public class RecipesAdminController
                     ri.setRecipe(recipe);
 
                     String safeUnitKey = "recipeIngredient.unit." + ri.getId().getIdIngredient() + "." + ri.getUnit();
-                    for (Locale langLocale : List.of(new Locale("es"), new Locale("en")))
+                    for (Locale langLocale : List.of(Locale.forLanguageTag("es"), Locale.forLanguageTag("en")))
                     {
                         nutritionLocaleService.addKeyToTranslationBundle(safeUnitKey, ri.getUnit(), langLocale,
                                 NutritionLocaleProvider.RECIPE_INGREDIENT_TRANSLATION_BUNDLE_PREFIX);
@@ -190,7 +190,7 @@ public class RecipesAdminController
             }
 
             String baseKey = "recipe";
-            for (Locale langLocale : List.of(new Locale("es"), new Locale("en")))
+            for (Locale langLocale : List.of(Locale.forLanguageTag("es"), Locale.forLanguageTag("en")))
             {
                 nutritionLocaleService.addKeyToTranslationBundle(baseKey + ".name." + recipe.getName(),
                         recipe.getName(), langLocale, NutritionLocaleProvider.RECIPES_TRANSLATION_BUNDLE_PREFIX);
@@ -315,10 +315,6 @@ public class RecipesAdminController
         try
         {
             Recipe recipe = recipeService.getRecipeById(id);
-            if (recipe == null)
-            {
-                throw new IllegalArgumentException("Receta no encontrada con id: " + id);
-            }
 
             deleteRecipeTranslations(recipe);
 
@@ -362,13 +358,9 @@ public class RecipesAdminController
                 ));
     }
 
-    private void enrichRecipeIngredients(Recipe recipe, Locale locale, boolean translateUnitKeyFromFile) throws IOException
+    private void enrichRecipeIngredients(Recipe recipe, Locale locale, 
+            boolean translateUnitKeyFromFile) throws IOException
     {
-        if (recipe.getRecipeIngredients() == null)
-        {
-            return;
-        }
-
         List<RecipeIngredient> validIngredients = recipe.getRecipeIngredients().stream()
                 .filter(ri -> ri.getIngredientId() != null)
                 .collect(Collectors.toList());
@@ -385,7 +377,7 @@ public class RecipesAdminController
             ri.setRecipe(recipe);
 
             String safeUnitKey = "recipeIngredient.unit." + ri.getId().getIdIngredient() + "." + ri.getUnit();
-            for (Locale lang : List.of(new Locale("es"), new Locale("en")))
+            for (Locale lang : List.of(Locale.forLanguageTag("es"), Locale.forLanguageTag("en")))
             {
                 nutritionLocaleService.addKeyToTranslationBundle(safeUnitKey, ri.getUnit(), lang,
                         NutritionLocaleProvider.RECIPE_INGREDIENT_TRANSLATION_BUNDLE_PREFIX);
@@ -458,7 +450,8 @@ public class RecipesAdminController
         String bundlePath = nutritionLocaleProvider.getTranslationsRootFolder() + File.separator
                 + NutritionLocaleProvider.RECIPES_TRANSLATION_BUNDLE_PREFIX + "_" + languageTag + ".properties";
 
-        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(bundlePath), StandardCharsets.UTF_8); BufferedReader bufferedReader = new BufferedReader(reader))
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(bundlePath), 
+                StandardCharsets.UTF_8); BufferedReader bufferedReader = new BufferedReader(reader))
         {
 
             Properties translations = new Properties();

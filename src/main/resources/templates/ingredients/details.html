@@ -131,7 +131,7 @@
             <div class="allergens-container">
                 <h3 th:text="#{ingredient.allergens}">Alérgenos:</h3>
                 <ul class="allergens">
-                    <li th:each="allergen : ${ingredient.allergens}" th:text="${allergen.name}"></li>
+                    <li th:each="allergen : ${ingredient.allergenicsDTO}" th:text="${allergen.name}"></li>
                 </ul>
             </div>
 
@@ -139,7 +139,7 @@
             <div class="recipe-ingredients">
                 <h3 th:text="#{ingredient.recipeIngredients}">Ingredientes en las Recetas: </h3>
                 <div th:each="recipeIngredient : ${ingredient.recipeIngredients}" class="recipe-ingredient-item">
-                    <span th:text="${recipeIngredient.recipe.name}"></span> <!-- Nombre de la receta -->
+                    <span th:text="${recipeIngredient.recipeDTO.name}"></span> <!-- Nombre de la receta -->
                 </div>
             </div>
 
