@@ -19,8 +19,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -185,12 +183,6 @@ public class ElaborationStepsAdminController
     @GetMapping("/edit/{id}")
     public ModelAndView showEditForm(@PathVariable long id, Locale locale)
     {
-        /*
-        ModelAndView modelAndView = new ModelAndView("elaborationSteps/editElaborationStep");
-        RecipeElaborationStep elaborationStep = elaborationStepService.getStepById(id);
-        modelAndView.addObject("elaborationStep", elaborationStep);
-        return modelAndView;*/
-
         ModelAndView modelAndView = new ModelAndView("elaborationSteps/editElaborationStep");
 
         RecipeElaborationStep elaborationStep = elaborationStepService.getStepById(id);
@@ -224,23 +216,6 @@ public class ElaborationStepsAdminController
     public ModelAndView updateElaborationStep(@ModelAttribute("elaborationStep") RecipeElaborationStep elaborationStep,
             Locale locale)
     {
-        /*ModelAndView modelAndView = new ModelAndView("elaborationSteps/editElaborationStep");
-        try
-        {
-            elaborationStepService.updateRecipeElaborationStep(elaborationStep);
-            String successMessage = messageSource.getMessage("elaborationStep.success.edit", null, locale);
-            modelAndView.addObject("successMessage", successMessage);
-        } catch (NoSuchMessageException e)
-        {
-            String errorMessage = messageSource.getMessage("elaborationStep.error.edit", new Object[]
-            {
-                e.getMessage()
-            }, locale);
-            modelAndView.addObject("errorMessage", errorMessage);
-        }
-
-        return modelAndView;*/
-
         ModelAndView modelAndView = new ModelAndView("elaborationSteps/editElaborationStep");
 
         try

@@ -47,7 +47,7 @@
 
                 <div class="ingredients">
                     <strong th:text="#{allergenic.ingredients}">Ingredientes: </strong>
-                    <div th:each="ingredient : ${allergenic.ingredients}" class="ingredient-item">
+                    <div th:each="ingredient : ${allergenic.ingredientsDTO}" class="ingredient-item">
                         <span th:text="${ingredient.name}"></span>
                     </div>
                 </div>
