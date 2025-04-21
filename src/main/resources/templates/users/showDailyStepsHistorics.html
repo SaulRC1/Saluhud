@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{user.steps.historics.title}">Históricos</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" th:href="@{/css/showHistorics.css}"/>
+    </head>
+    <body>
+
+        <div class="header">
+            <a th:href="@{/users/home}" class="header-link">
+                <h2 th:text="#{user.portal.admin}">Portal de Gestión para Administradores</h2>
+            </a>
+        </div>
+
+        <div class="container">
+            <h1 th:if="${entries != null}">
+                <span th:text="#{user.steps.historics.heading}">Histórico de pasos diarios de</span>
+                <span th:text="${user.name} + ' ' + ${user.surname}">Nombre</span>
+            </h1>
+
+            <div th:if="${errorMessage}">
+                <p th:text="${errorMessage}" style="color: red;"></p>
+            </div>
+
+            <div th:if="${entries != null}">
+                <canvas id="sleepChart" width="800" height="400"></canvas>
+
+                <h3 class="mt-4" th:text="#{user.steps.historics.evaluationsTitle}">Evaluaciones de pasos diarios</h3>
+                <table class="table table-bordered mt-2">
+                    <thead class="table-light">
+                        <tr>
+                            <th th:text="#{user.historics.date}">Fecha</th>
+                            <th th:text="#{user.steps.historics.doneSteps}">Pasos realizados</th>
+                            <th th:text="#{user.steps.historics.kcalBurned}">Kilocalorías quemadas</th>
+                            <th th:text="#{user.historics.evaluation}">Evaluación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="entry : ${entries}">
+                            <td th:text="${#temporals.format(entry.entryDate, 'dd/MM/yyyy')}"></td>
+                            <td th:text="${entry.doneSteps}"></td>
+                            <td th:text="${entry.kiloCaloriesBurned}"></td>
+                            <td th:switch="${entry.stepEvaluation.toString()}">
+                                <span th:case="'EXCELLENT'" th:text="#{user.historics.evaluation.excellent}"></span>
+                                <span th:case="'WELL'" th:text="#{user.historics.evaluation.well}"></span>
+                                <span th:case="'MINIMUM'" th:text="#{user.historics.evaluation.minimum}"></span>
+                                <span th:case="'FAILED'" th:text="#{user.historics.evaluation.failed}"></span>
+                                <span th:case="*" th:text="${entry.stepEvaluation}"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div id="dailyStepsData"
+                     th:data-labels="${dates}"
+                     th:data-doneSteps="${doneSteps}"
+                     th:data-kilocaloriesBurned="${kcalBurned}">
+                </div>
+            </div>
+
+            <a th:href="@{/users/home}" class="btn btn-secondary" th:text="#{user.historics.back}">Volver</a>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script th:inline="javascript">
+            const sleepDataDiv = document.getElementById('dailyStepsData');
+            const labels = JSON.parse(sleepDataDiv.getAttribute('data-labels'));
+            const doneSteps = JSON.parse(sleepDataDiv.getAttribute('data-doneSteps'));
+            const kilocaloriesBurned = JSON.parse(sleepDataDiv.getAttribute('data-kilocaloriesBurned'));
+
+            const labeldoneSteps = /*[[#{user.steps.historics.doneSteps}]]*/ 'Pasos realizados';
+            const labelkilocaloriesBurned = /*[[#{user.steps.historics.kcalBurned}]]*/ 'Kcal quemadas';
+            const labelFecha = /*[[#{user.historics.date}]]*/ 'Fecha';
+            const labelCantidad = /*[[#{user.historics.quantity}]]*/ 'Cantidad';
+
+            if (labels && doneSteps && kilocaloriesBurned) {
+                const ctx = document.getElementById('sleepChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                                label: labeldoneSteps,
+                                data: doneSteps,
+                                backgroundColor: '#a80a2e', // Rojo fuerte
+                                borderColor: '#d67a8f', // Borde rojo suave
+                                fill: false
+                            },
+                            {
+                                label: labelkilocaloriesBurned,
+                                data: kilocaloriesBurned,
+                                backgroundColor: '#3a9d8e',
+                                borderColor: '#64b3a8',
+                                fill: false
+                            }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: labelFecha
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: labelCantidad
+                                }
+                            }
+                        }
+                    }
+                });
+            } else {
+                console.error("No se han recibido datos válidos para el gráfico.");
+            }
+        </script>
+    </body>
+</html>
+
+

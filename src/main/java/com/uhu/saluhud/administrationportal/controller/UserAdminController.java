@@ -1,17 +1,30 @@
 package com.uhu.saluhud.administrationportal.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.uhu.saluhuddatabaseutils.models.user.DailyStepsHistorical;
+import com.uhu.saluhuddatabaseutils.models.user.DailyStepsHistoricalEntry;
 import com.uhu.saluhuddatabaseutils.models.user.SaluhudUser;
 import com.uhu.saluhuddatabaseutils.models.user.SaluhudUserFitnessData;
+import com.uhu.saluhuddatabaseutils.models.user.SleepHistorical;
+import com.uhu.saluhuddatabaseutils.models.user.SleepHistoricalEntry;
+import com.uhu.saluhuddatabaseutils.models.user.WeightHistorical;
+import com.uhu.saluhuddatabaseutils.models.user.WeightHistoricalEntry;
 import com.uhu.saluhuddatabaseutils.security.PasswordEncryptionService;
+import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalDailyStepsHistoricalService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalSaluhudUserService;
+import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalSleepHistoricalService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalUserFitnessDataService;
+import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalWeightHistoricalService;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -45,6 +58,15 @@ public class UserAdminController
 
     @Autowired
     private AdministrationPortalUserFitnessDataService fitnessDataService;
+
+    @Autowired
+    private AdministrationPortalSleepHistoricalService sleepHistoricalService;
+
+    @Autowired
+    private AdministrationPortalWeightHistoricalService weightHistoricalService;
+
+    @Autowired
+    private AdministrationPortalDailyStepsHistoricalService dailyStepHistoricalService;
 
     @GetMapping("/home")
     public ModelAndView getUsers(@RequestParam(defaultValue = "0") int page,
@@ -296,7 +318,7 @@ public class UserAdminController
             {
                 user.setFitnessData(null);
                 saluhudUserService.saveUser(user);
-                fitnessDataService.deleteFitnessData(fitnessData); 
+                fitnessDataService.deleteFitnessData(fitnessData);
 
                 String successMessage = messageSource.getMessage("fitnessData.success.delete", null, locale);
                 redirectAttributes.addFlashAttribute("successMessage", successMessage);
@@ -315,6 +337,172 @@ public class UserAdminController
             redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
         }
         return modelAndView;
+    }
+
+    @GetMapping("/sleepHistorics/{userId}")
+    public ModelAndView showUserSleepHistorics(@PathVariable long userId)
+    {
+        ModelAndView mav = new ModelAndView("users/showSleepHistorics");
+
+        SaluhudUser user = saluhudUserService.getUserById(userId);
+        SleepHistorical sleepHistorical = sleepHistoricalService.findByUserId(user.getId());
+
+        String errorMessageJsonConversion = messageSource.getMessage("user.historics.error.jsonConversion", null, LocaleContextHolder.getLocale());
+        String errorMessageNoData = messageSource.getMessage("user.historics.noData", null, LocaleContextHolder.getLocale());
+
+        if (sleepHistorical != null)
+        {
+            List<SleepHistoricalEntry> entries = sleepHistorical.getEntries();
+            List<String> dates = entries.stream()
+                    .map(e -> e.getEntryDate().toString())
+                    .collect(Collectors.toList());
+
+            List<Integer> hours = entries.stream()
+                    .map(SleepHistoricalEntry::getHoursSlept)
+                    .collect(Collectors.toList());
+
+            List<Double> minutes = entries.stream()
+                    .map(SleepHistoricalEntry::getMinutesSlept)
+                    .collect(Collectors.toList());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            try
+            {
+                String datesJson = objectMapper.writeValueAsString(dates);
+                String hoursJson = objectMapper.writeValueAsString(hours);
+                String minutesJson = objectMapper.writeValueAsString(minutes);
+
+                mav.addObject("dates", datesJson);
+                mav.addObject("hours", hoursJson);
+                mav.addObject("minutes", minutesJson);
+            } catch (JsonProcessingException e)
+            {
+                mav.addObject("errorMessage", errorMessageJsonConversion);
+            }
+
+            mav.addObject("entries", entries);
+            mav.addObject("user", user);
+        }
+        else
+        {
+            mav.addObject("errorMessage", errorMessageNoData);
+        }
+
+        return mav;
+    }
+
+    @GetMapping("/weightHistorics/{userId}")
+    public ModelAndView showUserWeightHistorics(@PathVariable long userId)
+    {
+        ModelAndView mav = new ModelAndView("users/showWeightHistorics");
+
+        SaluhudUser user = saluhudUserService.getUserById(userId);
+        WeightHistorical weightHistorical = weightHistoricalService.findWeightHistoricalByUserId(user.getId());
+
+        String errorMessageJsonConversion = messageSource.getMessage("user.historics.error.jsonConversion", null, LocaleContextHolder.getLocale());
+        String errorMessageNoData = messageSource.getMessage("user.weight.historics.noData", null, LocaleContextHolder.getLocale());
+
+        if (weightHistorical != null)
+        {
+            List<WeightHistoricalEntry> entries = weightHistorical.getEntries();
+            List<String> dates = entries.stream()
+                    .map(e -> e.getEntryDate().toString())
+                    .collect(Collectors.toList());
+
+            List<Double> height = entries.stream()
+                    .map(WeightHistoricalEntry::getHeightEntry)
+                    .collect(Collectors.toList());
+
+            List<Double> weight = entries.stream()
+                    .map(WeightHistoricalEntry::getWeightEntry)
+                    .collect(Collectors.toList());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            try
+            {
+                String datesJson = objectMapper.writeValueAsString(dates);
+                String heightJson = objectMapper.writeValueAsString(height);
+                String weightJson = objectMapper.writeValueAsString(weight);
+
+                mav.addObject("dates", datesJson);
+                mav.addObject("height", heightJson);
+                mav.addObject("weight", weightJson);
+            } catch (JsonProcessingException e)
+            {
+                mav.addObject("errorMessage", errorMessageJsonConversion);
+            }
+
+            mav.addObject("entries", entries);
+            mav.addObject("user", user);
+        }
+        else
+        {
+            mav.addObject("errorMessage", errorMessageNoData);
+        }
+
+        return mav;
+    }
+
+    @GetMapping("/dailyStepsHistorics/{userId}")
+    public ModelAndView showUserDailyStepsHistorics(@PathVariable long userId)
+    {
+        ModelAndView mav = new ModelAndView("users/showDailyStepsHistorics");
+
+        SaluhudUser user = saluhudUserService.getUserById(userId);
+        List<DailyStepsHistorical> listDailyStepsHistorical = dailyStepHistoricalService.findAllByUserId(user.getId());
+
+        String errorMessageJsonConversion = messageSource.getMessage("user.historics.error.jsonConversion", null, LocaleContextHolder.getLocale());
+        String errorMessageNoData = messageSource.getMessage("user.step.historics.noData", null, LocaleContextHolder.getLocale());
+
+        if (listDailyStepsHistorical != null)
+        {
+            for (DailyStepsHistorical dailyStepsHistorical : listDailyStepsHistorical)
+            {
+                if (dailyStepsHistorical != null)
+                {
+                    List<DailyStepsHistoricalEntry> entries = dailyStepsHistorical.getEntries();
+                    List<String> dates = entries.stream()
+                            .map(e -> e.getEntryDate().toString())
+                            .collect(Collectors.toList());
+
+                    List<Integer> doneSteps = entries.stream()
+                            .map(DailyStepsHistoricalEntry::getDoneSteps)
+                            .collect(Collectors.toList());
+
+                    List<Double> kcalBurned = entries.stream()
+                            .map(DailyStepsHistoricalEntry::getKiloCaloriesBurned)
+                            .collect(Collectors.toList());
+
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    try
+                    {
+                        String datesJson = objectMapper.writeValueAsString(dates);
+                        String doneStepsJson = objectMapper.writeValueAsString(doneSteps);
+                        String kcalBurnedJson = objectMapper.writeValueAsString(kcalBurned);
+
+                        mav.addObject("dates", datesJson);
+                        mav.addObject("doneSteps", doneStepsJson);
+                        mav.addObject("kcalBurned", kcalBurnedJson);
+                    } catch (JsonProcessingException e)
+                    {
+                        mav.addObject("errorMessage", errorMessageJsonConversion);
+                    }
+
+                    mav.addObject("entries", entries);
+                    mav.addObject("user", user);
+                }
+                else
+                {
+                    mav.addObject("errorMessage", errorMessageNoData);
+                }
+            }
+        }
+        else
+        {
+            mav.addObject("errorMessage", errorMessageNoData);
+        }
+
+        return mav;
     }
 
 }

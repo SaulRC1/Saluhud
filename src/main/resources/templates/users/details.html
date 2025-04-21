@@ -74,6 +74,20 @@
                     Eliminar Datos Fitness
                 </a>
 
+                <a th:href="@{/users/sleepHistorics/{userId}(userId=${user.id})}" class="button"
+                   th:text="#{user.historics.showButton}">
+                    Mostrar histórico de sueño
+                </a>
+                
+                <a th:href="@{/users/dailyStepsHistorics/{userId}(userId=${user.id})}" class="button"
+                   th:text="#{user.dailyStepsHistorics.showButton}">
+                    Mostrar histórico de pasos
+                </a>
+                
+                <a th:href="@{/users/weightHistorics/{userId}(userId=${user.id})}" class="button"
+                   th:text="#{user.weightHistorics.showButton}">
+                    Mostrar histórico de peso
+                </a>
             </div>  
 
             <!-- Mensajes i18n ocultos -->

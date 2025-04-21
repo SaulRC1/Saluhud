@@ -1,0 +1,100 @@
+/* Colores corporativos */
+:root {
+    --color-rojo: #a80a2e; /* Rojo oscuro */
+    --color-blanco: #FFFFFF; /* Blanco */
+    --color-negro: #000000; /* Negro */
+    --color-gris-claro: #f4f4f4;
+    --color-gris-oscuro: #333;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--color-gris-claro);
+    color: var(--color-negro);
+    margin: 0;
+    padding: 0;
+}
+
+/* Header responsivo */
+.header {
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+    padding: 1.5rem;
+    text-align: center;
+    font-size: 1.0rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0px 4px 6px var(--sombra);
+}
+
+/* Estilo para el enlace dentro del div .header */
+.header-link {
+    text-decoration: none; /* Elimina el subrayado */
+    color: var(--color-blanco); /* Color del enlace */ 
+    transition: color 0.3s ease; /* Transición suave para el cambio de color */
+}
+
+/* Estilo para el enlace cuando el ratón pasa por encima */
+.header-link:hover {
+    color: var(--color-negro); /* Cambia el color cuando el ratón pasa por encima */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--color-blanco);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 2rem;
+    color: var(--color-rojo);
+    margin-bottom: 20px;
+}
+
+h3 {
+    color: var(--color-rojo);
+    margin-top: 20px;
+}
+
+.table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid var(--color-gris-oscuro);
+}
+
+.table th {
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+}
+
+.table td {
+    background-color: var(--color-gris-claro);
+}
+
+.btn {
+    padding: 10px 20px;
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.btn:hover {
+    background-color: darkred;
+}
+
+#sleepChart {
+    margin-top: 30px;
+}
