@@ -13,6 +13,7 @@ import com.uhu.saluhuddatabaseutils.models.user.WeightHistoricalEntry;
 import com.uhu.saluhuddatabaseutils.security.PasswordEncryptionService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalDailyStepsHistoricalService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalSaluhudUserService;
+import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalSleepHistoricalEntryService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalSleepHistoricalService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalUserFitnessDataService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalWeightHistoricalService;
@@ -67,6 +68,9 @@ public class UserAdminController
 
     @Autowired
     private AdministrationPortalDailyStepsHistoricalService dailyStepHistoricalService;
+
+    @Autowired
+    private AdministrationPortalSleepHistoricalEntryService sleepHistoricalEntryService;
 
     @GetMapping("/home")
     public ModelAndView getUsers(@RequestParam(defaultValue = "0") int page,
@@ -454,52 +458,159 @@ public class UserAdminController
         String errorMessageJsonConversion = messageSource.getMessage("user.historics.error.jsonConversion", null, LocaleContextHolder.getLocale());
         String errorMessageNoData = messageSource.getMessage("user.step.historics.noData", null, LocaleContextHolder.getLocale());
 
-        if (listDailyStepsHistorical != null)
+        if (listDailyStepsHistorical != null && !listDailyStepsHistorical.isEmpty())
         {
             for (DailyStepsHistorical dailyStepsHistorical : listDailyStepsHistorical)
             {
-                if (dailyStepsHistorical != null)
+                List<DailyStepsHistoricalEntry> entries = dailyStepsHistorical.getEntries();
+                List<String> dates = entries.stream()
+                        .map(e -> e.getEntryDate().toString())
+                        .collect(Collectors.toList());
+
+                List<Integer> doneSteps = entries.stream()
+                        .map(DailyStepsHistoricalEntry::getDoneSteps)
+                        .collect(Collectors.toList());
+
+                List<Double> kcalBurned = entries.stream()
+                        .map(DailyStepsHistoricalEntry::getKiloCaloriesBurned)
+                        .collect(Collectors.toList());
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                try
                 {
-                    List<DailyStepsHistoricalEntry> entries = dailyStepsHistorical.getEntries();
-                    List<String> dates = entries.stream()
-                            .map(e -> e.getEntryDate().toString())
-                            .collect(Collectors.toList());
+                    String datesJson = objectMapper.writeValueAsString(dates);
+                    String doneStepsJson = objectMapper.writeValueAsString(doneSteps);
+                    String kcalBurnedJson = objectMapper.writeValueAsString(kcalBurned);
 
-                    List<Integer> doneSteps = entries.stream()
-                            .map(DailyStepsHistoricalEntry::getDoneSteps)
-                            .collect(Collectors.toList());
-
-                    List<Double> kcalBurned = entries.stream()
-                            .map(DailyStepsHistoricalEntry::getKiloCaloriesBurned)
-                            .collect(Collectors.toList());
-
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    try
-                    {
-                        String datesJson = objectMapper.writeValueAsString(dates);
-                        String doneStepsJson = objectMapper.writeValueAsString(doneSteps);
-                        String kcalBurnedJson = objectMapper.writeValueAsString(kcalBurned);
-
-                        mav.addObject("dates", datesJson);
-                        mav.addObject("doneSteps", doneStepsJson);
-                        mav.addObject("kcalBurned", kcalBurnedJson);
-                    } catch (JsonProcessingException e)
-                    {
-                        mav.addObject("errorMessage", errorMessageJsonConversion);
-                    }
-
-                    mav.addObject("entries", entries);
-                    mav.addObject("user", user);
-                }
-                else
+                    mav.addObject("dates", datesJson);
+                    mav.addObject("doneSteps", doneStepsJson);
+                    mav.addObject("kcalBurned", kcalBurnedJson);
+                } catch (JsonProcessingException e)
                 {
-                    mav.addObject("errorMessage", errorMessageNoData);
+                    mav.addObject("errorMessage", errorMessageJsonConversion);
                 }
+
+                mav.addObject("entries", entries);
+                mav.addObject("user", user);
             }
         }
         else
         {
             mav.addObject("errorMessage", errorMessageNoData);
+        }
+
+        return mav;
+    }
+
+    @GetMapping("/sleepHistorics/create/{userId}")
+    public ModelAndView showCreateSleepEntryForm(@PathVariable Long userId)
+    {
+        SaluhudUser user = saluhudUserService.getUserById(userId);
+        if (user == null)
+        {
+            return new ModelAndView("redirect:/users/home");
+        }
+
+        SleepHistoricalEntry entry = new SleepHistoricalEntry();
+        ModelAndView mav = new ModelAndView("users/createSleepEntry");
+        mav.addObject("entry", entry);
+        mav.addObject("userId", userId);
+        return mav;
+    }
+
+    @PostMapping("/sleepHistorics/create")
+    public ModelAndView createSleepEntry(@Valid @ModelAttribute("entry") SleepHistoricalEntry entry,
+            BindingResult result,
+            @RequestParam("userId") Long userId,
+            Locale locale)
+    {
+        ModelAndView mav = new ModelAndView("users/createSleepEntry");
+
+        try
+        {
+            SaluhudUser user = saluhudUserService.getUserById(userId);
+            SleepHistorical sleepHistorical = sleepHistoricalService.findByUserId(user.getId());
+            entry.setSleepHistorical(sleepHistorical);
+
+            sleepHistoricalEntryService.saveSleepHistoricalEntry(entry);
+
+            mav.addObject("successMessage", messageSource.getMessage("user.sleep.entry.created.success", null, locale));
+        } catch (DataIntegrityViolationException e)
+        {
+            mav.addObject("errorMessage", messageSource.getMessage("user.sleep.entry.error.duplicate", null, locale) + ": " + e.getMessage());
+        } catch (NoSuchElementException e)
+        {
+            mav.addObject("errorMessage", messageSource.getMessage("user.sleep.entry.error.user", null, locale) + ": " + e.getMessage());
+        } catch (NoSuchMessageException e)
+        {
+            mav.addObject("errorMessage", messageSource.getMessage("user.sleep.entry.error.saving", null, locale) + ": " + e.getMessage());
+        }
+
+        mav.addObject("userId", userId);
+        return mav;
+    }
+
+    @GetMapping("/sleepHistorics/{userId}/entries/edit/{entryId}")
+    public ModelAndView showEditSleepEntryForm(@PathVariable long userId,
+            @PathVariable long entryId)
+    {
+        ModelAndView modelAndView = new ModelAndView("users/editSleepEntry");
+        SleepHistoricalEntry entry = sleepHistoricalEntryService.findSleepHistoricalEntryById(entryId);
+        SaluhudUser user = entry.getSleepHistorical().getUser();
+        modelAndView.addObject("entry", entry);
+        modelAndView.addObject("userId", user.getId());
+        return modelAndView;
+    }
+
+    @PostMapping("/sleepHistoricalEntries/edit/{entryId}")
+    public ModelAndView updateSleepEntry(@ModelAttribute("entry") SleepHistoricalEntry entry,
+            BindingResult result,
+            Locale locale)
+    {
+        ModelAndView modelAndView = new ModelAndView("users/editSleepEntry");
+        if (result.hasErrors())
+        {
+            return modelAndView;
+        }
+
+        try
+        {
+            sleepHistoricalEntryService.updateSleepHistoricalEntry(entry);
+            String successMessage = messageSource.getMessage("sleep.entry.success.edit", null, locale);
+            modelAndView.addObject("successMessage", successMessage);
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("sleep.entry.error.edit", new Object[]
+            {
+                e.getMessage()
+            }, locale);
+            modelAndView.addObject("errorMessage", errorMessage);
+        }
+
+        return modelAndView;
+    }
+
+    @GetMapping("/sleepHistorics/{userId}/entries/delete/{entryId}")
+    public ModelAndView deleteSleepEntry(@PathVariable long userId,
+            @PathVariable long entryId,
+            Locale locale)
+    {
+        ModelAndView mav = new ModelAndView("redirect:/users/sleepHistorics/" + userId);
+
+        try
+        {
+            SleepHistoricalEntry entry = sleepHistoricalEntryService.findSleepHistoricalEntryById(entryId);
+            sleepHistoricalEntryService.deleteSleepHistoricalEntry(entry);
+            String successMessage = messageSource.getMessage("user.sleep.historics.entry.deleted.success", null, locale);
+            mav.addObject("successMessage", successMessage);
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("user.sleep.historics.entry.deleted.error",
+                    new Object[]
+                    {
+                        e.getMessage()
+                    }, locale);
+            mav.addObject("errorMessage", errorMessage);
         }
 
         return mav;

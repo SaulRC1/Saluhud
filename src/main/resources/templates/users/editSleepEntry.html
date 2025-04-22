@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8"/>
+        <title th:text="#{sleep.entry.edit.heading}">Editar Entrada de Sueño</title>
+        <link rel="stylesheet" th:href="@{/css/userFormStyle.css}"/>
+    </head>
+    <body>
+
+        <div class="container">
+            <h1 th:text="#{sleep.entry.edit.heading}">Editar Entrada del Historial de Sueño</h1>
+
+            <!-- Mensajes de éxito o error -->
+            <div th:if="${successMessage}" th:class="'message success'">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" th:class="'message error'">
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <form th:action="@{/users/sleepHistoricalEntries/edit/{entryId}(entryId=${entryId})}" th:object="${entry}" method="post">
+
+                <input type="hidden" id="entryId" th:field="*{id}"/>
+
+                <label for="entryDate" th:text="#{sleep.entry.date}">Fecha</label>
+                <input type="date" id="entryDate" th:field="*{entryDate}" required/>
+
+                <label for="hoursSlept" th:text="#{sleep.entry.hours}">Horas dormidas</label>
+                <input type="number" id="hoursSlept" th:field="*{hoursSlept}" min="1" max="15" required />
+
+                <label for="minutesSlept" th:text="#{sleep.entry.minutes}">Minutos dormidos</label>
+                <input type="number" id="minutesSlept" th:field="*{minutesSlept}" required />
+
+                <label for="sleepEvaluation" th:text="#{sleep.entry.evaluation}">Evaluación</label>
+                <select id="sleepEvaluation" th:field="*{sleepEvaluation}" required>
+                    <option th:value="EXCELLENT" th:text="#{user.historics.evaluation.excellent}">Excelente</option>
+                    <option th:value="WELL" th:text="#{user.historics.evaluation.well}">Bien</option>
+                    <option th:value="MINIMUM" th:text="#{user.historics.evaluation.minimum}">Mínimo</option>
+                    <option th:value="FAILED" th:text="#{user.historics.evaluation.failed}">Fallido</option>
+                </select>
+
+                <!-- Aquí el ID del historial al que pertenece la entrada -->
+                <input type="hidden" th:field="*{sleepHistorical.id}" />
+
+                <button type="submit" class="button" th:text="#{sleep.save}">Guardar</button>                                
+            </form>
+            
+            <a th:href="@{/users/home}" th:text="#{user.back}">Cancelar</a>
+        </div>
+    </body>
+</html>
+
