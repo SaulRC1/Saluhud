@@ -3,7 +3,7 @@ package com.uhu.saluhud.administrationportal.controller;
 import com.uhu.saluhud.administrationportal.configuration.web.IngredientSearchDTO;
 import com.uhu.saluhud.administrationportal.configuration.web.RecipeSearchDTO;
 import com.uhu.saluhud.administrationportal.configuration.web.UserSearchDTO;
-import com.uhu.saluhud.localization.NutritionLocaleProvider;
+import com.uhu.saluhuddatabaseutils.localization.NutritionLocaleProvider;
 import com.uhu.saluhuddatabaseutils.models.nutrition.Allergenic;
 import com.uhu.saluhuddatabaseutils.models.nutrition.Ingredient;
 import com.uhu.saluhuddatabaseutils.models.nutrition.Recipe;

@@ -1,7 +1,7 @@
 package com.uhu.saluhud.test.administrationportal.service.localization;
 
 import com.uhu.saluhud.administrationportal.service.localization.NutritionLocaleService;
-import com.uhu.saluhud.localization.NutritionLocaleProvider;
+import com.uhu.saluhuddatabaseutils.localization.NutritionLocaleProvider;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;

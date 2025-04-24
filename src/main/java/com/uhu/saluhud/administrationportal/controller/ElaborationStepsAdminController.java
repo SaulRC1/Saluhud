@@ -3,7 +3,7 @@ package com.uhu.saluhud.administrationportal.controller;
 import com.uhu.saluhud.administrationportal.dto.nutrition.RecipeDTO;
 import com.uhu.saluhud.administrationportal.dto.nutrition.RecipeElaborationStepDTO;
 import com.uhu.saluhud.administrationportal.service.localization.NutritionLocaleService;
-import com.uhu.saluhud.localization.NutritionLocaleProvider;
+import com.uhu.saluhuddatabaseutils.localization.NutritionLocaleProvider;
 import com.uhu.saluhuddatabaseutils.models.nutrition.Recipe;
 import com.uhu.saluhuddatabaseutils.models.nutrition.RecipeElaborationStep;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.nutrition.AdministrationPortalRecipeElaborationStepService;
