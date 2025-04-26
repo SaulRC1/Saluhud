@@ -17,6 +17,7 @@ public class SaluhudJWTProperties
     private final String secretKeyPlain;
     private final String secretKeyBase64;
     private final int expirationTime;
+    private final String httpHeader;
     
     public SaluhudJWTProperties() throws IOException
     {
@@ -30,6 +31,7 @@ public class SaluhudJWTProperties
         this.secretKeyPlain = (String) saluhudJWTProperties.get("com.uhu.saluhud.jwt.secretKeyPlain");
         this.secretKeyBase64 = (String) saluhudJWTProperties.get("com.uhu.saluhud.jwt.secretKeyBase64");
         this.expirationTime = Integer.parseInt((String) saluhudJWTProperties.get("com.uhu.saluhud.jwt.expirationTime"));
+        this.httpHeader = (String) saluhudJWTProperties.get("com.uhu.saluhud.jwt.httpHeader");
     }
 
     public String getIssuer()
@@ -61,5 +63,16 @@ public class SaluhudJWTProperties
     public int getExpirationTime()
     {
         return expirationTime;
+    }
+
+    /**
+     * Gets the HTTP Header where the JSON Web Token must be stored inside an
+     * incoming request.
+     * 
+     * @return The HTTP Header where the JWT is located inside a request.
+     */
+    public String getHttpHeader()
+    {
+        return httpHeader;
     }
 }

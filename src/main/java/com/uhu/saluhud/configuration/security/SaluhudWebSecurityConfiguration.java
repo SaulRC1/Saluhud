@@ -1,6 +1,9 @@
 package com.uhu.saluhud.configuration.security;
 
 import com.uhu.saluhud.mobileapp.filter.MobileAppAPIKeyFilter;
+import com.uhu.saluhud.mobileapp.filter.MobileAppJWTFilter;
+import com.uhu.saluhud.mobileapp.service.JWTService;
+import com.uhu.saluhud.mobileapp.service.MobileAppHttpRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,13 +28,17 @@ public class SaluhudWebSecurityConfiguration
 
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final JWTService jwtService;
+    private final MobileAppHttpRequestService mobileAppHttpRequestService;
 
     @Autowired
     public SaluhudWebSecurityConfiguration(UserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder)
+            PasswordEncoder passwordEncoder, JWTService jwtService, MobileAppHttpRequestService mobileAppHttpRequestService)
     {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.mobileAppHttpRequestService = mobileAppHttpRequestService;
     }
 
     @Bean
@@ -54,6 +61,7 @@ public class SaluhudWebSecurityConfiguration
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new MobileAppAPIKeyFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new MobileAppJWTFilter(jwtService, mobileAppHttpRequestService), MobileAppAPIKeyFilter.class)
                 .formLogin(login
                         -> login
                         .loginPage("/security/login") // Login page

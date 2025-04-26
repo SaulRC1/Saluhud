@@ -100,4 +100,10 @@ public class JWTService
         return claims.get(JWTSaluhudPrivateClaim.SALUHUD_USERNAME.getClaimName(), String.class);
     }
     
+    public Date extractExpirationDate(String token)
+    {
+        Claims claims = extractAllClaims(token);
+
+        return claims.get(JWTRegisteredClaim.EXPIRATION_TIME.getClaimName(), Date.class);
+    }
 }
