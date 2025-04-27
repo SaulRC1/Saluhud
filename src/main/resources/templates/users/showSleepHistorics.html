@@ -7,7 +7,7 @@
         <link rel="stylesheet" th:href="@{/css/showHistorics.css}"/>
     </head>
     <body>
-        
+
         <script th:src="@{/js/sleepHistorics-action.js}"></script>
 
         <div class="header">
@@ -22,8 +22,12 @@
                 <span th:text="${user.name} + ' ' + ${user.surname}">Nombre</span>
             </h1>
 
-            <div th:if="${errorMessage}">
-                <p th:text="${errorMessage}" style="color: red;"></p>
+            <!-- Mensajes de éxito o error -->
+            <div th:if="${successMessage}" th:class="'message success'">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" th:class="'message error'">
+                <p th:text="${errorMessage}"></p>
             </div>
 
             <div th:if="${entries != null}">

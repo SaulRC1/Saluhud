@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8"/>
+        <title th:text="#{daily.steps.entry.create.heading}">Crear Entrada de Pasos</title>
+        <link rel="stylesheet" th:href="@{/css/userFormStyle.css}"/>
+    </head>
+    <body>
+
+        <div class="container">
+            <h1 th:text="#{daily.steps.entry.create.heading}">Crear Entrada del Historial de Pasos</h1>
+
+            <!-- Mensajes de éxito o error -->
+            <div th:if="${successMessage}" th:class="'message success'">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" th:class="'message error'">
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <form th:action="@{/users/dailyStepsHistorics/create}" th:object="${entry}" method="post">
+
+                <!-- Campo oculto para asociar al historial correspondiente -->
+                <input type="hidden" name="userId" th:value="${userId}"/>
+
+                <label for="entryDate" th:text="#{daily.steps.entry.date}">Fecha</label>
+                <input type="date" id="entryDate" th:field="*{entryDate}" required/>
+
+                <label for="doneSteps" th:text="#{daily.steps.entry.steps.done}">Pasos Realizados</label>
+                <input type="number" id="doneSteps" th:field="*{doneSteps}" min="0" required/>
+
+                <label for="kiloCaloriesBurned" th:text="#{daily.steps.entry.kcal.burned}">Kcal Quemadas</label>
+                <input type="number" step="1.00" id="kiloCaloriesBurned" th:field="*{kiloCaloriesBurned}" min="0" required/>
+
+                <button type="submit" class="button" th:text="#{daily.steps.save}">Guardar</button>
+            </form>
+
+            <a th:href="@{/users/home}" th:text="#{user.back}">Cancelar</a>
+        </div>
+
+    </body>
+</html>
+

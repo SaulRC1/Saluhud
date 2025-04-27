@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8"/>
+        <title th:text="#{daily.steps.entry.update.heading}">Crear Entrada de Pasos</title>
+        <link rel="stylesheet" th:href="@{/css/userFormStyle.css}"/>
+    </head>
+    <body>
+
+        <div class="container">
+            <h1 th:text="#{daily.steps.entry.update.heading}">Crear Entrada del Historial de Pasos</h1>
+
+            <!-- Mensajes de éxito o error -->
+            <div th:if="${successMessage}" th:class="'message success'">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" th:class="'message error'">
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <form th:action="@{/users/dailyStepsHistorics/edit/{entryId}(entryId=${entryId})}" th:object="${entry}" method="post">
+                
+                <input type="hidden" id="entryId" th:field="*{id}"/>
+
+                <label for="entryDate" th:text="#{daily.steps.entry.date}">Fecha</label>
+                <input type="date" id="entryDate" th:field="*{entryDate}" required/>
+
+                <label for="doneSteps" th:text="#{daily.steps.entry.steps.done}">Pasos Realizados</label>
+                <input type="number" id="doneSteps" th:field="*{doneSteps}" min="0" required/>
+
+                <label for="kiloCaloriesBurned" th:text="#{daily.steps.entry.kcal.burned}">Kcal Quemadas</label>
+                <input type="number" step="1.00" id="kiloCaloriesBurned" th:field="*{kiloCaloriesBurned}" min="0" required/>
+
+                <label for="stepEvaluation" th:text="#{daily.steps.entry.evaluation}">Evaluación</label>
+                <select id="stepEvaluation" th:field="*{stepEvaluation}" required>
+                    <option th:value="EXCELLENT" th:text="#{user.historics.evaluation.excellent}">Excelente</option>
+                    <option th:value="WELL" th:text="#{user.historics.evaluation.well}">Bien</option>
+                    <option th:value="MINIMUM" th:text="#{user.historics.evaluation.minimum}">Mínimo</option>
+                    <option th:value="FAILED" th:text="#{user.historics.evaluation.failed}">Fallido</option>
+                </select>
+                
+                <!-- Aquí el ID del historial al que pertenece la entrada -->
+                <input type="hidden" th:field="*{dailyStepsHistorical.id}" />
+                
+                <input type="hidden" th:field="*{dailyStepsHistorical.version}" />
+
+                <button type="submit" class="button" th:text="#{daily.steps.save}">Guardar</button>
+            </form>
+
+            <a th:href="@{/users/home}" th:text="#{user.back}">Cancelar</a>
+        </div>
+
+    </body>
+</html>
+
+

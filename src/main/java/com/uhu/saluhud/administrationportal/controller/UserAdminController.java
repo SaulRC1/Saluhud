@@ -11,6 +11,7 @@ import com.uhu.saluhuddatabaseutils.models.user.SleepHistoricalEntry;
 import com.uhu.saluhuddatabaseutils.models.user.WeightHistorical;
 import com.uhu.saluhuddatabaseutils.models.user.WeightHistoricalEntry;
 import com.uhu.saluhuddatabaseutils.security.PasswordEncryptionService;
+import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalDailyStepsHistoricalEntryService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalDailyStepsHistoricalService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalSaluhudUserService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalSleepHistoricalEntryService;
@@ -68,6 +69,9 @@ public class UserAdminController
 
     @Autowired
     private AdministrationPortalDailyStepsHistoricalService dailyStepHistoricalService;
+
+    @Autowired
+    private AdministrationPortalDailyStepsHistoricalEntryService dailyStepsHistoricalEntryService;
 
     @Autowired
     private AdministrationPortalSleepHistoricalEntryService sleepHistoricalEntryService;
@@ -497,6 +501,119 @@ public class UserAdminController
         else
         {
             mav.addObject("errorMessage", errorMessageNoData);
+        }
+
+        return mav;
+    }
+
+    @GetMapping("/dailyStepsHistorics/create/{userId}")
+    public ModelAndView showCreateDailyStepsEntryForm(@PathVariable Long userId)
+    {
+        SaluhudUser user = saluhudUserService.getUserById(userId);
+        if (user == null)
+        {
+            return new ModelAndView("redirect:/users/home");
+        }
+
+        DailyStepsHistoricalEntry entry = new DailyStepsHistoricalEntry();
+        ModelAndView mav = new ModelAndView("users/createStepEntry");
+        mav.addObject("entry", entry);
+        mav.addObject("userId", userId);
+        return mav;
+    }
+
+    @PostMapping("/dailyStepsHistorics/create")
+    public ModelAndView createDailyStepsEntry(@Valid @ModelAttribute("entry") DailyStepsHistoricalEntry entry,
+            BindingResult result,
+            @RequestParam("userId") Long userId,
+            Locale locale)
+    {
+        ModelAndView mav = new ModelAndView("users/createStepEntry");
+
+        try
+        {
+            SaluhudUser user = saluhudUserService.getUserById(userId);
+            DailyStepsHistorical dailyStepsHistorical = dailyStepHistoricalService.findByUserId(user.getId());
+            entry.setDailyStepsHistorical(dailyStepsHistorical);
+
+            dailyStepsHistoricalEntryService.saveDailyStepsHistoricalEntry(entry);
+
+            mav.addObject("successMessage", messageSource.getMessage("user.daily.steps.entry.created.success", null, locale));
+        } catch (DataIntegrityViolationException e)
+        {
+            mav.addObject("errorMessage", messageSource.getMessage("user.daily.steps.entry.error.duplicate", null, locale) + ": " + e.getMessage());
+        } catch (NoSuchElementException e)
+        {
+            mav.addObject("errorMessage", messageSource.getMessage("user.daily.steps.entry.error.user", null, locale) + ": " + e.getMessage());
+        } catch (NoSuchMessageException e)
+        {
+            mav.addObject("errorMessage", messageSource.getMessage("user.daily.steps.entry.error.saving", null, locale) + ": " + e.getMessage());
+        }
+
+        mav.addObject("userId", userId);
+        return mav;
+    }
+
+    @GetMapping("/dailyStepsHistorics/{userId}/entries/edit/{entryId}")
+    public ModelAndView showEditDailyStepsEntryForm(@PathVariable long userId,
+            @PathVariable long entryId)
+    {
+        ModelAndView modelAndView = new ModelAndView("users/editDailyStepsEntry");
+        DailyStepsHistoricalEntry entry = dailyStepsHistoricalEntryService.getDailyStepsHistoricalEntryById(entryId);
+        SaluhudUser user = entry.getDailyStepsHistorical().getUser();
+        modelAndView.addObject("entry", entry);
+        modelAndView.addObject("userId", user.getId());
+        return modelAndView;
+    }
+
+    @PostMapping("/dailyStepsHistorics/edit/{entryId}")
+    public ModelAndView updateDailyStepsEntry(@ModelAttribute("entry") DailyStepsHistoricalEntry entry,
+            BindingResult result,
+            Locale locale)
+    {
+        ModelAndView modelAndView = new ModelAndView("users/editDailyStepsEntry");
+        if (result.hasErrors())
+        {
+            return modelAndView;
+        }
+
+        try
+        {
+            dailyStepsHistoricalEntryService.updateDailyStepsHistoricalEntry(entry);
+            String successMessage = messageSource.getMessage("daily.steps.entry.success.edit", null, locale);
+            modelAndView.addObject("successMessage", successMessage);
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("daily.steps.entry.error.edit", new Object[]
+            {
+                e.getMessage()
+            }, locale);
+            modelAndView.addObject("errorMessage", errorMessage);
+        }
+
+        return modelAndView;
+    }
+
+    @GetMapping("/dailyStepsHistorics/{userId}/entries/delete/{entryId}")
+    public ModelAndView deleteDailyStepsEntry(@PathVariable long userId,
+            @PathVariable long entryId,
+            Locale locale)
+    {
+        ModelAndView mav = new ModelAndView("redirect:/users/dailyStepsHistorics/" + userId);
+
+        try
+        {
+            DailyStepsHistoricalEntry entry = dailyStepsHistoricalEntryService.getDailyStepsHistoricalEntryById(entryId);
+            dailyStepsHistoricalEntryService.deleteDailyStepsHistorical(entry);
+            String successMessage = messageSource.getMessage("user.daily.steps.entry.deleted.success", null, locale);
+            mav.addObject("successMessage", successMessage);
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("user.daily.steps.entry.deleted.error", new Object[]
+            {
+                e.getMessage()
+            }, locale);
+            mav.addObject("errorMessage", errorMessage);
         }
 
         return mav;
