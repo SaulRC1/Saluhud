@@ -8,6 +8,8 @@
     </head>
     <body>
 
+        <script th:src="@{/js/weightHistorics-action.js}"></script>
+
         <div class="header">
             <a th:href="@{/users/home}" class="header-link">
                 <h2 th:text="#{user.portal.admin}">Portal de Gestión para Administradores</h2>
@@ -20,8 +22,24 @@
                 <span th:text="${user.name} + ' ' + ${user.surname}">Nombre</span>
             </h1>
 
-            <div th:if="${errorMessage}">
-                <p th:text="${errorMessage}" style="color: red;"></p>
+            <div th:if="${entries == null}" class="create-historical-container">
+
+                <h2 th:text="#{user.weight.historical.create.title}">Crear Historial de Peso</h2>
+
+                <form th:action="@{/users/weightHistorical/create}" method="post">
+                    <!-- Campo oculto para el ID del usuario -->
+                    <input type="hidden" name="userId" th:value="${userId}" />
+
+                    <button type="submit" class="button" th:text="#{user.weight.historical.create.button}">Crear Historial</button>
+                </form>
+            </div>
+
+            <!-- Mensajes de éxito o error -->
+            <div th:if="${successMessage}" th:class="'message success'">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" th:class="'message error'">
+                <p th:text="${errorMessage}"></p>
             </div>
 
             <div th:if="${entries != null}">
@@ -32,9 +50,10 @@
                     <thead class="table-light">
                         <tr>
                             <th th:text="#{user.historics.date}">Fecha</th>
-                            <th th:text="#{user.weight.historics.weight}">Pesajes</th>
-                            <th th:text="#{user.weight.historics.height}">Alturas</th>
+                            <th th:text="#{user.weight.historics.weight}">Pesaje</th>
+                            <th th:text="#{user.weight.historics.height}">Altura</th>
                             <th th:text="#{user.weight.historics.kilocaloriesObjectiveEntry}">Objetivo de kilocalorías</th>
+                            <th th:text="#{user.historics.select}">Seleccionar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,18 +62,38 @@
                             <td th:text="${entry.weightEntry}"></td>
                             <td th:text="${entry.heightEntry}"></td>
                             <td th:text="${entry.kilocaloriesObjectiveEntry}"></td>
+                            <td>
+                                <input type="radio" name="selectedEntry" th:value="${entry.id}" />
+                            </td>
                         </tr>
                     </tbody>
                 </table>
 
+                <div id="actions">
+                    <button disabled id="updateButton" th:text="#{sleep.edit}">Modificar</button>
+                    <button disabled id="deleteButton" th:text="#{sleep.delete}">Eliminar</button>
+                </div>
+
+                <!-- Elementos invisibles para los textos localizados -->
+                <span id="editConfirmTitle" th:text="#{user.historics.editConfirmTitle}" style="display:none;">Editar entrada</span>
+                <span id="editConfirmMessage" th:text="#{user.historics.editConfirmMessage}" style="display:none;">¿Deseas editar esta entrada?</span>
+                <span id="deleteConfirmTitle" th:text="#{user.historics.deleteConfirmTitle}" style="display:none;">Eliminar entrada</span>
+                <span id="deleteConfirmMessage" th:text="#{user.historics.deleteConfirmMessage}" style="display:none;">¿Deseas eliminar esta entrada?</span>
+                <span id="buttonYes" th:text="#{button.yes}" style="display:none;">Sí</span>
+                <span id="buttonNo" th:text="#{button.no}" style="display:none;">No</span>
+
                 <div id="weightData"
                      th:data-labels="${dates}"
                      th:data-height="${height}"
-                     th:data-weight="${weight}">
+                     th:data-weight="${weight}"
+                     th:data-user-id="${user.id}">
                 </div>
             </div>
 
             <a th:href="@{/users/home}" class="btn btn-secondary" th:text="#{user.historics.back}">Volver</a>
+            <div th:if="${weightHistorical != null}">
+                <a th:href="@{/users/weightHistorics/create/{userId}(userId=${userId})}" class="btn btn-secondary" th:text="#{user.weight.historics.create}">Crear entrada</a>
+            </div>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

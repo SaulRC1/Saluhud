@@ -17,6 +17,7 @@ import com.uhu.saluhuddatabaseutils.services.administrationportal.user.Administr
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalSleepHistoricalEntryService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalSleepHistoricalService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalUserFitnessDataService;
+import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalWeightHistoricalEntryService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalWeightHistoricalService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -75,6 +76,9 @@ public class UserAdminController
 
     @Autowired
     private AdministrationPortalSleepHistoricalEntryService sleepHistoricalEntryService;
+
+    @Autowired
+    private AdministrationPortalWeightHistoricalEntryService weightHistoricalEntryService;
 
     @GetMapping("/home")
     public ModelAndView getUsers(@RequestParam(defaultValue = "0") int page,
@@ -390,6 +394,7 @@ public class UserAdminController
 
             mav.addObject("entries", entries);
             mav.addObject("user", user);
+            mav.addObject("sleepHistorical", sleepHistorical);
         }
         else
         {
@@ -442,6 +447,7 @@ public class UserAdminController
 
             mav.addObject("entries", entries);
             mav.addObject("user", user);
+            mav.addObject("weightHistorical", weightHistorical);
         }
         else
         {
@@ -496,6 +502,7 @@ public class UserAdminController
 
                 mav.addObject("entries", entries);
                 mav.addObject("user", user);
+                mav.addObject("stepHistorical", dailyStepsHistorical);
             }
         }
         else
@@ -731,6 +738,174 @@ public class UserAdminController
         }
 
         return mav;
+    }
+
+    @GetMapping("/weightHistorics/create/{userId}")
+    public ModelAndView showCreateWeightEntryForm(@PathVariable Long userId)
+    {
+        SaluhudUser user = saluhudUserService.getUserById(userId);
+        if (user == null)
+        {
+            return new ModelAndView("redirect:/users/home");
+        }
+
+        WeightHistoricalEntry entry = new WeightHistoricalEntry();
+        ModelAndView mav = new ModelAndView("users/createWeightEntry");
+        mav.addObject("entry", entry);
+        mav.addObject("userId", userId);
+        return mav;
+    }
+
+    @PostMapping("/weightHistorics/create")
+    public ModelAndView createWeightEntry(@Valid @ModelAttribute("entry") WeightHistoricalEntry entry,
+            BindingResult result,
+            @RequestParam("userId") Long userId,
+            Locale locale)
+    {
+        ModelAndView mav = new ModelAndView("users/createWeightEntry");
+
+        try
+        {
+            SaluhudUser user = saluhudUserService.getUserById(userId);
+            WeightHistorical weightHistorical = weightHistoricalService.findWeightHistoricalByUserId(user.getId());
+            entry.setWeightHistorical(weightHistorical);
+
+            weightHistoricalEntryService.saveWeightHistoricalEntry(entry);
+
+            mav.addObject("successMessage", messageSource.getMessage("user.weight.entry.created.success", null, locale));
+        } catch (DataIntegrityViolationException e)
+        {
+            mav.addObject("errorMessage", messageSource.getMessage("user.weight.entry.error.duplicate", null, locale) + ": " + e.getMessage());
+        } catch (NoSuchElementException e)
+        {
+            mav.addObject("errorMessage", messageSource.getMessage("user.weight.entry.error.user", null, locale) + ": " + e.getMessage());
+        } catch (NoSuchMessageException e)
+        {
+            mav.addObject("errorMessage", messageSource.getMessage("user.weight.entry.error.saving", null, locale) + ": " + e.getMessage());
+        }
+
+        mav.addObject("userId", userId);
+        return mav;
+    }
+
+    @GetMapping("/weightHistorics/{userId}/entries/edit/{entryId}")
+    public ModelAndView showEditWeightEntryForm(@PathVariable long userId,
+            @PathVariable long entryId)
+    {
+        ModelAndView modelAndView = new ModelAndView("users/editWeightEntry");
+        WeightHistoricalEntry entry = weightHistoricalEntryService.findWeightHistoricalEntryById(entryId);
+        SaluhudUser user = entry.getWeightHistorical().getUser();
+        modelAndView.addObject("entry", entry);
+        modelAndView.addObject("userId", user.getId());
+        return modelAndView;
+    }
+
+    @PostMapping("/weightHistorics/edit/{entryId}")
+    public ModelAndView updateWeightEntry(@Valid @ModelAttribute("entry") WeightHistoricalEntry entry,
+            BindingResult result,
+            Locale locale)
+    {
+        ModelAndView modelAndView = new ModelAndView("users/editWeightEntry");
+        if (result.hasErrors())
+        {
+            return modelAndView;
+        }
+
+        try
+        {
+            weightHistoricalEntryService.updateWeightHistoricalEntry(entry);
+            String successMessage = messageSource.getMessage("weight.entry.success.edit", null, locale);
+            modelAndView.addObject("successMessage", successMessage);
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("weight.entry.error.edit", new Object[]
+            {
+                e.getMessage()
+            }, locale);
+            modelAndView.addObject("errorMessage", errorMessage);
+        }
+
+        return modelAndView;
+    }
+
+    @GetMapping("/weightHistorics/{userId}/entries/delete/{entryId}")
+    public ModelAndView deleteWeightEntry(@PathVariable long userId,
+            @PathVariable long entryId,
+            Locale locale)
+    {
+        ModelAndView mav = new ModelAndView("redirect:/users/weightHistorics/" + userId);
+
+        try
+        {
+            WeightHistoricalEntry entry = weightHistoricalEntryService.findWeightHistoricalEntryById(entryId);
+            weightHistoricalEntryService.deleteWeightHistoricalEntry(entry);
+            String successMessage = messageSource.getMessage("user.weight.historics.entry.deleted.success", null, locale);
+            mav.addObject("successMessage", successMessage);
+        } catch (NoSuchMessageException e)
+        {
+            String errorMessage = messageSource.getMessage("user.weight.historics.entry.deleted.error",
+                    new Object[]
+                    {
+                        e.getMessage()
+                    }, locale);
+            mav.addObject("errorMessage", errorMessage);
+        }
+
+        return mav;
+    }
+
+    @PostMapping("/weightHistorical/create")
+    public String createWeightHistorical(@RequestParam("userId") Long userId, 
+            RedirectAttributes redirectAttributes, Locale locale)
+    {
+        try
+        {
+            SaluhudUser user = saluhudUserService.getUserById(userId);
+            WeightHistorical historical = new WeightHistorical();
+            historical.setUser(user);
+            weightHistoricalService.saveWeightHistorical(historical);
+            redirectAttributes.addFlashAttribute("successMessage", messageSource.getMessage("user.weight.historical.created.success", null, locale));
+        } catch (NoSuchMessageException e)
+        {
+            redirectAttributes.addFlashAttribute("errorMessage", messageSource.getMessage("user.weight.historical.created.error", null, locale));
+        }
+        return "redirect:/users/weightHistorics/" + userId;
+    }
+    
+    @PostMapping("/sleepHistorical/create")
+    public String createSleepHistorical(@RequestParam("userId") Long userId, 
+            RedirectAttributes redirectAttributes, Locale locale)
+    {
+        try
+        {
+            SaluhudUser user = saluhudUserService.getUserById(userId);
+            SleepHistorical historical = new SleepHistorical();
+            historical.setUser(user);
+            sleepHistoricalService.saveSleepHistorical(historical);
+            redirectAttributes.addFlashAttribute("successMessage", messageSource.getMessage("user.sleep.historical.created.success", null, locale));
+        } catch (NoSuchMessageException e)
+        {
+            redirectAttributes.addFlashAttribute("errorMessage", messageSource.getMessage("user.sleep.historical.created.error", null, locale));
+        }
+        return "redirect:/users/sleepHistorics/" + userId;
+    }
+    
+    @PostMapping("/stepHistorical/create")
+    public String createDailyStepHistorical(@RequestParam("userId") Long userId, 
+            RedirectAttributes redirectAttributes, Locale locale)
+    {
+        try
+        {
+            SaluhudUser user = saluhudUserService.getUserById(userId);
+            DailyStepsHistorical historical = new DailyStepsHistorical();
+            historical.setUser(user);
+            dailyStepHistoricalService.saveDailyStepsHistorical(historical);
+            redirectAttributes.addFlashAttribute("successMessage", messageSource.getMessage("user.step.historical.created.success", null, locale));
+        } catch (NoSuchMessageException e)
+        {
+            redirectAttributes.addFlashAttribute("errorMessage", messageSource.getMessage("user.step.historical.created.error", null, locale));
+        }
+        return "redirect:/users/dailyStepsHistorics/" + userId;
     }
 
 }

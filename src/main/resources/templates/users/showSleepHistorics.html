@@ -22,6 +22,18 @@
                 <span th:text="${user.name} + ' ' + ${user.surname}">Nombre</span>
             </h1>
 
+            <div th:if="${entries == null}" class="create-historical-container">
+
+                <h2 th:text="#{user.sleep.historical.create.title}">Crear Historial de sueño</h2>
+
+                <form th:action="@{/users/sleepHistorical/create}" method="post">
+                    <!-- Campo oculto para el ID del usuario -->
+                    <input type="hidden" name="userId" th:value="${userId}" />
+
+                    <button type="submit" class="button" th:text="#{user.sleep.historical.create.button}">Crear Historial</button>
+                </form>
+            </div>
+
             <!-- Mensajes de éxito o error -->
             <div th:if="${successMessage}" th:class="'message success'">
                 <p th:text="${successMessage}"></p>
@@ -85,7 +97,9 @@
             </div>
 
             <a th:href="@{/users/home}" class="btn btn-secondary" th:text="#{user.historics.back}">Volver</a>
-            <a th:href="@{/users/sleepHistorics/create/{userId}(userId=${userId})}" class="btn btn-secondary" th:text="#{user.historics.create}">Crear entrada</a>
+            <div th:if="${sleepHistorical != null}">
+                <a th:href="@{/users/sleepHistorics/create/{userId}(userId=${userId})}" class="btn btn-secondary" th:text="#{user.historics.create}">Crear entrada</a>
+            </div>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
