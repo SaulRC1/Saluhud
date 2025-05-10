@@ -30,13 +30,16 @@
 
                 <div>
                     <label th:for="height" th:text="#{user.fitnessData.height}">Altura</label>
-                    <input type="number" step="0.01" th:field="*{height}" />
+                    <input type="number" step="0.1" th:field="*{height}" />
                     <div th:if="${#fields.hasErrors('height')}" th:errors="*{height}"></div>
                 </div>
 
                 <div>
                     <label th:for="biologicalSex" th:text="#{user.fitnessData.sex}">Sexo Biológico</label>
-                    <input type="text" th:field="*{biologicalSex}" />
+                    <select th:field="*{biologicalSex}">
+                        <option th:value="MALE" th:text="#{user.fitnessData.sex.male}">Hombre</option>
+                        <option th:value="FEMALE" th:text="#{user.fitnessData.sex.female}">Mujer</option>
+                    </select>
                     <div th:if="${#fields.hasErrors('biologicalSex')}" th:errors="*{biologicalSex}"></div>
                 </div>
 
@@ -47,39 +50,40 @@
                 </div>
 
                 <div>
-                    <label th:for="bodyComposition" th:text="#{user.fitnessData.bodyComposition}">Composición Corporal</label>
-                    <input type="text" th:field="*{bodyComposition}" />
-                    <div th:if="${#fields.hasErrors('bodyComposition')}" th:errors="*{bodyComposition}"></div>
+                    <label th:for="activityFactor" th:text="#{user.fitnessData.activityFactor}">Nivel de actividad física</label>
+                    <select th:field="*{activityFactor}">
+                        <option th:value="SEDENTARY" th:text="#{activityFactor.SEDENTARY}">Sedentario (poco o ningún ejercicio)</option>
+                        <option th:value="LIGHTLY_ACTIVE" th:text="#{activityFactor.LIGHTLY_ACTIVE}">Ejercicio ligero (1–3 días/semana)</option>
+                        <option th:value="MODERATELY_ACTIVE" th:text="#{activityFactor.MODERATELY_ACTIVE}">Ejercicio moderado (3–5 días/semana)</option>
+                        <option th:value="VERY_ACTIVE" th:text="#{activityFactor.VERY_ACTIVE}">Ejercicio intenso (6–7 días/semana)</option>
+                        <option th:value="EXTRA_ACTIVE" th:text="#{activityFactor.EXTRA_ACTIVE}">Ejercicio muy intenso + trabajo físico</option>
+                        <option th:value="PROFESSIONAL_ATHLETE" th:text="#{activityFactor.PROFESSIONAL_ATHLETE}">Atleta profesional</option>
+                    </select>
+                    <div th:if="${#fields.hasErrors('activityFactor')}" th:errors="*{activityFactor}"></div>
                 </div>
 
                 <div>
-                    <label th:for="recommendedDailyWaterLiters" th:text="#{user.fitnessData.litres}">Litros de agua</label>
-                    <input type="number" th:field="*{recommendedDailyWaterLiters}" />
-                    <div th:if="${#fields.hasErrors('recommendedDailyWaterLiters')}" th:errors="*{recommendedDailyWaterLiters}"></div>
+                    <label th:text="#{user.fitnessData.bodyComposition.leanBodyMassPercentage}">Lean Body Mass %</label>
+                    <input type="number" step="0.1" th:field="*{bodyComposition.leanBodyMassPercentage}" />
+                    <div th:if="${#fields.hasErrors('bodyComposition.leanBodyMassPercentage')}" th:errors="*{bodyComposition.leanBodyMassPercentage}"></div>
+                </div>
+                
+                 <div>
+                    <label th:text="#{user.fitnessData.bodyComposition.leanBodyMassWeight}">Lean Body Mass Weight</label>
+                    <input type="number" step="0.1" th:field="*{bodyComposition.leanBodyMassWeight}" />
+                    <div th:if="${#fields.hasErrors('bodyComposition.leanBodyMassWeight')}" th:errors="*{bodyComposition.leanBodyMassWeight}"></div>
                 </div>
 
                 <div>
-                    <label th:for="recommendedSleepHours" th:text="#{user.fitnessData.hours}">Horas de sueño</label>
-                    <input type="number" th:field="*{recommendedSleepHours}" />
-                    <div th:if="${#fields.hasErrors('recommendedSleepHours')}" th:errors="*{recommendedSleepHours}"></div>
+                    <label th:text="#{user.fitnessData.bodyComposition.bodyFatPercentage}">Body Fat %</label>
+                    <input type="number" step="0.1" th:field="*{bodyComposition.bodyFatPercentage}" />
+                    <div th:if="${#fields.hasErrors('bodyComposition.bodyFatPercentage')}" th:errors="*{bodyComposition.bodyFatPercentage}"></div>
                 </div>
 
                 <div>
-                    <label th:for="recommendedDailySteps" th:text="#{user.fitnessData.steps}">Pasos diarios</label>
-                    <input type="number" th:field="*{recommendedDailySteps}" />
-                    <div th:if="${#fields.hasErrors('recommendedDailySteps')}" th:errors="*{recommendedDailySteps}"></div>
-                </div>
-
-                <div>
-                    <label th:for="dailyKilocaloriesObjective" th:text="#{user.fitnessData.kcal}">Kilocalorías diarias</label>
-                    <input type="number" th:field="*{dailyKilocaloriesObjective}" />
-                    <div th:if="${#fields.hasErrors('dailyKilocaloriesObjective')}" th:errors="*{dailyKilocaloriesObjective}"></div>
-                </div>
-
-                <div>
-                    <label th:for="bodyMassIndex" th:text="#{user.fitnessData.massIndex}">Índice de masa corporal</label>
-                    <input type="text" th:field="*{bodyMassIndex}" />
-                    <div th:if="${#fields.hasErrors('bodyMassIndex')}" th:errors="*{bodyMassIndex}"></div>
+                    <label th:text="#{user.fitnessData.bodyComposition.bodyFatWeight}">Body Fat Weight</label>
+                    <input type="number" step="0.1" th:field="*{bodyComposition.bodyFatWeight}" />
+                    <div th:if="${#fields.hasErrors('bodyComposition.bodyFatWeight')}" th:errors="*{bodyComposition.bodyFatWeight}"></div>
                 </div>
 
                 <div>
@@ -88,7 +92,7 @@
 
             </form>
             <div>
-                 <a th:href="@{/users/details/{id}(id=${userId})}" class="button" th:text="#{fitnessData.back}">Volver atrás</a>
+                <a th:href="@{/users/details/{id}(id=${userId})}" class="button" th:text="#{fitnessData.back}">Volver atrás</a>
             </div>
         </div>
 

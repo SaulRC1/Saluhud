@@ -38,9 +38,23 @@
 
                 <p><strong th:text="#{user.fitnessData.weight}">Peso:</strong> <span th:text="${user.fitnessData.weight}"></span> kg</p>
                 <p><strong th:text="#{user.fitnessData.height}">Altura:</strong> <span th:text="${user.fitnessData.height}"></span> cm</p>
-                <p><strong th:text="#{user.fitnessData.sex}">Sexo biológico:</strong> <span th:text="${user.fitnessData.biologicalSex}"></span></p>
+                <p>
+                    <strong th:text="#{user.fitnessData.sex}">Sexo biológico:</strong>
+                    <span th:switch="${biologicalSex}">
+                        <span th:case="'MALE'" th:text="#{user.fitnessData.sex.male}">Hombre</span>
+                        <span th:case="'FEMALE'" th:text="#{user.fitnessData.sex.female}">Mujer</span>
+                        <span th:case="*">Desconocido</span>
+                    </span>
+                </p>
+
                 <p><strong th:text="#{user.fitnessData.age}">Edad:</strong> <span th:text="${user.fitnessData.age}"></span> años</p>
-                <p><strong th:text="#{user.fitnessData.bodyComposition}">Composición corporal:</strong> <span th:text="${user.fitnessData.bodyComposition}"></span></p>
+                <p>
+                    <span th:text="'Masa magra: ' + ${user.fitnessData.bodyComposition.leanBodyMassPercentage} + '%' + 
+                          ' (' + ${user.fitnessData.bodyComposition.leanBodyMassWeight} + ' kg), ' + 
+                          'Grasa corporal: ' + ${user.fitnessData.bodyComposition.bodyFatPercentage} + '%' + 
+                          ' (' + ${user.fitnessData.bodyComposition.bodyFatWeight} + ' kg)'">
+                    </span>
+                </p>
                 <p><strong th:text="#{user.fitnessData.litres}">Litros de agua diarios recomendados:</strong> <span th:text="${user.fitnessData.recommendedDailyWaterLiters}"></span> L</p>
                 <p><strong th:text="#{user.fitnessData.hours}">Horas de sueño recomendadas:</strong> <span th:text="${user.fitnessData.recommendedSleepHours}"></span> h</p>
                 <p><strong th:text="#{user.fitnessData.steps}">Pasos diarios recomendados:</strong> <span th:text="${user.fitnessData.recommendedDailySteps}"></span></p>
@@ -78,12 +92,12 @@
                    th:text="#{user.historics.showButton}">
                     Mostrar histórico de sueño
                 </a>
-                
+
                 <a th:href="@{/users/dailyStepsHistorics/{userId}(userId=${user.id})}" class="button"
                    th:text="#{user.dailyStepsHistorics.showButton}">
                     Mostrar histórico de pasos
                 </a>
-                
+
                 <a th:href="@{/users/weightHistorics/{userId}(userId=${user.id})}" class="button"
                    th:text="#{user.weightHistorics.showButton}">
                     Mostrar histórico de peso

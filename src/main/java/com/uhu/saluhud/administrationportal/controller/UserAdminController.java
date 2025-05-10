@@ -11,6 +11,7 @@ import com.uhu.saluhuddatabaseutils.models.user.SleepHistoricalEntry;
 import com.uhu.saluhuddatabaseutils.models.user.WeightHistorical;
 import com.uhu.saluhuddatabaseutils.models.user.WeightHistoricalEntry;
 import com.uhu.saluhuddatabaseutils.security.PasswordEncryptionService;
+import com.uhu.saluhuddatabaseutils.service.fitness.SaluhudUserFitnessDataService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalDailyStepsHistoricalEntryService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalDailyStepsHistoricalService;
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalSaluhudUserService;
@@ -79,6 +80,9 @@ public class UserAdminController
 
     @Autowired
     private AdministrationPortalWeightHistoricalEntryService weightHistoricalEntryService;
+    
+    @Autowired
+    SaluhudUserFitnessDataService saluhudUserFitnessDataService;
 
     @GetMapping("/home")
     public ModelAndView getUsers(@RequestParam(defaultValue = "0") int page,
@@ -220,6 +224,7 @@ public class UserAdminController
         ModelAndView modelAndView = new ModelAndView("users/details");
         SaluhudUser user = saluhudUserService.getUserById(id);
         modelAndView.addObject("user", user);
+        modelAndView.addObject("biologicalSex", user.getFitnessData().getBiologicalSex().name());
         return modelAndView;
     }
 
@@ -254,9 +259,16 @@ public class UserAdminController
         try
         {
             SaluhudUser user = saluhudUserService.getUserById(userId);
-            fitnessData.setSaluhudUser(user);
-            user.setFitnessData(fitnessData);
-            fitnessDataService.saveFitnessData(fitnessData);
+            
+            float weight = (float) fitnessData.getWeight();
+            float height = (float) fitnessData.getHeight();
+            SaluhudUserFitnessData fitness = saluhudUserFitnessDataService.buildSaluhudUserFitnessData(weight, height, 
+                    fitnessData.getAge(), fitnessData.getBiologicalSex(), 
+                    fitnessData.getActivityFactor(), fitnessData.getBodyComposition());
+            
+            fitness.setSaluhudUser(user);
+            user.setFitnessData(fitness);
+            fitnessDataService.saveFitnessData(fitness);
             model.addObject("successMessage", messageSource.getMessage("user.successFitness.create", null, locale));
 
         } catch (DataIntegrityViolationException e)
@@ -300,8 +312,15 @@ public class UserAdminController
         try
         {
             SaluhudUser user = saluhudUserService.getUserById(userId);
-            user.setFitnessData(fitnessData);
-            fitnessDataService.updateFitnessData(fitnessData);
+            
+            float weight = (float) fitnessData.getWeight();
+            float height = (float) fitnessData.getHeight();
+            SaluhudUserFitnessData fitness = saluhudUserFitnessDataService.buildSaluhudUserFitnessData(weight, height, 
+                    fitnessData.getAge(), fitnessData.getBiologicalSex(), 
+                    fitnessData.getActivityFactor(), fitnessData.getBodyComposition());
+            
+            user.setFitnessData(fitness);
+            fitnessDataService.updateFitnessData(fitness);
             String successMessage = messageSource.getMessage("user.fitnessData.success.edit", null, locale);
             mav.addObject("successMessage", successMessage);
         } catch (NoSuchMessageException e)
