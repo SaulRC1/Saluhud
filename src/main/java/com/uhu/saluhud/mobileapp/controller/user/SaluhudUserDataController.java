@@ -1,8 +1,10 @@
 package com.uhu.saluhud.mobileapp.controller.user;
 
+import com.uhu.saluhud.mobileapp.dto.user.SaluhudUserDTO;
 import com.uhu.saluhud.mobileapp.dto.user.SaluhudUserFitnessDataDTO;
 import com.uhu.saluhud.mobileapp.dto.user.SaveSaluhudUserFitnessDataDTO;
 import com.uhu.saluhud.mobileapp.localization.MobileAppLocaleProvider;
+import com.uhu.saluhud.mobileapp.response.ApiErrorResponse;
 import com.uhu.saluhud.mobileapp.response.ApiInformationResponse;
 import com.uhu.saluhud.mobileapp.service.JWTService;
 import com.uhu.saluhud.mobileapp.service.MobileAppHttpRequestService;
@@ -52,7 +54,26 @@ public class SaluhudUserDataController
     @GetMapping("/user")
     public ResponseEntity<Object> getSaluhudUserData(HttpServletRequest request)
     {
-        return null;
+        String jwt = mobileAppHttpRequestService.getJsonWebToken(request);
+
+        String username = jwtService.extractUsername(jwt);
+
+        Optional<SaluhudUser> saluhudUserOptional = mobileAppSaluhudUserService.findByUsername(username);
+
+        if (saluhudUserOptional.isEmpty())
+        {
+            ApiErrorResponse errorResponse = new ApiErrorResponse(request.getServletPath(), "User not found.");
+            
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+
+        SaluhudUser saluhudUser = saluhudUserOptional.get();
+
+        SaluhudUserDTO saluhudUserDTO = new SaluhudUserDTO(saluhudUser.getUsername(), 
+                saluhudUser.getEmail(), saluhudUser.getName(), saluhudUser.getSurname(), 
+                saluhudUser.getPhoneNumber());
+
+        return new ResponseEntity<>(saluhudUserDTO, HttpStatus.OK);
     }
     
     @GetMapping("/user-fitness-data")
