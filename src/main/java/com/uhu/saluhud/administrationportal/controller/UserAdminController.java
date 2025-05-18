@@ -224,7 +224,7 @@ public class UserAdminController
         ModelAndView modelAndView = new ModelAndView("users/details");
         SaluhudUser user = saluhudUserService.getUserById(id);
         modelAndView.addObject("user", user);
-        modelAndView.addObject("biologicalSex", user.getFitnessData().getBiologicalSex().name());
+        //modelAndView.addObject("biologicalSex", user.getFitnessData().getBiologicalSex().name());
         return modelAndView;
     }
 

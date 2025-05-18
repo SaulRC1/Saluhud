@@ -40,7 +40,7 @@
                 <p><strong th:text="#{user.fitnessData.height}">Altura:</strong> <span th:text="${user.fitnessData.height}"></span> cm</p>
                 <p>
                     <strong th:text="#{user.fitnessData.sex}">Sexo biológico:</strong>
-                    <span th:switch="${biologicalSex}">
+                    <span th:switch="${user.fitnessData.biologicalSex.toString()}">
                         <span th:case="'MALE'" th:text="#{user.fitnessData.sex.male}">Hombre</span>
                         <span th:case="'FEMALE'" th:text="#{user.fitnessData.sex.female}">Mujer</span>
                         <span th:case="*">Desconocido</span>
