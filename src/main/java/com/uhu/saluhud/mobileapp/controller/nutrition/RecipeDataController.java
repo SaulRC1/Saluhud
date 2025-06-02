@@ -7,6 +7,7 @@ import com.uhu.saluhud.mobileapp.dto.nutrition.RecipeCardDTO;
 import com.uhu.saluhud.mobileapp.dto.nutrition.RecipeDetailDTO;
 import com.uhu.saluhud.mobileapp.dto.nutrition.RecipeElaborationStepDTO;
 import com.uhu.saluhud.mobileapp.dto.nutrition.RecipeIngredientDTO;
+import com.uhu.saluhud.mobileapp.dto.nutrition.RecipeNameAndIdDataDTO;
 import com.uhu.saluhud.mobileapp.response.ApiErrorResponse;
 import com.uhu.saluhud.mobileapp.service.MobileAppHttpRequestService;
 import com.uhu.saluhuddatabaseutils.models.nutrition.Allergenic;
@@ -197,5 +198,19 @@ public class RecipeDataController
         recipeDetailDTO.setRecipeIngredients(recipeIngredientsDTO);
         
         return new ResponseEntity<>(recipeDetailDTO, HttpStatus.OK);
+    }
+    
+    @GetMapping("/recipes-name-and-id-data")
+    public ResponseEntity<Object> getRecipesNameAndIdData(HttpServletRequest request)
+    {           
+        List<Recipe> allRecipes = this.mobileAppRecipeService.findAll();
+        
+        List<RecipeNameAndIdDataDTO> recipesNameAndIdData
+                = allRecipes.stream().map((recipe) -> new RecipeNameAndIdDataDTO(recipe.getId(),
+                nutritionLocaleProvider.getTranslation(recipe.getName(),
+                        NutritionLocaleProvider.RECIPES_TRANSLATION_BUNDLE_PREFIX,
+                        mobileAppHttpRequestService.getMobileAppLocale(request)))).toList();
+        
+        return new ResponseEntity<>(recipesNameAndIdData, HttpStatus.OK);
     }
 }
