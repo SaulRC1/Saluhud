@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -131,6 +132,17 @@ public class RecipesAdminController
                                 NutritionLocaleProvider.INGREDIENTS_TRANSLATION_BUNDLE_PREFIX,
                                 locale)
                 ));
+        List<String> commonUnits = List.of("ml", "g", "l", "kg");
+
+        Map<String, String> translatedUnits = new LinkedHashMap<>();
+        for (String unit : commonUnits)
+        {
+            String key = "recipeIngredient.unit.default." + unit;
+            String translated = messageSource.getMessage(key, null, unit, locale);
+            translatedUnits.put(unit, translated);
+        }
+
+        modelAndView.addObject("translatedUnits", translatedUnits);
         modelAndView.addObject("translatedIngredients", translatedIngredients);
 
         return modelAndView;

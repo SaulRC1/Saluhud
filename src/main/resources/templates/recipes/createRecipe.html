@@ -52,7 +52,15 @@
                             </option>
                         </select>
                         <input type="number" step="0.01" th:field="*{recipeIngredients[__${stat.index}__].quantity}" th:placeholder="#{recipe.ingredients.quantity}" required/>
-                        <input type="text" th:field="*{recipeIngredients[__${stat.index}__].unit}" th:placeholder="#{recipe.ingredients.unit}" required/>
+                        <select name="recipeIngredients[__${stat.index}__].unit" required>
+                            <option value="">[[#{selectUnit}]]</option>
+                            <option th:each="entry : ${translatedUnits}"
+                                    th:if="${#lists.contains(#arrays.asList('ml', 'g', 'l', 'kg'), entry.key)}"
+                                    th:value="${entry.key}"
+                                    th:text="${entry.value}">
+                            </option>
+                        </select>
+
                         <button type="button" class="remove-ingredient" th:text="#{ingredient.delete}">Eliminar</button>
                     </div>
                 </div>
@@ -61,19 +69,28 @@
                 <button type="submit" class="button" th:text="#{recipe.save.button}">Guardar Receta</button>
             </form>
 
-            <a th:href="@{/recipes/home}" class="button" th:text="#{recipe.back.button}">Volver al listado</a>
-        </div>
-        <script th:inline="javascript">
-            /*<![CDATA[*/
-            var i18n = {
-                selectIngredient: /*[[#{recipe.ingredients.select}]]*/ 'Selecciona un ingrediente',
-                quantity: /*[[#{recipe.ingredients.quantity}]]*/ 'Cantidad',
-                unit: /*[[#{recipe.ingredients.unit}]]*/ 'Unidad',
-                next: /*[[#{recipe.ingredients.next}]]*/ 'Siguiente página',
-                delete: /*[[#{ingredient.delete}]]*/ 'Eliminar'
-            };
-            /*]]>*/
-        </script>
-    </body>
-</html>
+            <datalist id="unitSuggestions">
+                <option value="g">
+                    <option value="ml">
+                        <option value="taza">
+                            <option value="l">
+                                <option value="unidad">
+                                    <option value="cucharada">
+                                        </datalist>
+
+                                        <a th:href="@{/recipes/home}" class="button" th:text="#{recipe.back.button}">Volver al listado</a>
+                                        </div>
+                                        <script th:inline="javascript">
+                                            /*<![CDATA[*/
+                                            var i18n = {
+                                                selectIngredient: /*[[#{recipe.ingredients.select}]]*/ 'Selecciona un ingrediente',
+                                                quantity: /*[[#{recipe.ingredients.quantity}]]*/ 'Cantidad',
+                                                unit: /*[[#{recipe.ingredients.unit}]]*/ 'Unidad',
+                                                next: /*[[#{recipe.ingredients.next}]]*/ 'Siguiente página',
+                                                delete: /*[[#{ingredient.delete}]]*/ 'Eliminar'
+                                            };
+                                            /*]]>*/
+                                        </script>
+                                        </body>
+                                        </html>
 
