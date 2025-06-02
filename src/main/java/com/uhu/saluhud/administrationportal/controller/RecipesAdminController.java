@@ -140,6 +140,7 @@ public class RecipesAdminController
     public ModelAndView createRecipe(@ModelAttribute Recipe recipe, Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("recipes/createRecipe");
+        recipe.setImageSource("");
         try
         {
             if (recipe.getRecipeIngredients() != null)
@@ -192,11 +193,13 @@ public class RecipesAdminController
             String baseKey = "recipe";
             for (Locale langLocale : List.of(Locale.forLanguageTag("es"), Locale.forLanguageTag("en")))
             {
-                nutritionLocaleService.addKeyToTranslationBundle(baseKey + ".name." + recipe.getName(),
+                String recipeKey = recipe.getName().replaceAll("\\s+", "");
+
+                nutritionLocaleService.addKeyToTranslationBundle(baseKey + ".name." + recipeKey,
                         recipe.getName(), langLocale, NutritionLocaleProvider.RECIPES_TRANSLATION_BUNDLE_PREFIX);
-                nutritionLocaleService.addKeyToTranslationBundle(baseKey + ".description." + recipe.getName(),
+                nutritionLocaleService.addKeyToTranslationBundle(baseKey + ".description." + recipeKey,
                         recipe.getDescription(), langLocale, NutritionLocaleProvider.RECIPES_TRANSLATION_BUNDLE_PREFIX);
-                nutritionLocaleService.addKeyToTranslationBundle(baseKey + ".ingredientsDescription." + recipe.getName(),
+                nutritionLocaleService.addKeyToTranslationBundle(baseKey + ".ingredientsDescription." + recipeKey,
                         recipe.getIngredientsDescription(), langLocale, NutritionLocaleProvider.RECIPES_TRANSLATION_BUNDLE_PREFIX);
             }
 
@@ -358,7 +361,7 @@ public class RecipesAdminController
                 ));
     }
 
-    private void enrichRecipeIngredients(Recipe recipe, Locale locale, 
+    private void enrichRecipeIngredients(Recipe recipe, Locale locale,
             boolean translateUnitKeyFromFile) throws IOException
     {
         List<RecipeIngredient> validIngredients = recipe.getRecipeIngredients().stream()
@@ -450,7 +453,7 @@ public class RecipesAdminController
         String bundlePath = nutritionLocaleProvider.getTranslationsRootFolder() + File.separator
                 + NutritionLocaleProvider.RECIPES_TRANSLATION_BUNDLE_PREFIX + "_" + languageTag + ".properties";
 
-        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(bundlePath), 
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(bundlePath),
                 StandardCharsets.UTF_8); BufferedReader bufferedReader = new BufferedReader(reader))
         {
 
