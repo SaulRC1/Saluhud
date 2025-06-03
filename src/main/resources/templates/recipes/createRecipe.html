@@ -69,28 +69,19 @@
                 <button type="submit" class="button" th:text="#{recipe.save.button}">Guardar Receta</button>
             </form>
 
-            <datalist id="unitSuggestions">
-                <option value="g">
-                    <option value="ml">
-                        <option value="taza">
-                            <option value="l">
-                                <option value="unidad">
-                                    <option value="cucharada">
-                                        </datalist>
-
-                                        <a th:href="@{/recipes/home}" class="button" th:text="#{recipe.back.button}">Volver al listado</a>
-                                        </div>
-                                        <script th:inline="javascript">
-                                            /*<![CDATA[*/
-                                            var i18n = {
-                                                selectIngredient: /*[[#{recipe.ingredients.select}]]*/ 'Selecciona un ingrediente',
-                                                quantity: /*[[#{recipe.ingredients.quantity}]]*/ 'Cantidad',
-                                                unit: /*[[#{recipe.ingredients.unit}]]*/ 'Unidad',
-                                                next: /*[[#{recipe.ingredients.next}]]*/ 'Siguiente página',
-                                                delete: /*[[#{ingredient.delete}]]*/ 'Eliminar'
-                                            };
-                                            /*]]>*/
-                                        </script>
-                                        </body>
-                                        </html>
+            <a th:href="@{/recipes/home}" class="button" th:text="#{recipe.back.button}">Volver al listado</a>
+        </div>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            var i18n = {
+                selectIngredient: /*[[#{recipe.ingredients.select}]]*/ 'Selecciona un ingrediente',
+                quantity: /*[[#{recipe.ingredients.quantity}]]*/ 'Cantidad',
+                unit: /*[[#{recipe.ingredients.unit}]]*/ 'Unidad',
+                next: /*[[#{recipe.ingredients.next}]]*/ 'Siguiente página',
+                delete: /*[[#{ingredient.delete}]]*/ 'Eliminar'
+            };
+            /*]]>*/
+        </script>
+    </body>
+</html>
 
