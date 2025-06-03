@@ -28,6 +28,9 @@ public class SaveSaluhudUserFitnessDataDTO
     @NotBlank
     private String biologicalSex;
     
+    @NotBlank
+    private String fitnessTarget;
+    
     @DecimalMin("1.2")
     @DecimalMax("2.3")
     @NotNull
@@ -41,14 +44,13 @@ public class SaveSaluhudUserFitnessDataDTO
 
     private Float leanBodyMassWeight;
 
-    public SaveSaluhudUserFitnessDataDTO(float weight, float height, int age, 
-            String biologicalSex, float activityFactor, Float leanBodyMassPercentage, 
-            Float bodyFatPercentage, Float bodyFatWeight, Float leanBodyMassWeight)
+    public SaveSaluhudUserFitnessDataDTO(Float weight, Float height, Integer age, String biologicalSex, String fitnessTarget, Float activityFactor, Float leanBodyMassPercentage, Float bodyFatPercentage, Float bodyFatWeight, Float leanBodyMassWeight)
     {
         this.weight = weight;
         this.height = height;
         this.age = age;
         this.biologicalSex = biologicalSex;
+        this.fitnessTarget = fitnessTarget;
         this.activityFactor = activityFactor;
         this.leanBodyMassPercentage = leanBodyMassPercentage;
         this.bodyFatPercentage = bodyFatPercentage;
@@ -144,5 +146,15 @@ public class SaveSaluhudUserFitnessDataDTO
     public void setLeanBodyMassWeight(Float leanBodyMassWeight)
     {
         this.leanBodyMassWeight = leanBodyMassWeight;
+    }
+
+    public String getFitnessTarget()
+    {
+        return fitnessTarget;
+    }
+
+    public void setFitnessTarget(String fitnessTarget)
+    {
+        this.fitnessTarget = fitnessTarget;
     }
 }

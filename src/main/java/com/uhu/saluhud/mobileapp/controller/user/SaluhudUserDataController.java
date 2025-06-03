@@ -11,6 +11,7 @@ import com.uhu.saluhud.mobileapp.service.MobileAppHttpRequestService;
 import com.uhu.saluhuddatabaseutils.localization.NutritionLocaleProvider;
 import com.uhu.saluhuddatabaseutils.models.user.BiologicalSex;
 import com.uhu.saluhuddatabaseutils.models.user.BodyComposition;
+import com.uhu.saluhuddatabaseutils.models.user.FitnessTargetEnum;
 import com.uhu.saluhuddatabaseutils.models.user.HarrisBenedictBMRActivityFactor;
 import com.uhu.saluhuddatabaseutils.models.user.SaluhudUser;
 import com.uhu.saluhuddatabaseutils.models.user.SaluhudUserFitnessData;
@@ -96,9 +97,11 @@ public class SaluhudUserDataController
         SaluhudUserFitnessData fitnessData = fitnessDataOptional.get();
         fitnessDataDTO.setAge(fitnessData.getAge());
         fitnessDataDTO.setBiologicalSex(fitnessData.getBiologicalSex().getSexName());
+        fitnessDataDTO.setFitnessTarget(fitnessData.getFitnessTarget().getFitnessTargetName());
         fitnessDataDTO.setBodyComposition(fitnessData.getBodyComposition());
         fitnessDataDTO.setBodyMassIndex(fitnessData.getBodyMassIndex());
-        fitnessDataDTO.setDailyKilocaloriesObjective(fitnessData.getDailyKilocaloriesObjective());
+        fitnessDataDTO.setDailyKilocaloriesObjective(fitnessData.getMaintenanceDailyKilocalories());
+        fitnessDataDTO.setFitnessTargetRecommendedKilocalories(fitnessData.getFitnessTargetRecommendedKilocalories());
         fitnessDataDTO.setHeight(fitnessData.getHeight());
         fitnessDataDTO.setRecommendedDailySteps(fitnessData.getRecommendedDailySteps());
         fitnessDataDTO.setRecommendedDailyWaterLiters(fitnessData.getRecommendedDailyWaterLiters());
@@ -137,7 +140,8 @@ public class SaluhudUserDataController
         SaluhudUserFitnessData fitnessData = this.saluhudUserFitnessDataService.buildSaluhudUserFitnessData(
                 saveFitnessDataDTO.getWeight(), saveFitnessDataDTO.getHeight(), 
                 saveFitnessDataDTO.getAge(), BiologicalSex.fromSexName(saveFitnessDataDTO.getBiologicalSex()), 
-                HarrisBenedictBMRActivityFactor.fromActivityFactorValue(saveFitnessDataDTO.getActivityFactor()), bodyComposition);
+                HarrisBenedictBMRActivityFactor.fromActivityFactorValue(saveFitnessDataDTO.getActivityFactor()), bodyComposition,
+                FitnessTargetEnum.fromFitnessTargetName(saveFitnessDataDTO.getFitnessTarget()));
         
         SaluhudUser saluhudUser = saluhudUserOptional.get();
         

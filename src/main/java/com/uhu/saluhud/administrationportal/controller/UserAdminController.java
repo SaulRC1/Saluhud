@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uhu.saluhuddatabaseutils.models.user.DailyStepsHistorical;
 import com.uhu.saluhuddatabaseutils.models.user.DailyStepsHistoricalEntry;
+import com.uhu.saluhuddatabaseutils.models.user.FitnessTargetEnum;
 import com.uhu.saluhuddatabaseutils.models.user.SaluhudUser;
 import com.uhu.saluhuddatabaseutils.models.user.SaluhudUserFitnessData;
 import com.uhu.saluhuddatabaseutils.models.user.SleepHistorical;
@@ -264,7 +265,7 @@ public class UserAdminController
             float height = (float) fitnessData.getHeight();
             SaluhudUserFitnessData fitness = saluhudUserFitnessDataService.buildSaluhudUserFitnessData(weight, height, 
                     fitnessData.getAge(), fitnessData.getBiologicalSex(), 
-                    fitnessData.getActivityFactor(), fitnessData.getBodyComposition());
+                    fitnessData.getActivityFactor(), fitnessData.getBodyComposition(), FitnessTargetEnum.MAINTENANCE);
             
             fitness.setSaluhudUser(user);
             user.setFitnessData(fitness);
@@ -317,7 +318,7 @@ public class UserAdminController
             float height = (float) fitnessData.getHeight();
             SaluhudUserFitnessData fitness = saluhudUserFitnessDataService.buildSaluhudUserFitnessData(weight, height, 
                     fitnessData.getAge(), fitnessData.getBiologicalSex(), 
-                    fitnessData.getActivityFactor(), fitnessData.getBodyComposition());
+                    fitnessData.getActivityFactor(), fitnessData.getBodyComposition(), FitnessTargetEnum.MAINTENANCE);
             
             user.setFitnessData(fitness);
             fitnessDataService.updateFitnessData(fitness);

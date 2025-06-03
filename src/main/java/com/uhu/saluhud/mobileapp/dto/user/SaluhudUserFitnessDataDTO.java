@@ -13,6 +13,8 @@ public class SaluhudUserFitnessDataDTO
     private double height;
 
     private String biologicalSex;
+    
+    private String fitnessTarget;
 
     private int age;
 
@@ -25,25 +27,26 @@ public class SaluhudUserFitnessDataDTO
     private int recommendedDailySteps;
 
     private int dailyKilocaloriesObjective;
+    
+    private int fitnessTargetRecommendedKilocalories;
 
     private double bodyMassIndex;
     
     private float activityFactor;
 
-    public SaluhudUserFitnessDataDTO(double weight, double height, String biologicalSex, 
-            int age, BodyComposition bodyComposition, int recommendedDailyWaterLiters, int recommendedSleepHours, 
-            int recommendedDailySteps, int dailyKilocaloriesObjective, double bodyMassIndex, 
-            float activityFactor)
+    public SaluhudUserFitnessDataDTO(double weight, double height, String biologicalSex, String fitnessTarget, int age, BodyComposition bodyComposition, int recommendedDailyWaterLiters, int recommendedSleepHours, int recommendedDailySteps, int dailyKilocaloriesObjective, int fitnessTargetRecommendedKilocalories, double bodyMassIndex, float activityFactor)
     {
         this.weight = weight;
         this.height = height;
         this.biologicalSex = biologicalSex;
+        this.fitnessTarget = fitnessTarget;
         this.age = age;
         this.bodyComposition = bodyComposition;
         this.recommendedDailyWaterLiters = recommendedDailyWaterLiters;
         this.recommendedSleepHours = recommendedSleepHours;
         this.recommendedDailySteps = recommendedDailySteps;
         this.dailyKilocaloriesObjective = dailyKilocaloriesObjective;
+        this.fitnessTargetRecommendedKilocalories = fitnessTargetRecommendedKilocalories;
         this.bodyMassIndex = bodyMassIndex;
         this.activityFactor = activityFactor;
     }
@@ -161,5 +164,24 @@ public class SaluhudUserFitnessDataDTO
     {
         this.activityFactor = activityFactor;
     }
-    
+
+    public String getFitnessTarget()
+    {
+        return fitnessTarget;
+    }
+
+    public void setFitnessTarget(String fitnessTarget)
+    {
+        this.fitnessTarget = fitnessTarget;
+    }
+
+    public int getFitnessTargetRecommendedKilocalories()
+    {
+        return fitnessTargetRecommendedKilocalories;
+    }
+
+    public void setFitnessTargetRecommendedKilocalories(int fitnessTargetRecommendedKilocalories)
+    {
+        this.fitnessTargetRecommendedKilocalories = fitnessTargetRecommendedKilocalories;
+    }
 }
