@@ -33,6 +33,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
@@ -552,6 +553,66 @@ public class MenuDataController
             ApiInformationResponse successResponse = new ApiInformationResponse(request.getServletPath(), successResponseMessage);
 
             return new ResponseEntity<>(successResponse, HttpStatus.OK);
+        } catch (Exception e)
+        {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            String errorResponseMessage = mobileAppLocaleProvider.getTranslation("general.unknownError",
+                    MobileAppLocaleProvider.ERROR_MESSAGES_RESOURCE_BUNDLE_KEY, mobileAppHttpRequestService.getMobileAppLocale(request));
+            ApiErrorResponse errorResponse = new ApiErrorResponse(request.getServletPath(), errorResponseMessage);
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @GetMapping("/next-favourite-menu-recipe")
+    public ResponseEntity<Object> getNextFavouriteMenuRecipe(HttpServletRequest request)
+    {
+        String jwt = mobileAppHttpRequestService.getJsonWebToken(request);
+        
+        String username = jwtService.extractUsername(jwt);
+        
+        try
+        {
+            Optional<Menu> favouriteMenuOptional = this.mobileAppMenuService.findFavouriteMenuForUser(username);
+            
+            if(favouriteMenuOptional.isEmpty())
+            {
+                return this.buildApiErrorResponse("menuDataRetrieval.noFavouriteMenuForUser", request, HttpStatus.NOT_FOUND);
+            }
+            
+            Menu favouriteMenu = favouriteMenuOptional.get();
+            
+            Optional<MenuDayRecipe> upcomingRecipeOptional = this.mobileAppMenuUtilsService.getUpcomingRecipeForMenu(favouriteMenu);
+            
+            if(upcomingRecipeOptional.isEmpty())
+            {
+                return this.buildApiErrorResponse("menuDataRetrieval.noUpcomingRecipe", request, HttpStatus.NOT_FOUND);
+            }
+            
+            MenuDayRecipe upcomingRecipe = upcomingRecipeOptional.get();
+            
+            MenuDayRecipeDTO upcomingRecipeDTO = new MenuDayRecipeDTO();
+            upcomingRecipeDTO.setId(upcomingRecipe.getId());
+            upcomingRecipeDTO.setStartTime(upcomingRecipe.getStartTime().toString());
+            upcomingRecipeDTO.setEndTime(upcomingRecipe.getEndTime().toString());
+            
+            String localizedRecipeName = this.nutritionLocaleProvider.getTranslation(upcomingRecipe.getRecipe().getName(),
+                    NutritionLocaleProvider.RECIPES_TRANSLATION_BUNDLE_PREFIX, this.mobileAppHttpRequestService.getMobileAppLocale(request));
+            
+            List<RecipeCardAllergenicDTO> recipeCardAllergenicsDTO = new ArrayList<>();
+            
+            for (Allergenic allergenic : upcomingRecipe.getRecipe().getAllergenics())
+            {
+                RecipeCardAllergenicDTO recipeCardAllergenicDTO = new RecipeCardAllergenicDTO(allergenic.getId(), allergenic.getName());
+                
+                recipeCardAllergenicsDTO.add(recipeCardAllergenicDTO);
+            }
+            
+            RecipeCardDTO recipeCardDTO = new RecipeCardDTO(upcomingRecipe.getRecipe().getId(), localizedRecipeName, 
+                    upcomingRecipe.getRecipe().getKilocalories(), upcomingRecipe.getRecipe().getImageSource(), recipeCardAllergenicsDTO);
+            
+            upcomingRecipeDTO.setRecipe(recipeCardDTO);
+
+            return new ResponseEntity<>(upcomingRecipeDTO, HttpStatus.OK);
         } catch (Exception e)
         {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);

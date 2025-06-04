@@ -1,5 +1,6 @@
 package com.uhu.saluhud.mobileapp.controller.nutrition;
 
+import com.uhu.saluhud.administrationportal.dto.nutrition.AllergenicDTO;
 import com.uhu.saluhud.mobileapp.dto.nutrition.IngredientDTO;
 import com.uhu.saluhuddatabaseutils.localization.NutritionLocaleProvider;
 import com.uhu.saluhud.mobileapp.dto.nutrition.RecipeCardAllergenicDTO;
@@ -8,14 +9,21 @@ import com.uhu.saluhud.mobileapp.dto.nutrition.RecipeDetailDTO;
 import com.uhu.saluhud.mobileapp.dto.nutrition.RecipeElaborationStepDTO;
 import com.uhu.saluhud.mobileapp.dto.nutrition.RecipeIngredientDTO;
 import com.uhu.saluhud.mobileapp.dto.nutrition.RecipeNameAndIdDataDTO;
+import com.uhu.saluhud.mobileapp.localization.MobileAppLocaleProvider;
 import com.uhu.saluhud.mobileapp.response.ApiErrorResponse;
+import com.uhu.saluhud.mobileapp.service.JWTService;
 import com.uhu.saluhud.mobileapp.service.MobileAppHttpRequestService;
 import com.uhu.saluhuddatabaseutils.models.nutrition.Allergenic;
 import com.uhu.saluhuddatabaseutils.models.nutrition.AllergenicEnum;
 import com.uhu.saluhuddatabaseutils.models.nutrition.Recipe;
 import com.uhu.saluhuddatabaseutils.models.nutrition.RecipeElaborationStep;
 import com.uhu.saluhuddatabaseutils.models.nutrition.RecipeIngredient;
+import static com.uhu.saluhuddatabaseutils.models.user.FitnessTargetEnum.MAINTENANCE;
+import static com.uhu.saluhuddatabaseutils.models.user.FitnessTargetEnum.WEIGHT_GAIN;
+import static com.uhu.saluhuddatabaseutils.models.user.FitnessTargetEnum.WEIGHT_LOSS;
+import com.uhu.saluhuddatabaseutils.models.user.SaluhudUserFitnessData;
 import com.uhu.saluhuddatabaseutils.services.mobileapp.nutrition.MobileAppRecipeService;
+import com.uhu.saluhuddatabaseutils.services.mobileapp.user.MobileAppSaluhudUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +56,15 @@ public class RecipeDataController
     
     @Autowired
     private NutritionLocaleProvider nutritionLocaleProvider;
+    
+    @Autowired
+    private MobileAppSaluhudUserService mobileAppSaluhudUserService;
+    
+    @Autowired
+    private JWTService jwtService;
+    
+    @Autowired
+    private MobileAppLocaleProvider mobileAppLocaleProvider;
     
     @GetMapping("/recipe-card-data")
     public ResponseEntity<Object> getRecipeCardData(HttpServletRequest request,
@@ -212,5 +229,88 @@ public class RecipeDataController
                         mobileAppHttpRequestService.getMobileAppLocale(request)))).toList();
         
         return new ResponseEntity<>(recipesNameAndIdData, HttpStatus.OK);
+    }
+    
+    @GetMapping("/recipe-recommendations")
+    public ResponseEntity<Object> getRecipeRecommendations(HttpServletRequest request)
+    {
+        String jwt = mobileAppHttpRequestService.getJsonWebToken(request);
+
+        String username = jwtService.extractUsername(jwt);
+
+        try
+        {
+            Optional<SaluhudUserFitnessData> saluhudUserFitnessDataOptional
+                    = this.mobileAppSaluhudUserService.getSaluhudUserFitnessData(username);
+
+            if (saluhudUserFitnessDataOptional.isEmpty())
+            {
+                List<Recipe> recipes = this.mobileAppRecipeService.findRecipesPaginated(0, 10);
+
+                List<RecipeCardDTO> recipeCardDTOs = this.mapRecipeToRecipeCardDTO(recipes,
+                        this.mobileAppHttpRequestService.getMobileAppLocale(request));
+
+                return new ResponseEntity<>(recipeCardDTOs, HttpStatus.OK);
+            }
+
+            List<Recipe> recipes = Collections.emptyList();
+
+            switch (saluhudUserFitnessDataOptional.get().getFitnessTarget())
+            {
+                case WEIGHT_GAIN:
+                    recipes = this.mobileAppRecipeService.findMostKaloricRecipesPaginated(0, 10);
+                    break;
+                case WEIGHT_LOSS:
+                    recipes = this.mobileAppRecipeService.findLessKaloricRecipesPaginated(0, 10);
+                    break;
+                case MAINTENANCE:
+                    recipes = this.mobileAppRecipeService.findRecipesPaginated(0, 10);
+                    break;
+            }
+
+            return new ResponseEntity<>(this.mapRecipeToRecipeCardDTO(recipes,
+                    this.mobileAppHttpRequestService.getMobileAppLocale(request)), HttpStatus.OK);
+        } 
+        catch (Exception e)
+        {
+            return this.buildApiErrorResponse("recipeRecommendations.unknownError", request, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    private ResponseEntity<Object> buildApiErrorResponse(String errorMessageTranslationKey, HttpServletRequest request, HttpStatus status)
+    {
+        String errorResponseMessage = mobileAppLocaleProvider.getTranslation(errorMessageTranslationKey, 
+                        MobileAppLocaleProvider.ERROR_MESSAGES_RESOURCE_BUNDLE_KEY, mobileAppHttpRequestService.getMobileAppLocale(request));
+        ApiErrorResponse errorResponse = new ApiErrorResponse(request.getServletPath(), errorResponseMessage);
+            
+        return new ResponseEntity<>(errorResponse, status);
+    }
+    
+    private List<RecipeCardDTO> mapRecipeToRecipeCardDTO(List<Recipe> recipes, Locale locale)
+    {
+        List<RecipeCardDTO> recipeCardList = new ArrayList<>();
+        
+        for (Recipe recipe : recipes)
+        {
+            Set<Allergenic> allergenics = recipe.getAllergenics();
+            List<RecipeCardAllergenicDTO> recipeCardAllergenics = new ArrayList<>();
+            
+            for (Allergenic allergenic : allergenics)
+            {
+                RecipeCardAllergenicDTO allergenicDTO = new RecipeCardAllergenicDTO(allergenic.getId(), allergenic.getName());
+                recipeCardAllergenics.add(allergenicDTO);
+            }
+            
+            String localizedRecipeName = this.nutritionLocaleProvider.getTranslation(recipe.getName(), 
+                    NutritionLocaleProvider.RECIPES_TRANSLATION_BUNDLE_PREFIX, 
+                    locale);
+            
+            RecipeCardDTO recipeCardDTO = new RecipeCardDTO(recipe.getId(), localizedRecipeName, 
+                    recipe.getKilocalories(), recipe.getImageSource(), recipeCardAllergenics);
+            
+            recipeCardList.add(recipeCardDTO);
+        }
+        
+        return recipeCardList;
     }
 }
