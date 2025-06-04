@@ -58,8 +58,17 @@
                 <p><strong th:text="#{user.fitnessData.litres}">Litros de agua diarios recomendados:</strong> <span th:text="${user.fitnessData.recommendedDailyWaterLiters}"></span> L</p>
                 <p><strong th:text="#{user.fitnessData.hours}">Horas de sueño recomendadas:</strong> <span th:text="${user.fitnessData.recommendedSleepHours}"></span> h</p>
                 <p><strong th:text="#{user.fitnessData.steps}">Pasos diarios recomendados:</strong> <span th:text="${user.fitnessData.recommendedDailySteps}"></span></p>
-                <p><strong th:text="#{user.fitnessData.kcal}">Kilocalorías diarias objetivo:</strong> <span th:text="${user.fitnessData.dailyKilocaloriesObjective}"></span> kcal</p>
+                <p><strong th:text="#{user.fitnessData.kcal}">Kilocalorías diarias objetivo:</strong> <span th:text="${user.fitnessData.fitnessTargetRecommendedKilocalories}"></span> kcal</p>
                 <p><strong th:text="#{user.fitnessData.massIndex}">Índice de masa corporal (IMC):</strong> <span th:text="${user.fitnessData.bodyMassIndex}"></span></p>
+                <p>
+                    <strong th:text="#{user.fitnessData.fitnessTarget}">Sexo biológico:</strong>
+                    <span th:switch="${user.fitnessData.fitnessTarget.toString()}">
+                        <span th:case="'WEIGHT_GAIN'" th:text="#{fitnessTarget.WEIGHT_GAIN}">Ganancia de peso</span>
+                        <span th:case="'WEIGHT_LOSS'" th:text="#{fitnessTarget.WEIGHT_LOSS}">Pérdida de peso</span>
+                        <span th:case="'MAINTENANCE'" th:text="#{fitnessTarget.MAINTENANCE}">Mantenimiento</span>
+                        <span th:case="*">Desconocido</span>
+                    </span>
+                </p>      
             </div>
 
             <div class="button-container">

@@ -82,7 +82,17 @@
                     <label th:text="#{user.fitnessData.bodyComposition.bodyFatWeight}">Body Fat Weight</label>
                     <input type="number" step="0.1" th:field="*{bodyComposition.bodyFatWeight}" />
                     <div th:if="${#fields.hasErrors('bodyComposition.bodyFatWeight')}" th:errors="*{bodyComposition.bodyFatWeight}"></div>
-                </div>               
+                </div>  
+                
+                <div>
+                    <label th:for="fitnessTarget" th:text="#{user.fitnessData.fitnessTarget}">Objetivo Fitness</label>
+                    <select th:field="*{fitnessTarget}">
+                        <option th:value="WEIGHT_LOSS" th:text="#{fitnessTarget.WEIGHT_LOSS}">Pérdida de peso</option>
+                        <option th:value="WEIGHT_GAIN" th:text="#{fitnessTarget.WEIGHT_GAIN}">Aumento de peso</option>
+                        <option th:value="MAINTENANCE" th:text="#{fitnessTarget.MAINTENANCE}">Mantenimiento</option>
+                    </select>
+                    <div th:if="${#fields.hasErrors('fitnessTarget')}" th:errors="*{fitnessTarget}"></div>
+                </div>
 
                 <div class="button-container">
                     <button type="submit" class="button" th:text="#{user.fitnessData.editButton}">Actualizar</button>

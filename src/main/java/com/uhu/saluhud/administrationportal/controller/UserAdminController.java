@@ -81,7 +81,7 @@ public class UserAdminController
 
     @Autowired
     private AdministrationPortalWeightHistoricalEntryService weightHistoricalEntryService;
-    
+
     @Autowired
     SaluhudUserFitnessDataService saluhudUserFitnessDataService;
 
@@ -225,7 +225,6 @@ public class UserAdminController
         ModelAndView modelAndView = new ModelAndView("users/details");
         SaluhudUser user = saluhudUserService.getUserById(id);
         modelAndView.addObject("user", user);
-        //modelAndView.addObject("biologicalSex", user.getFitnessData().getBiologicalSex().name());
         return modelAndView;
     }
 
@@ -260,13 +259,13 @@ public class UserAdminController
         try
         {
             SaluhudUser user = saluhudUserService.getUserById(userId);
-            
+
             float weight = (float) fitnessData.getWeight();
             float height = (float) fitnessData.getHeight();
-            SaluhudUserFitnessData fitness = saluhudUserFitnessDataService.buildSaluhudUserFitnessData(weight, height, 
-                    fitnessData.getAge(), fitnessData.getBiologicalSex(), 
-                    fitnessData.getActivityFactor(), fitnessData.getBodyComposition(), FitnessTargetEnum.MAINTENANCE);
-            
+            SaluhudUserFitnessData fitness = saluhudUserFitnessDataService.buildSaluhudUserFitnessData(weight, height,
+                    fitnessData.getAge(), fitnessData.getBiologicalSex(),
+                    fitnessData.getActivityFactor(), fitnessData.getBodyComposition(), fitnessData.getFitnessTarget());
+
             fitness.setSaluhudUser(user);
             user.setFitnessData(fitness);
             fitnessDataService.saveFitnessData(fitness);
@@ -313,13 +312,13 @@ public class UserAdminController
         try
         {
             SaluhudUser user = saluhudUserService.getUserById(userId);
-            
+
             float weight = (float) fitnessData.getWeight();
             float height = (float) fitnessData.getHeight();
-            SaluhudUserFitnessData fitness = saluhudUserFitnessDataService.buildSaluhudUserFitnessData(weight, height, 
-                    fitnessData.getAge(), fitnessData.getBiologicalSex(), 
-                    fitnessData.getActivityFactor(), fitnessData.getBodyComposition(), FitnessTargetEnum.MAINTENANCE);
-            
+            SaluhudUserFitnessData fitness = saluhudUserFitnessDataService.buildSaluhudUserFitnessData(weight, height,
+                    fitnessData.getAge(), fitnessData.getBiologicalSex(),
+                    fitnessData.getActivityFactor(), fitnessData.getBodyComposition(), fitnessData.getFitnessTarget());
+
             user.setFitnessData(fitness);
             fitnessDataService.updateFitnessData(fitness);
             String successMessage = messageSource.getMessage("user.fitnessData.success.edit", null, locale);
@@ -875,7 +874,7 @@ public class UserAdminController
     }
 
     @PostMapping("/weightHistorical/create")
-    public String createWeightHistorical(@RequestParam("userId") Long userId, 
+    public String createWeightHistorical(@RequestParam("userId") Long userId,
             RedirectAttributes redirectAttributes, Locale locale)
     {
         try
@@ -891,9 +890,9 @@ public class UserAdminController
         }
         return "redirect:/users/weightHistorics/" + userId;
     }
-    
+
     @PostMapping("/sleepHistorical/create")
-    public String createSleepHistorical(@RequestParam("userId") Long userId, 
+    public String createSleepHistorical(@RequestParam("userId") Long userId,
             RedirectAttributes redirectAttributes, Locale locale)
     {
         try
@@ -909,9 +908,9 @@ public class UserAdminController
         }
         return "redirect:/users/sleepHistorics/" + userId;
     }
-    
+
     @PostMapping("/stepHistorical/create")
-    public String createDailyStepHistorical(@RequestParam("userId") Long userId, 
+    public String createDailyStepHistorical(@RequestParam("userId") Long userId,
             RedirectAttributes redirectAttributes, Locale locale)
     {
         try
