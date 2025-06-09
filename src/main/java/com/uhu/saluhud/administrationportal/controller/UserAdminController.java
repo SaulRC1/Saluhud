@@ -110,9 +110,27 @@ public class UserAdminController
 
     // Guardar nuevo usuario
     @PostMapping("/create")
-    public ModelAndView createUser(@ModelAttribute("user") SaluhudUser user, BindingResult result, Locale locale)
+    public ModelAndView createUser(@Valid @ModelAttribute("user") SaluhudUser user,
+            BindingResult result, Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("users/createUser");
+
+        // Validaciones de unicidad
+        if (saluhudUserService.existsByUsername(user.getUsername()))
+        {
+            result.rejectValue("username", "user.error.username.exists",
+                    messageSource.getMessage("user.error.username.exists", null, locale));
+        }
+        if (saluhudUserService.existsByEmail(user.getEmail()))
+        {
+            result.rejectValue("email", "user.error.email.exists",
+                    messageSource.getMessage("user.error.email.exists", null, locale));
+        }
+        if (user.getPhoneNumber() != null && saluhudUserService.existsByPhoneNumber(user.getPhoneNumber()))
+        {
+            result.rejectValue("phoneNumber", "user.error.phone.exists",
+                    messageSource.getMessage("user.error.phone.exists", null, locale));
+        }
 
         if (result.hasErrors())
         {
@@ -122,37 +140,17 @@ public class UserAdminController
 
         try
         {
-            if (saluhudUserService.existsByUsername(user.getUsername()))
-            {
-                modelAndView.addObject("errorMessage", messageSource.getMessage("user.error.username.exists", null, locale));
-                return modelAndView;
-            }
-            if (saluhudUserService.existsByEmail(user.getEmail()))
-            {
-                modelAndView.addObject("errorMessage", messageSource.getMessage("user.error.email.exists", null, locale));
-                return modelAndView;
-            }
-            if (user.getPhoneNumber() != null && saluhudUserService.existsByPhoneNumber(user.getPhoneNumber()))
-            {
-                modelAndView.addObject("errorMessage", messageSource.getMessage("user.error.phone.exists", null, locale));
-                return modelAndView;
-            }
-
             String encryptedPassword = passwordEncryptionService.encryptPassword(user.getPassword());
             user.setPassword(encryptedPassword);
             saluhudUserService.saveUser(user);
-            modelAndView.addObject("successMessage", messageSource.getMessage("user.success.create", null, locale));
-        } catch (NoSuchMessageException e)
-        {
-            modelAndView.addObject("errorMessage", "Error retrieving message: " + e.getMessage());
-        } catch (DataIntegrityViolationException e)
-        {
-            modelAndView.addObject("errorMessage", messageSource.getMessage("user.error.duplicate", null, locale));
+            modelAndView.addObject("successMessage",
+                    messageSource.getMessage("user.success.create", null, locale));
         } catch (Exception e)
         {
-            modelAndView.addObject("errorMessage", messageSource.getMessage("user.error.create", new Object[]
-            {
-                e.getMessage()
+            modelAndView.addObject("errorMessage",
+                    messageSource.getMessage("user.error.create", new Object[]
+                    {
+                        e.getMessage()
             }, locale));
         }
 
@@ -171,10 +169,17 @@ public class UserAdminController
 
     // Guardar edición de usuario
     @PostMapping("/edit")
-    public ModelAndView updateUser(@ModelAttribute("user") SaluhudUser user,
-            Locale locale)
+    public ModelAndView updateUser(@Valid @ModelAttribute("user") SaluhudUser user,
+            BindingResult result, Locale locale)
     {
         ModelAndView modelAndView = new ModelAndView("users/editUser");
+
+        if (result.hasErrors())
+        {
+            modelAndView.addObject("users", saluhudUserService.findAllUsers());
+            return modelAndView;
+        }
+
         try
         {
             String encryptedPassword = passwordEncryptionService.encryptPassword(user.getPassword());
@@ -182,7 +187,7 @@ public class UserAdminController
             saluhudUserService.updateUser(user);
             String successMessage = messageSource.getMessage("user.success.edit", null, locale);
             modelAndView.addObject("successMessage", successMessage);
-        } catch (NoSuchMessageException e)
+        } catch (Exception e)
         {
             String errorMessage = messageSource.getMessage("user.error.edit", new Object[]
             {
