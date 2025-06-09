@@ -14,9 +14,11 @@ import com.uhu.saluhuddatabaseutils.services.administrationportal.nutrition.Admi
 import com.uhu.saluhuddatabaseutils.services.administrationportal.user.AdministrationPortalSaluhudUserService;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -166,10 +168,29 @@ public class SearchsAdminController
 
         Page<Recipe> recipes;
 
-        // Cargar todos los alérgenos sin paginar
         if (name != null && !name.isEmpty())
         {
-            recipes = recipeService.searchByName(name, page, size);
+            String trimmedName = name.trim();
+
+            Optional<Long> maybeId = nutritionLocaleProvider.getRecipeIdByTranslatedName(trimmedName, locale);
+            if (maybeId.isPresent())
+            {
+                // Buscar solo por ID
+                Optional<Recipe> recipe = recipeService.getRecipeById(maybeId.get());
+                if (recipe.isPresent())
+                {
+                    recipes = new PageImpl<>(List.of(recipe.get()), PageRequest.of(page, size), 1);
+                }
+                else
+                {
+                    recipes = Page.empty(PageRequest.of(page, size));
+                }
+            }
+            else
+            {
+                // Buscar por nombre real en base de datos (por si el usuario escribió el original)
+                recipes = recipeService.searchByName(trimmedName, page, size);
+            }
         }
         else if (maxKilocalories != null)
         {
